@@ -43,4 +43,5 @@ after the tests pass and the Lead asks for G2. Nothing is committed until Marius
 | 6 | Pass | `npm run check`: 21/21 pass, exit 0; only the two Write files added; engine/vendor unchanged; nothing committed |
 
 Overall: PASS (story-reviewer, 2026-10-05). Observations: also exports constants RULE_VALUES and COLUMNS; settings carries unused dealerHitsSoft17/deckCount.
+Follow-up D-035 (Codex adversarial finding: exported COLUMNS/RULE_VALUES were mutable references): exports are now deep-frozen copies; 3 regression tests; story-reviewer PASS 4/4 — 36 combos, 10,800 cells identical to before the fix; `npm run check` 24/24.
 

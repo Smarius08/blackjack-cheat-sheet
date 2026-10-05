@@ -207,6 +207,58 @@ test('buildChart is pure: same rules give equal output, input is not changed', (
   assert.equal(JSON.stringify(r), frozen);
 });
 
+// ---- D-035: exported constants cannot corrupt the engine ----------------------
+
+const chartModule = require(path.join(ENGINE_DIR, 'chart.js'));
+
+// Run a mutation; in strict mode a frozen target throws TypeError. Either a
+// throw or a silent no-op is fine; what matters is later buildChart() output.
+function attempt(fn) {
+  try { fn(); } catch (e) { assert.ok(e instanceof TypeError, String(e)); }
+}
+
+function allCharts() {
+  return allCombos().map((r) => buildChart(r));
+}
+
+test('exported COLUMNS and RULE_VALUES (and its inner arrays) are frozen', () => {
+  const { COLUMNS: C, RULE_VALUES: RV } = chartModule;
+  assert.ok(Object.isFrozen(C));
+  assert.deepEqual(C, COLUMNS);
+  assert.ok(Object.isFrozen(RV));
+  assert.deepEqual(Object.keys(RV), ['decks', 'soft17', 'das', 'surrender']);
+  for (const name of Object.keys(RV)) assert.ok(Object.isFrozen(RV[name]), name);
+});
+
+test('mutating exported COLUMNS / RULE_VALUES does not change later buildChart() output', () => {
+  const before = allCharts();
+  const { COLUMNS: C, RULE_VALUES: RV } = chartModule;
+  attempt(() => C.sort().reverse());
+  attempt(() => { C[0] = 'X'; });
+  attempt(() => C.push('11'));
+  attempt(() => { C.length = 0; });
+  attempt(() => RV.decks.push('6'));
+  attempt(() => { RV.decks[0] = '8'; });
+  attempt(() => RV.surrender.sort());
+  attempt(() => { RV.soft17.length = 0; });
+  attempt(() => { RV.das = ['maybe']; });
+  attempt(() => { delete RV.surrender; });
+  attempt(() => { RV.extra = ['x']; });
+  assert.deepEqual(C, COLUMNS);
+  assert.deepEqual(RV.decks, ['1', '2', '4-8']);
+  assert.deepStrictEqual(allCharts(), before);
+  assert.throws(() => buildChart(rules({ decks: '6' })), RangeError);
+});
+
+test('mutating a returned chart.columns does not affect the next buildChart()', () => {
+  const before = buildChart(BASE);
+  const first = buildChart(BASE);
+  first.columns.reverse();
+  first.columns[0] = 'X';
+  first.columns.push('11');
+  assert.deepStrictEqual(buildChart(BASE), before);
+});
+
 // ---- AC 5: module format ---------------------------------------------------
 
 test('loads in a browser-like context after strategy_table.js and attaches ChipyEngine.chart', () => {

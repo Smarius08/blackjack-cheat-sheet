@@ -145,5 +145,16 @@
     };
   }
 
-  return { buildChart: buildChart, RULE_VALUES: RULE_VALUES, COLUMNS: COLUMNS };
+  // Exported constants are frozen copies (D-035): a consumer cannot reach the
+  // private COLUMNS / RULE_VALUES that buildChart() uses.
+  const EXPORTED_RULE_VALUES = {};
+  Object.keys(RULE_VALUES).forEach(function (name) {
+    EXPORTED_RULE_VALUES[name] = Object.freeze(RULE_VALUES[name].slice());
+  });
+
+  return {
+    buildChart: buildChart,
+    RULE_VALUES: Object.freeze(EXPORTED_RULE_VALUES),
+    COLUMNS: Object.freeze(COLUMNS.slice()),
+  };
 });
