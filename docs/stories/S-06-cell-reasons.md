@@ -1,6 +1,6 @@
 # S-06 — `engine/why.js`: a plain-words reason for every chart cell
 
-State: approved · Agent: engine-dev · Goal served: 2 (usable at the table) · Gate: none
+State: done · Agent: engine-dev · Goal served: 2 (usable at the table) · Gate: none
 
 ## Why
 When a player taps a cell they should see why that move is right, in plain words (north-star "MVP scope"; D-003).
@@ -32,3 +32,13 @@ This story builds the function that produces that short reason from the Trainer'
 ## Review (filled by story-reviewer)
 | # | Pass/Fail | Evidence |
 |---|---|---|
+| 1 | Pass | `reasonFor` (D-041) returns the vendored getStrategyExplanation text untouched; note never read (D-028, D-030) |
+| 2 | Pass | Independent input mapping vs direct vendor call: 36 charts, 10,800 cells, 0 mismatches; 18-21 quotes "18" (D-029) |
+| 3 | Pass | Test covers every cell of all 36 charts (10,800) → non-empty string |
+| 4 | Pass | 12 hand-picked exact-string tests (all five moves, Soft, Pairs, A,A, 18-21); mutations caught (18-21→21, note appended, pair null) |
+| 5 | Pass | No DOM; only require is the vendor writer; ChipyEngine.why; vm browser test matches Node |
+| 6 | Pass | `npm run check` 57/57, exit 0; only the two Write files added; engine/vendor, chart.js, snapshot unchanged |
+
+Overall: PASS (story-reviewer, 2026-10-06). Gap closed before commit: A,A soft mapping had no catching test (A,A is SPLIT everywhere) → added synthetic STAND/HIT/DOUBLE test; mutation now fails it; 58/58.
+Notes for S-10 (reviewer): 18-21 row says "Your 18…"; 5-7 reason says "without busting"; 33 distinct reasons across 10,800 cells, mostly not naming the dealer card or rule; pair reasons start "You can split this pair, but…" even on HIT/STAND/DOUBLE; "Soft" is not explained.
+

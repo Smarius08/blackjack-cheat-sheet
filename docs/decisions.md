@@ -44,3 +44,4 @@ Format: ID · date · decision · by. Newest at the bottom. Superseded rows move
 | D-038 | 2026-10-06 | charts-36.json top level = { "charts": [36] }; each chart's `tables` = buildChart(rules) output as is (columns, hard, soft, pairs); written as JSON.stringify(…, null, 2) + LF | Lead |
 | D-039 | 2026-10-06 | G2: 36-chart snapshot approved with label wording "Dealer hits on soft 17" and "Surrender: any dealer card except ace" (supersedes those two D-024 wordings); cells unchanged | Marius |
 | D-040 | 2026-10-06 | G2: review page (S-05) approved, plus a one-line key for the engine codes in the intro (checked by the test) | Marius |
+| D-041 | 2026-10-06 | why.js API: `reasonFor({ table: "hard"\|"soft"\|"pairs", row: <D-033 row label>, dealer: <column label>, cell })` → string; browser global `window.ChipyEngine.why` | Lead |
