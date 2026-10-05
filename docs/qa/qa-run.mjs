@@ -1,4 +1,4 @@
-// S-12 + S-20 QA run for prototype/index.html (file://). Reports only; edits nothing but docs/qa/screenshots/*.png.
+// S-12 + S-20 + S-21 QA run for prototype/index.html (file://). Reports only; edits nothing but docs/qa/screenshots/*.png and docs/qa/visual/*.png.
 //
 // Re-run:  node docs/qa/qa-run.mjs
 //   PLAYWRIGHT_CORE_DIR  folder that contains node_modules/playwright-core (D-065: install it OUTSIDE the repo)
@@ -11,6 +11,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import zlib from 'node:zlib';
 
 const PW_DIR = process.env.PLAYWRIGHT_CORE_DIR ||
   '/private/tmp/claude-501/-Users-mariussolis-blackjack-cheat-sheet/03210098-060c-4517-a3e6-fddb3554c962/scratchpad/qa';
@@ -22,6 +23,9 @@ const PAGE = path.join(repo, 'prototype', 'index.html');
 const URL0 = pathToFileURL(PAGE).href;
 const SHOTS = path.join(here, 'screenshots');
 fs.mkdirSync(SHOTS, { recursive: true });
+const VIS = path.join(here, 'visual');
+fs.mkdirSync(VIS, { recursive: true });
+const FIG = path.join(repo, 'docs', 'figma');
 const snap = JSON.parse(fs.readFileSync(path.join(repo, 'snapshot', 'charts-36.json'), 'utf8')).charts;
 const { chromium } = createRequire(path.join(PW_DIR, 'package.json'))('playwright-core');
 
@@ -39,6 +43,55 @@ const HANDS = [];
 for (let t = 5; t <= 21; t++) HANDS.push({ table: 'hard', text: String(t), key: 'hard:' + t, row: t <= 7 ? '5-7' : t >= 18 ? '18-21' : String(t) });
 for (let n = 2; n <= 9; n++) HANDS.push({ table: 'soft', text: 'A,' + n, key: 'soft:A,' + n, row: String(11 + n) });
 for (const p of ['2,2', '3,3', '4,4', '5,5', '6,6', '7,7', '8,8', '9,9', '10,10', 'A,A']) HANDS.push({ table: 'pairs', text: p, key: 'pairs:' + p, row: p });
+
+// ---------- minimal PDF text extractor (Chrome/Skia Type3 fonts + ToUnicode); no dependency ----------
+// Minimal text extractor for Chrome/Skia PDFs: inflates streams, reads ToUnicode CMaps, decodes hex strings in Tj/TJ.
+function pdfText(buf) {
+  const s = buf.toString('latin1');
+  const objs = {};
+  const re = /(\d+) 0 obj([\s\S]*?)endobj/g; let m;
+  while ((m = re.exec(s))) {
+    const body = m[2]; const si = body.indexOf('stream');
+    let data = null;
+    if (si >= 0) {
+      const dict = body.slice(0, si);
+      let st = si + 6; if (body[st] === '\r') st++; if (body[st] === '\n') st++;
+      const en = body.lastIndexOf('endstream');
+      let raw = Buffer.from(body.slice(st, en), 'latin1');
+      if (/FlateDecode/.test(dict)) { try { raw = zlib.inflateSync(raw); } catch { raw = Buffer.alloc(0); } }
+      data = raw.toString('latin1');
+      objs[m[1]] = { dict, data };
+    } else objs[m[1]] = { dict: body, data: null };
+  }
+  // font resource name -> ToUnicode map
+  const cmaps = {}; // objnum of font -> Map
+  for (const [n, o] of Object.entries(objs)) {
+    const t = /\/ToUnicode (\d+) 0 R/.exec(o.dict || '');
+    if (t && objs[t[1]]?.data) {
+      const map = new Map(); const d = objs[t[1]].data;
+      for (const b of d.matchAll(/beginbfchar([\s\S]*?)endbfchar/g)) for (const x of b[1].matchAll(/<([0-9a-fA-F]+)>\s*<([0-9a-fA-F]+)>/g)) map.set(parseInt(x[1], 16), String.fromCharCode(...x[2].match(/.{4}/g).map(h => parseInt(h, 16))));
+      for (const b of d.matchAll(/beginbfrange([\s\S]*?)endbfrange/g)) for (const x of b[1].matchAll(/<([0-9a-fA-F]+)>\s*<([0-9a-fA-F]+)>\s*<([0-9a-fA-F]+)>/g)) { const a = parseInt(x[1], 16), z = parseInt(x[2], 16), u = parseInt(x[3], 16); for (let i = a; i <= z; i++) map.set(i, String.fromCharCode(u + i - a)); }
+      cmaps[n] = map;
+    }
+  }
+  let out = '';
+  for (const o of Object.values(objs)) {
+    if (!o.data || !/BT/.test(o.data) || o.data.length < 20) continue;
+    // resource name -> font obj via page resources (approximate: any /Fxx n 0 R in all dicts)
+    const fontOf = {};
+    for (const x of s.matchAll(/\/(F\d+)\s+(\d+) 0 R/g)) fontOf[x[1]] = x[2];
+    let cur = null;
+    for (const tok of o.data.matchAll(/\/(F\d+)\s+[\d.]+\s+Tf|\[((?:<[0-9a-fA-F]*>|[-\d.\s])*)\]\s*TJ|<([0-9a-fA-F]*)>\s*Tj|(T\*|Tm|ET)/g)) {
+      if (tok[1]) cur = cmaps[fontOf[tok[1]]] || null;
+      else if (tok[2] !== undefined || tok[3] !== undefined) {
+        const hexes = tok[2] !== undefined ? [...tok[2].matchAll(/<([0-9a-fA-F]*)>/g)].map(x => x[1]) : [tok[3]];
+        for (const h of hexes) for (const c of h.match(/../g) || []) out += cur?.get(parseInt(c, 16)) ?? '?';
+      } else if (tok[4]) out += ' ';
+    }
+    out += '\n';
+  }
+  return out;
+}
 
 // ---------- browser + collectors ----------
 const consoleMsgs = [], requests = [], pageErrors = [];
@@ -304,7 +357,8 @@ function pageCount(buf) {
 const p5 = await newPage(1280, 900);
 await p5.goto(URL0);
 const c5 = [];
-let pagesFail = [], textFail = [], pdfN = 0;
+let pagesFail = [], textFail = [], layoutFail = [], pdfN = 0, pdfIntendedN = 0;
+const POCKET_LEGEND = 'H Hit \u00b7 S Stand';
 const PD = path.join(PW_DIR, 'pdf'); fs.mkdirSync(PD, { recursive: true });
 for (const c of snap) {
   await p5.evaluate(r => { window.ChipyCheatSheet.setRules(r); }, c.rules);
@@ -329,9 +383,16 @@ for (const c of snap) {
     }));
     if (!ok) textFail.push(`${c.id} ${mode}`);
     for (const fmt of ['A4', 'Letter']) {
+      // page.pdf() fires afterprint, which clears html[data-print]: set the flag right before EACH pdf() call (S-21 QA bug fix)
+      await p5.evaluate(m => { document.documentElement.dataset.print = m; }, mode);
       const buf = await p5.pdf({ format: fmt, landscape: mode === 'pocket', printBackground: true, preferCSSPageSize: false });
       const n = pageCount(buf); pdfN++;
       if (n !== 1) pagesFail.push(`${c.id} ${mode} ${fmt}: ${n} pages`);
+      const tx = pdfText(buf).replace(/\s+/g, ' ');
+      const hasPocket = tx.includes(POCKET_LEGEND), hasFold = tx.includes('Fold or cut'), hasFullKey = tx.includes('Hit Stand Double Split Surrender');
+      const intended = tx.includes(c.label) && (mode === 'pocket' ? hasPocket && hasFold && !hasFullKey : hasFullKey && !hasPocket && !hasFold && tx.includes('Your hand'));
+      pdfIntendedN++;
+      if (!intended) layoutFail.push(`${c.id} ${mode} ${fmt}`);
       if (c === snap[0] || c === snap[35]) fs.writeFileSync(path.join(PD, `${mode}-${fmt}-${snap.indexOf(c)}.pdf`), buf);
     }
   }
@@ -340,8 +401,12 @@ for (const c of snap) {
 await p5.evaluate(() => { window.ChipyCheatSheet.setRules({ decks: '4-8', soft17: 'hits', das: 'yes', surrender: 'any' }); });
 const cssPages = {};
 for (const mode of ['full', 'pocket']) {
-  await p5.evaluate(m => { document.documentElement.dataset.print = m; }, mode);
-  for (const fmt of ['A4', 'Letter']) { const b = await p5.pdf({ format: fmt, landscape: mode === 'pocket', preferCSSPageSize: true, printBackground: true }); cssPages[`${mode}/${fmt}/css`] = pageCount(b); }
+  for (const fmt of ['A4', 'Letter']) {
+    await p5.evaluate(m => { document.documentElement.dataset.print = m; }, mode); // flag before EACH pdf()
+    const b = await p5.pdf({ format: fmt, landscape: mode === 'pocket', preferCSSPageSize: true, printBackground: true });
+    cssPages[`${mode}/${fmt}/css`] = pageCount(b);
+    const tx = pdfText(b); if ((mode === 'pocket') !== tx.includes('Fold or cut')) layoutFail.push(`css ${mode} ${fmt}`);
+  }
 }
 // print buttons set the flag and call print (window.print stubbed so the dialog never opens)
 await p5.emulateMedia({ media: 'screen' });
@@ -355,6 +420,7 @@ const btns = f1.flag === 'full' && f2.flag === 'pocket' && f2.n === 2;
 const screenHidden = await p5.evaluate(() => ['#print-full', '#print-pocket'].every(s => getComputedStyle(document.querySelector(s)).display === 'none'));
 const flagCleared = await p5.evaluate(() => new Promise(r => { window.dispatchEvent(new Event('afterprint')); setTimeout(() => r(document.documentElement.dataset.print ?? null), 50); }));
 c5.push({ n: `${pdfN} PDFs (36 sets x full/pocket x A4/Letter(landscape for pocket)) = exactly 1 page`, v: pagesFail.length === 0, x: pagesFail.slice(0, 4).join(' ; ') || 'all 1 page' });
+c5.push({ n: `${pdfIntendedN} PDFs contain the intended layout (flag set before each pdf(); text read from the PDF itself: rules sentence == snapshot label; pocket has "${POCKET_LEGEND}" + fold-line text and no full word key; full has "Your hand" + word key and no pocket legend; also checked in the 4 preferCSSPageSize PDFs)`, v: layoutFail.length === 0 && pdfIntendedN === 144, x: layoutFail.slice(0, 4).join(' ; ') || 'all intended' });
 c5.push({ n: 'with preferCSSPageSize also 1 page', v: Object.values(cssPages).every(n => n === 1), x: JSON.stringify(cssPages) });
 c5.push({ n: 'print view states the chosen rules (== snapshot label) and every cell (full: words; pocket: letters) for all 36 x 2', v: textFail.length === 0, x: textFail.slice(0, 4).join(' ; ') || 'ok' });
 c5.push({ n: 'Print buttons set html[data-print]=full/pocket and call window.print (stubbed)', v: btns, x: JSON.stringify({ f1, f2 }) });
@@ -564,13 +630,16 @@ const readDiff = p => p.evaluate(() => {
   const note = document.getElementById('diff-note');
   const marked = [...document.querySelectorAll('#chart [data-changed="1"]')];
   return { hidden: note.hidden, text: note.querySelector('[data-diff-text]')?.textContent.trim() || '', marked: marked.length,
-    keys: marked.map(b => `${b.dataset.table}|${b.dataset.erow}|${b.dataset.dealer}`), badges: document.querySelectorAll('#chart .chg').length,
+    keys: marked.map(b => `${b.dataset.table}|${b.dataset.erow}|${b.dataset.dealer}`), badges: document.querySelectorAll('#chart .chg').length + [...document.querySelectorAll('#chart td')].filter(td => /changed/i.test(td.textContent)).length,
+    marker: marked.map(b => { const cs = getComputedStyle(b), a = getComputedStyle(b, '::after'), sur = !!b.closest('.m-surrender'), want = sur ? 'rgb(255, 255, 255)' : 'rgb(26, 29, 34)';
+      return cs.outlineStyle === 'dashed' && parseFloat(cs.outlineWidth) === 2 && cs.outlineColor === want && a.content !== 'none' && a.width === '12px' && a.height === '12px' && a.backgroundColor === want && /polygon/.test(a.clipPath); }).filter(Boolean).length,
+    rowH: [...new Set([...document.querySelectorAll('#chart tbody tr')].map(tr => Math.round(tr.getBoundingClientRect().height)))],
     srLabels: [...document.querySelectorAll('#chart button.cell-hit')].filter(b => /changed for your new rules/.test(b.getAttribute('aria-label'))).length };
 });
 const p11 = await newPage(1280, 900);
 await p11.goto(URL0);
 const first = await readDiff(p11);
-c11.push({ n: 'first load: no markers, no count line', v: first.marked === 0 && first.badges === 0 && first.hidden, x: JSON.stringify({ marked: first.marked, hidden: first.hidden }) });
+c11.push({ n: 'first load: no markers, no count line, rows 52px', v: first.marked === 0 && first.badges === 0 && first.hidden && first.rowH.length === 1 && first.rowH[0] === 52, x: JSON.stringify({ marked: first.marked, hidden: first.hidden, rowH: first.rowH }) });
 await p11.goto(URL0 + '?decks=1&soft17=stands&das=no&surrender=none');
 const q1 = await readDiff(p11);
 c11.push({ n: '?query load: no markers, no count line', v: q1.marked === 0 && q1.badges === 0 && q1.hidden, x: JSON.stringify({ marked: q1.marked, hidden: q1.hidden }) });
@@ -589,10 +658,10 @@ for (const c of snap) for (const [f, nm, vals] of RF) for (const v of vals) {
   const wording = exp.n === 0 ? 'No moves changed for your new rules' : exp.n === 1 ? '1 move changed for your new rules' : `${exp.n} moves changed for your new rules`;
   const sameKeys = got.keys.length === exp.set.size && got.keys.every(k => exp.set.has(k));
   minN = Math.min(minN, exp.n); maxN = Math.max(maxN, exp.n); if (!exp.n) zero++; if (exp.n === 1) one++;
-  if (got.marked !== exp.n || num !== exp.n || got.text !== wording || !sameKeys || got.badges !== exp.n || got.srLabels !== exp.n || got.hidden)
-    trBad.push(`${c.id} ${f}->${v}: expected ${exp.n}, marked ${got.marked}, text "${got.text}", badges ${got.badges}, sr ${got.srLabels}, sameCells ${sameKeys}`);
+  if (got.marked !== exp.n || num !== exp.n || got.text !== wording || !sameKeys || got.badges !== 0 || got.marker !== exp.n || !(got.rowH.length === 1 && got.rowH[0] === 52) || got.srLabels !== exp.n || got.hidden)
+    trBad.push(`${c.id} ${f}->${v}: expected ${exp.n}, marked ${got.marked}, styled ${got.marker}, rowH ${got.rowH}, text "${got.text}", textBadges ${got.badges}, sr ${got.srLabels}, sameCells ${sameKeys}`);
 }
-c11.push({ n: `${nTr} neighbouring transitions by real rule-panel clicks: marked cells (data-changed=1), badges, screen-reader labels and the number in the count line == cells whose move differs in snapshot; exact cells; exact wording`, v: nTr === 216 && trBad.length === 0, x: `${nTr} transitions (${((Date.now() - t11) / 1000).toFixed(0)} s), expected counts min ${minN} max ${maxN}, ${zero} with 0, ${one} with 1; mismatches ${trBad.length}${trBad.length ? ' e.g. ' + trBad.slice(0, 3).join(' ; ') : ''}` });
+c11.push({ n: `${nTr} neighbouring transitions by real rule-panel clicks: marked cells (data-changed=1), each with dashed 2px inner outline + 12px corner triangle (::after; white on Surrender, #1a1d22 otherwise), no 'Changed' text in cells, all 30 rows 52px, screen-reader labels and the number in the count line == cells whose move differs in snapshot; exact cells; exact wording`, v: nTr === 216 && trBad.length === 0, x: `${nTr} transitions (${((Date.now() - t11) / 1000).toFixed(0)} s), expected counts min ${minN} max ${maxN}, ${zero} with 0, ${one} with 1; mismatches ${trBad.length}${trBad.length ? ' e.g. ' + trBad.slice(0, 3).join(' ; ') : ''}` });
 // replace / dismiss / no-change
 await p11.goto(URL0);
 await rl(p11, 'rule-decks', '1').click();
@@ -602,7 +671,7 @@ const a1b = await readDiff(p11);
 await rl(p11, 'rule-soft17', 'stands').click();
 const a2 = await readDiff(p11);
 const e1 = diffExpected(byRules.get('4-8|hits|yes|any'), byRules.get('1|hits|yes|any')).n, e2 = diffExpected(byRules.get('1|hits|yes|any'), byRules.get('1|stands|yes|any')).n;
-c11.push({ n: 'next rule change replaces the diff with the one against the previous rules; clicking the already-chosen value changes nothing', v: a1.marked === e1 && a1b.marked === e1 && a1b.text === a1.text && a2.marked === e2 && a2.text.startsWith(String(e2)), x: `4-8->1: ${a1.marked}/${e1}; same click ${a1b.marked}; then S17: ${a2.marked}/${e2} "${a2.text}"` });
+c11.push({ n: 'next rule change replaces the diff with the one against the previous rules; clicking the already-chosen value changes nothing', v: a1.marked === e1 && a1.marker === e1 && a1b.marked === e1 && a1b.text === a1.text && a2.marked === e2 && a2.text.startsWith(String(e2)), x: `4-8->1: ${a1.marked}/${e1}; same click ${a1b.marked}; then S17: ${a2.marked}/${e2} "${a2.text}"` });
 await p11.locator('[data-diff-dismiss]').click();
 const dm = await readDiff(p11);
 c11.push({ n: 'Dismiss clears marks and the count line', v: dm.marked === 0 && dm.badges === 0 && dm.hidden, x: JSON.stringify({ marked: dm.marked, badges: dm.badges, hidden: dm.hidden }) });
@@ -642,13 +711,15 @@ await p11.emulateMedia({ media: 'print' });
 for (const m of ['full', 'pocket']) {
   await p11.evaluate(m => { document.documentElement.dataset.print = m; }, m);
   printTexts[m] = await p11.evaluate(() => ({ body: document.body.innerText, vis: [...document.querySelectorAll('.chg, .diff-note, .sa-changed, [data-changed]')].filter(e => { const r = e.getBoundingClientRect(); return getComputedStyle(e).display !== 'none' && r.width > 0 && r.height > 0; }).length }));
+  await p11.evaluate(m => { document.documentElement.dataset.print = m; }, m); // flag right before pdf()
   const buf = await p11.pdf({ format: 'A4', landscape: m === 'pocket', printBackground: true });
   printTexts[m].pages = pageCount(buf);
+  printTexts[m].pdf = pdfText(buf).replace(/\s+/g, ' ');
 }
 await p11.emulateMedia({ media: 'screen' });
 await p11.evaluate(() => { delete document.documentElement.dataset.print; });
-c11.push({ n: 'print output (full and pocket, with a diff showing on screen) has no "Changed"/"moves changed" text and no visible badge/outline element', v: preChg > 0 && ['full', 'pocket'].every(m => !/changed/i.test(printTexts[m].body) && printTexts[m].vis === 0 && printTexts[m].pages === 1), x: `diff showing ${preChg} cells; ` + ['full', 'pocket'].map(m => `${m}: text has "changed"=${/changed/i.test(printTexts[m].body)}, visible marker elements ${printTexts[m].vis}, ${printTexts[m].pages} page`).join('; ') + ' (method: print-media rendered text + Chrome PDF page count; no PDF text extractor installed)' });
-// screenshots + badge legibility
+c11.push({ n: 'print output (full and pocket, with a diff showing on screen) has no "Changed"/"moves changed" text and no visible badge/outline element', v: preChg > 0 && ['full', 'pocket'].every(m => !/changed/i.test(printTexts[m].body) && !/changed/i.test(printTexts[m].pdf) && printTexts[m].pdf.length > 500 && printTexts[m].vis === 0 && printTexts[m].pages === 1), x: `diff showing ${preChg} cells; ` + ['full', 'pocket'].map(m => `${m}: print-media text has "changed"=${/changed/i.test(printTexts[m].body)}, PDF text has "changed"=${/changed/i.test(printTexts[m].pdf)} (${printTexts[m].pdf.length} chars), visible marker elements ${printTexts[m].vis}, ${printTexts[m].pages} page`).join('; ') + ' (method: print-media rendered text + text read from the PDF + Chrome PDF page count)' });
+// screenshots + marker legibility
 for (const [w, h] of [[390, 844], [1280, 900]]) {
   const p = await newPage(w, h);
   await p.goto(URL0);
@@ -657,18 +728,64 @@ for (const [w, h] of [[390, 844], [1280, 900]]) {
   const d = await readDiff(p);
   const vis = await p.evaluate(() => { const n = document.getElementById('diff-note').getBoundingClientRect(); return { top: Math.round(n.top), h: Math.round(n.height) }; });
   await p.screenshot({ path: path.join(SHOTS, `rules-changed-${w}.png`), fullPage: true });
-  c11.push({ n: `screenshot rules-changed-${w}.png (4-8 -> 1 deck): count line + marks`, v: d.marked > 0 && !d.hidden && vis.h > 0, x: `"${d.text}", ${d.marked} marked cells` });
+  c11.push({ n: `screenshot rules-changed-${w}.png (4-8 -> 1 deck): count line + marks`, v: d.marked > 0 && !d.hidden && vis.h > 0 && d.marker === d.marked && d.rowH.length === 1 && d.rowH[0] === 52 && d.badges === 0, x: `"${d.text}", ${d.marked} marked cells, ${d.marker} with dashed outline + 12px triangle, row heights ${d.rowH}, no Changed text in cells` });
   if (w === 390) {
-    const bd = await p.evaluate(() => { const b = document.querySelector('#chart .chg'); const r = b.getBoundingClientRect(), cell = b.closest('td').getBoundingClientRect(), mw = b.parentElement.querySelector('.mw').getBoundingClientRect(); const cs = getComputedStyle(b); return { fs: cs.fontSize, w: Math.round(r.width), h: Math.round(r.height), cellW: Math.round(cell.width), overlapWord: !(r.right < mw.left || r.left > mw.right || r.bottom < mw.top || r.top > mw.bottom), fg: cs.color, bg: cs.backgroundColor }; });
-    console.log('badge@390', JSON.stringify(bd));
     const el = await p.locator('#chart [data-changed="1"]').first();
     await el.scrollIntoViewIfNeeded();
     const bb = await el.boundingBox();
-    await p.screenshot({ path: path.join(PW_DIR, 'badge-crop-390.png'), clip: { x: Math.max(0, bb.x - 10), y: Math.max(0, bb.y - 10), width: 200, height: bb.height + 20 } });
+    await p.screenshot({ path: path.join(PW_DIR, 'marker-crop-390.png'), clip: { x: Math.max(0, bb.x - 10), y: Math.max(0, bb.y - 10), width: 200, height: bb.height + 20 } });
   }
 }
 row(11, 'What your rules change (S-20, D-067)', c11.every(x => x.v), c11.map(x => (x.v ? 'ok' : 'FAIL') + ': ' + x.n + ' [' + x.x + ']').join(' | '));
 for (const x of c11.filter(x => !x.v)) find('high', 'Check 11: ' + x.n + ' ' + x.x);
+
+
+// =====================================================================
+// CHECK 12: visual vs Figma (S-21, D-076): side-by-side images, prototype LEFT, Figma RIGHT
+// =====================================================================
+const c12 = [];
+const SCREENS = [
+  ['default-chart', 'cs-default-chart', async p => {}],
+  ['reason-panel', 'cs-reason-panel', async p => { await p.locator('#chart-hard button.cell-hit[data-erow="16"][data-dealer="10"]').click(); await p.waitForTimeout(200); }],
+  ['rules-changed', 'cs-rules-changed', async p => { await rl(p, 'rule-decks', '1').click(); await p.waitForTimeout(250); }],
+  ['table-mode-result', 'cs-table-mode-result', async p => {
+    await p.locator('#mode-switch').getByText('Table mode').click();
+    await p.locator('#table-pick button[data-act="hand"][data-val="hard:16"]').click();
+    await p.locator('#table-pick button[data-act="dealer"][data-val="10"]').click(); await p.waitForTimeout(400); }],
+];
+const compCtx = await browser.newContext({ viewport: { width: 800, height: 600 } });
+const tokens = {};
+for (const [w, h] of [[1280, 900], [390, 844]]) {
+  for (const [name, figBase, setup] of SCREENS) {
+    const p = await newPage(w, h);
+    await p.goto(URL0); await p.waitForTimeout(200);
+    await setup(p);
+    const box = await p.evaluate(() => { const r = document.querySelector('main.shell').getBoundingClientRect(); return { top: r.top + scrollY, bottom: r.bottom + scrollY }; });
+    const mg = w === 1280 ? 40 : 8;
+    const y0 = Math.max(0, Math.floor(box.top - mg)), y1 = Math.ceil(box.bottom + mg);
+    const protoBuf = await p.screenshot({ fullPage: true, clip: { x: 0, y: y0, width: w, height: y1 - y0 } });
+    tokens[`${name}-${w}`] = await p.evaluate(() => { const g = (s, pr = 'color') => { const e = document.querySelector(s); return e ? getComputedStyle(e)[pr] : null; };
+      return { title: g('h1'), cardH: Math.round(document.querySelector('main.shell').getBoundingClientRect().height), unselected: g('#rule-panel label:not(:has(input:checked)) span, #rule-panel label:not(:has(input:checked))') }; });
+    const figBuf = fs.readFileSync(path.join(FIG, `${figBase}-${w}.png`));
+    const fh = figBuf.readUInt32BE(20);
+    const uri = b => 'data:image/png;base64,' + b.toString('base64');
+    const html = `<html><body style="margin:0;background:#888;font:600 14px Arial"><div style="display:flex;gap:12px;align-items:flex-start;width:${2 * w + 12}px">` +
+      `<div style="width:${w}px"><div style="background:#222;color:#fff;padding:6px 10px">Prototype</div><img style="display:block;width:${w}px" src="${uri(protoBuf)}"></div>` +
+      `<div style="width:${w}px"><div style="background:#222;color:#fff;padding:6px 10px">Figma</div><img style="display:block;width:${w}px" src="${uri(figBuf)}"></div></div></body></html>`;
+    const cp = await compCtx.newPage();
+    await cp.setViewportSize({ width: 2 * w + 12, height: 600 });
+    await cp.setContent(html); await cp.waitForLoadState('load');
+    const out = path.join(VIS, `${name}-${w}-side-by-side.png`);
+    await cp.screenshot({ path: out, fullPage: true });
+    await cp.close();
+    const ok = fs.existsSync(out) && fs.statSync(out).size > 5000;
+    c12.push({ n: `${name} @${w}`, v: ok, x: `prototype crop ${w}x${y1 - y0}, figma ${w}x${fh}` });
+    await p.context().close();
+  }
+}
+await compCtx.close();
+row(12, 'Visual vs Figma side-by-sides (automated part: images built; verdict per screen in the report)', c12.every(x => x.v) && c12.length === 8, c12.map(x => (x.v ? 'ok' : 'FAIL') + ': ' + x.n + ' [' + x.x + ']').join(' | '));
+console.log('tokens', JSON.stringify(tokens));
 
 
 await browser.close();
