@@ -1,6 +1,6 @@
 # S-20 — G3 fixes: scroll cue, bigger Calculator link, "What your rules change"
 
-State: approved (G3 first pass D-066; D-067; batch D-058) · Agent: ui-dev, then qa-tester (separate step) · Goal served: 2 (usable at the table, chart correct for the player's rules) · Gate: G3
+State: reviewed (awaiting G3) (G3 first pass D-066; D-067; batch D-058) · Agent: ui-dev, then qa-tester (separate step) · Goal served: 2 (usable at the table, chart correct for the player's rules) · Gate: G3
 
 ## Why
 Marius's first G3 review found three things, and asked for them in one fix story (D-066, D-067): (1) at phone width players do not see that the chart
@@ -44,7 +44,7 @@ changed (feature E, D-067).
 | 3 | Pass | Independent: 216 transitions, diffCharts = marked cells = badges = expected (min 1, max 17), count text singular/plural, 0 mismatches |
 | 4 | Pass | No markers on first load or ?query load (test fixed to really load a query); Dismiss clears; next change diffs vs previous rules; table-mode card marked exactly when its move changed (350 pairs); print markup clean |
 | 5 | Pass | `npm run check` 118/118; existing tests unchanged; only Write-list files |
-| 6 | Pending | QA re-run by qa-tester |
+| 6 | Pass | QA re-run at 1a0410c: checks 1–11 PASS, exit 0 (qa-tester + reviewer's own re-run, 2:56); check 11 = 216 real-click transitions, expected counts from snapshot only, 0 mismatches; 8 screenshots incl. rules-changed-390/1280. QA_TABLE_CLICKS=all not re-run (table answers unchanged; covered by checks 1, 2, 11) |
 
 Builder part: PASS (story-reviewer, 2026-10-05). Note for QA: 9px "Changed" badge legibility at 390.
-
+AC 6: PASS (story-reviewer, 2026-10-05). F1, F3 closed; F4 low (9px badge overlaps icon top) + F2 low → S-13 Figma brief.

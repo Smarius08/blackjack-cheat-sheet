@@ -28,13 +28,13 @@ Defaults on load: 4–8 decks · dealer hits soft 17 · DAS allowed · surrender
 | S-10 | Tap/click/keyboard a cell → panel: row label, reason (why.js), note shown separately (D-029, D-030, D-049); no hover | ui-dev | 2 | — | done |
 | S-11 | Print, both sizes: full page + pocket card, chosen rules printed on each (D-054) | ui-dev | 2 | — | done |
 | S-19 | My-table link: active rules kept in the page URL; every combo round-trips; invalid values fall back to defaults with no error (D-051, D-054) | ui-dev | 2 | — | done |
-| S-20 | G3 fix (D-066, D-067): scroll cue at 390 (fade + "Swipe for dealer 6–A"), Calculator link ≥44px, "What your rules change" highlight + count (chart and table mode); new QA checks; full QA re-run | ui-dev + qa-tester | 2 | G3 | in progress |
-| S-12 | QA run: Playwright 390 / 1280, all 36 combos vs snapshot, incl. S-18 and S-19 → docs/qa/ | qa-tester | 2 | G3 | reviewed (G3 pending; re-run after S-20) |
+| S-20 | G3 fix (D-066, D-067): scroll cue at 390 (fade + "Swipe for dealer 6–A"), Calculator link ≥44px, "What your rules change" highlight + count (chart and table mode); new QA checks; full QA re-run | ui-dev + qa-tester | 2 | G3 | reviewed (G3 pending) |
+| S-12 | QA run: Playwright 390 / 1280, all 36 combos vs snapshot, incl. S-18 and S-19 → docs/qa/ | qa-tester | 2 | G3 | reviewed (G3 pending; re-run done after S-20) |
 
 ## Sprint 3 — Figma (D2) + Jira (D3)
 | ID | Story (one output) | Agent | Goal | Gate | State |
 |---|---|---|---|---|---|
-| S-13 | Figma page from approved prototype (desktop + mobile + print); reserve space for v2 "Learn this chart" (D-051); final chart colours from CHIPY tokens (lime #c4db11 / #859c2e, neutrals), cells keep move icon + word (D-053); title #859c2e on #f9fafa ≈ 2.96:1 contrast — review with E53 owner | figma-designer | 2 | G4 | proposed |
+| S-13 | Figma page from approved prototype (desktop + mobile + print); reserve space for v2 "Learn this chart" (D-051); final chart colours from CHIPY tokens (lime #c4db11 / #859c2e, neutrals), cells keep move icon + word (D-053); title #859c2e on #f9fafa ≈ 2.96:1 contrast — review with E53 owner; "Changed" badge 9px overlaps icon top (QA F4) | figma-designer | 2 | G4 | proposed |
 | S-14 | Jira draft: Calculation Logic & Lookup Tables (engine + snapshot; must state the 2-cell deviation from v30: Single/H17 6,6 vs 7 Ph, Multi/H17 8,8 vs A Rpa — D-046, D-049) | jira-writer | 3 | G5 | proposed |
 | S-15 | Jira drafts: Tool Layout (reserve space for v2 "Learn this chart", D-051), Tool Functionality | jira-writer | 3 | G5 | proposed |
 | S-16 | Jira drafts: SEO Content (incl. keyword split decision with Ahrefs, D-016), Common Sections, related tools, sitemaps/index/search | jira-writer | 1 | G5 | proposed |

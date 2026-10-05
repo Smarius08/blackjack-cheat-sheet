@@ -1,4 +1,4 @@
-// S-12 QA run for prototype/index.html (file://). Reports only; edits nothing but docs/qa/screenshots/*.png.
+// S-12 + S-20 QA run for prototype/index.html (file://). Reports only; edits nothing but docs/qa/screenshots/*.png.
 //
 // Re-run:  node docs/qa/qa-run.mjs
 //   PLAYWRIGHT_CORE_DIR  folder that contains node_modules/playwright-core (D-065: install it OUTSIDE the repo)
@@ -474,7 +474,7 @@ const labels = await p8.evaluate(() => {
   const noWord = [...document.querySelectorAll('#chart td[data-move]')].filter(td => !(td.querySelector('.mw')?.textContent.trim())).length;
   const iconsHidden = [...document.querySelectorAll('.mi')].every(i => i.getAttribute('aria-hidden') === 'true');
   const noAria = [...document.querySelectorAll('button')].filter(b => !(b.textContent.trim() || b.getAttribute('aria-label'))).length;
-  const cellAria = [...document.querySelectorAll('button.cell-hit')].every(b => /: (Hit|Stand|Double|Split|Surrender)\./.test(b.getAttribute('aria-label') || ''));
+  const cellAria = [...document.querySelectorAll('button.cell-hit')].every(b => /: (Hit|Stand|Double|Split|Surrender)(, changed for your new rules)?\. Show why$/.test(b.getAttribute('aria-label') || ''));
   return { noWord, iconsHidden, noAria, cellAria };
 });
 c8.push({ n: 'icons never the only label (word in every cell, icons aria-hidden, every button named, cell buttons announce hand+dealer+move)', v: labels.noWord === 0 && labels.iconsHidden && labels.noAria === 0 && labels.cellAria, x: JSON.stringify(labels) });
@@ -482,6 +482,194 @@ const lang = await p8.evaluate(() => ({ lang: document.documentElement.lang, tit
 c8.push({ n: 'html lang, title, viewport meta present', v: !!lang.lang && !!lang.title && !!lang.viewport, x: JSON.stringify(lang) });
 row(8, 'Keyboard + basic accessibility', c8.every(x => x.v), c8.map(x => (x.v ? 'ok' : 'FAIL') + ': ' + x.n + ' [' + x.x + ']').join(' | '));
 for (const x of c8.filter(x => !x.v)) find('medium', 'Check 8: ' + x.n + ' ' + x.x);
+
+// =====================================================================
+// CHECK 9: scroll cue (S-20 F1)
+// =====================================================================
+const c9 = [];
+const p9 = await newPage(390, 844);
+await p9.goto(URL0);
+await p9.waitForTimeout(250);
+const cueStateFn = `(() => { const T = ['hard','soft','pairs']; return T.map(t => {
+  const sec = document.getElementById('chart-' + t), hint = sec.querySelector('[data-swipe-hint]'), wrap = sec.querySelector('.scroll-wrap'), box = sec.querySelector('.scroll');
+  const after = getComputedStyle(wrap, '::after');
+  return { t, hint: !!hint && getComputedStyle(hint).display !== 'none' && hint.getBoundingClientRect().height > 0, hintText: hint && hint.textContent.trim(), fade: after.content !== 'none' && after.display !== 'none', fadeW: after.width, pe: after.pointerEvents, sl: box.scrollLeft, cw: box.clientWidth, sw: box.scrollWidth };
+}); })()`;
+const s0 = await p9.evaluate(cueStateFn);
+c9.push({ n: '390 on load: each of 3 tables shows hint "Swipe for dealer 6–A" + right fade', v: s0.every(x => x.hint && x.hintText === 'Swipe for dealer 6–A' && x.fade && x.sw > x.cw), x: s0.map(x => `${x.t}: hint=${x.hint} fade=${x.fade} (${x.fadeW}) box ${x.cw}/${x.sw}`).join('; ') });
+c9.push({ n: 'fade has pointer-events none', v: s0.every(x => x.pe === 'none'), x: s0.map(x => x.pe).join(',') });
+// geometry: fade vs pinned first column
+const geo = await p9.evaluate(() => {
+  const wrap = document.querySelector('#chart-hard .scroll-wrap'), w = wrap.getBoundingClientRect(), a = getComputedStyle(wrap, '::after');
+  const th = document.querySelector('#chart-hard tbody tr th, #chart-hard tbody tr td:first-child').getBoundingClientRect();
+  const fadeLeft = w.right - parseFloat(a.width) - parseFloat(a.right || 0);
+  return { fadeLeft: Math.round(fadeLeft), pinnedRight: Math.round(th.right), wrapRight: Math.round(w.right) };
+});
+c9.push({ n: 'fade does not cover the pinned first column', v: geo.fadeLeft >= geo.pinnedRight, x: JSON.stringify(geo) });
+// tap under the fade opens the cell's reason
+await p9.evaluate(() => document.querySelector('#chart-hard tbody tr:nth-child(4)').scrollIntoView({ block: 'center' }));
+const pt = await p9.evaluate(() => { const w = document.querySelector('#chart-hard .scroll-wrap').getBoundingClientRect(); const r = document.querySelector('#chart-hard tbody tr:nth-child(4) td:last-child') ; const rr = document.querySelector('#chart-hard tbody tr:nth-child(4)').getBoundingClientRect(); const x = w.right - 12, y = rr.top + rr.height / 2; const el = document.elementFromPoint(x, y); const hit = el && el.closest('button.cell-hit'); return { x, y, hit: !!hit, dealer: hit?.dataset.dealer, erow: hit?.dataset.erow, tag: el?.tagName + '.' + el?.className }; });
+await p9.mouse.click(pt.x, pt.y);
+await p9.waitForTimeout(100);
+const panelT = await p9.evaluate(() => document.querySelector('#reason-hard [data-title]')?.textContent || null);
+c9.push({ n: 'tap inside the fade area hits the cell and opens its reason panel', v: pt.hit && panelT === `Hard ${pt.erow} vs dealer ${pt.dealer}`, x: `elementFromPoint ${pt.tag}; panel "${panelT}"` });
+await p9.keyboard.press('Escape');
+// scroll each table to the end
+for (const t of TABLES) await p9.evaluate(t => { const b = document.querySelector(`#chart-${t} .scroll`); b.scrollLeft = b.scrollWidth; }, t);
+await p9.waitForTimeout(300);
+const s1 = await p9.evaluate(cueStateFn);
+c9.push({ n: 'after scrolling each table to its end, hint and fade are gone', v: s1.every(x => !x.hint && !x.fade), x: s1.map(x => `${x.t}: sl=${Math.round(x.sl)} hint=${x.hint} fade=${x.fade}`).join('; ') });
+// scroll back: returns
+await p9.evaluate(() => { document.querySelector('#chart-hard .scroll').scrollLeft = 0; });
+await p9.waitForTimeout(300);
+const s2 = await p9.evaluate(cueStateFn);
+c9.push({ n: 'scrolling back to the start brings the cue back', v: s2[0].hint && s2[0].fade, x: `hard hint=${s2[0].hint} fade=${s2[0].fade}` });
+const sw390 = await p9.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth]);
+// 1280
+const p9b = await newPage(1280, 900);
+await p9b.goto(URL0);
+await p9b.waitForTimeout(250);
+const w0 = await p9b.evaluate(cueStateFn);
+const sw1280 = await p9b.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth]);
+c9.push({ n: '1280: no hint and no fade on any table', v: w0.every(x => !x.hint && !x.fade), x: w0.map(x => `${x.t}: hint=${x.hint} fade=${x.fade} box ${x.cw}/${x.sw}`).join('; ') });
+c9.push({ n: 'page scrollWidth == innerWidth at 390 and 1280', v: sw390[0] === sw390[1] && sw1280[0] === sw1280[1], x: `390: ${sw390}; 1280: ${sw1280}` });
+row(9, 'Scroll cue (S-20 F1, D-066, D-050)', c9.every(x => x.v), c9.map(x => (x.v ? 'ok' : 'FAIL') + ': ' + x.n + ' [' + x.x + ']').join(' | '));
+for (const x of c9.filter(x => !x.v)) find('medium', 'Check 9: ' + x.n + ' ' + x.x);
+
+// =====================================================================
+// CHECK 10: Calculator link >= 44px
+// =====================================================================
+const c10 = [];
+for (const [w, h] of [[390, 844], [1280, 900]]) {
+  const p = await newPage(w, h);
+  await p.goto(URL0);
+  await p.locator('#mode-switch').getByText('Table mode').click();
+  await p.locator('#table-pick button[data-act="hand"][data-val="hard:16"]').click();
+  await p.locator('#table-pick button[data-act="dealer"][data-val="10"]').click();
+  const bb = await p.locator('#table-result a.sa-link').boundingBox();
+  c10.push({ n: `link box at ${w}`, v: !!bb && bb.height >= 44, x: bb ? `${Math.round(bb.width)}x${bb.height}` : 'link missing' });
+}
+row(10, 'Calculator link tap target >= 44px (S-20 F3, D-055)', c10.every(x => x.v), c10.map(x => (x.v ? 'ok' : 'FAIL') + ': ' + x.n + ' [' + x.x + ']').join(' | '));
+for (const x of c10.filter(x => !x.v)) find('low', 'Check 10: ' + x.n + ' ' + x.x);
+
+// =====================================================================
+// CHECK 11: What your rules change (D-067)
+// =====================================================================
+const c11 = [];
+const RF = [['decks', 'rule-decks', ['1', '2', '4-8']], ['soft17', 'rule-soft17', ['stands', 'hits']], ['das', 'rule-das', ['yes', 'no']], ['surrender', 'rule-surrender', ['none', 'any', 'except_ace']]];
+const key = r => `${r.decks}|${r.soft17}|${r.das}|${r.surrender}`;
+const byRules = new Map(snap.map(c => [key(c.rules), c]));
+const diffExpected = (a, b) => { let n = 0; const set = new Set(); for (const t of TABLES) a.tables[t].forEach((r, i) => r.cells.forEach((c, j) => { if (c.move !== b.tables[t][i].cells[j].move) { n++; set.add(`${t}|${r.label}|${D[j]}`); } })); return { n, set }; };
+const readDiff = p => p.evaluate(() => {
+  const note = document.getElementById('diff-note');
+  const marked = [...document.querySelectorAll('#chart [data-changed="1"]')];
+  return { hidden: note.hidden, text: note.querySelector('[data-diff-text]')?.textContent.trim() || '', marked: marked.length,
+    keys: marked.map(b => `${b.dataset.table}|${b.dataset.erow}|${b.dataset.dealer}`), badges: document.querySelectorAll('#chart .chg').length,
+    srLabels: [...document.querySelectorAll('#chart button.cell-hit')].filter(b => /changed for your new rules/.test(b.getAttribute('aria-label'))).length };
+});
+const p11 = await newPage(1280, 900);
+await p11.goto(URL0);
+const first = await readDiff(p11);
+c11.push({ n: 'first load: no markers, no count line', v: first.marked === 0 && first.badges === 0 && first.hidden, x: JSON.stringify({ marked: first.marked, hidden: first.hidden }) });
+await p11.goto(URL0 + '?decks=1&soft17=stands&das=no&surrender=none');
+const q1 = await readDiff(p11);
+c11.push({ n: '?query load: no markers, no count line', v: q1.marked === 0 && q1.badges === 0 && q1.hidden, x: JSON.stringify({ marked: q1.marked, hidden: q1.hidden }) });
+// 216 transitions by real clicks
+let nTr = 0, trBad = [], minN = 1e9, maxN = 0, zero = 0, one = 0;
+const t11 = Date.now();
+for (const c of snap) for (const [f, nm, vals] of RF) for (const v of vals) {
+  if (v === c.rules[f]) continue;
+  await p11.evaluate(r => window.ChipyCheatSheet.setRules(r), c.rules);
+  await rl(p11, nm, v).click();
+  const nr = { ...c.rules, [f]: v };
+  const exp = diffExpected(c, byRules.get(key(nr)));
+  const got = await readDiff(p11);
+  nTr++;
+  const num = got.text.startsWith('No ') ? 0 : parseInt(got.text, 10);
+  const wording = exp.n === 0 ? 'No moves changed for your new rules' : exp.n === 1 ? '1 move changed for your new rules' : `${exp.n} moves changed for your new rules`;
+  const sameKeys = got.keys.length === exp.set.size && got.keys.every(k => exp.set.has(k));
+  minN = Math.min(minN, exp.n); maxN = Math.max(maxN, exp.n); if (!exp.n) zero++; if (exp.n === 1) one++;
+  if (got.marked !== exp.n || num !== exp.n || got.text !== wording || !sameKeys || got.badges !== exp.n || got.srLabels !== exp.n || got.hidden)
+    trBad.push(`${c.id} ${f}->${v}: expected ${exp.n}, marked ${got.marked}, text "${got.text}", badges ${got.badges}, sr ${got.srLabels}, sameCells ${sameKeys}`);
+}
+c11.push({ n: `${nTr} neighbouring transitions by real rule-panel clicks: marked cells (data-changed=1), badges, screen-reader labels and the number in the count line == cells whose move differs in snapshot; exact cells; exact wording`, v: nTr === 216 && trBad.length === 0, x: `${nTr} transitions (${((Date.now() - t11) / 1000).toFixed(0)} s), expected counts min ${minN} max ${maxN}, ${zero} with 0, ${one} with 1; mismatches ${trBad.length}${trBad.length ? ' e.g. ' + trBad.slice(0, 3).join(' ; ') : ''}` });
+// replace / dismiss / no-change
+await p11.goto(URL0);
+await rl(p11, 'rule-decks', '1').click();
+const a1 = await readDiff(p11);
+await rl(p11, 'rule-decks', '1').click(); // same value: nothing new
+const a1b = await readDiff(p11);
+await rl(p11, 'rule-soft17', 'stands').click();
+const a2 = await readDiff(p11);
+const e1 = diffExpected(byRules.get('4-8|hits|yes|any'), byRules.get('1|hits|yes|any')).n, e2 = diffExpected(byRules.get('1|hits|yes|any'), byRules.get('1|stands|yes|any')).n;
+c11.push({ n: 'next rule change replaces the diff with the one against the previous rules; clicking the already-chosen value changes nothing', v: a1.marked === e1 && a1b.marked === e1 && a1b.text === a1.text && a2.marked === e2 && a2.text.startsWith(String(e2)), x: `4-8->1: ${a1.marked}/${e1}; same click ${a1b.marked}; then S17: ${a2.marked}/${e2} "${a2.text}"` });
+await p11.locator('[data-diff-dismiss]').click();
+const dm = await readDiff(p11);
+c11.push({ n: 'Dismiss clears marks and the count line', v: dm.marked === 0 && dm.badges === 0 && dm.hidden, x: JSON.stringify({ marked: dm.marked, badges: dm.badges, hidden: dm.hidden }) });
+// table mode: result marked exactly when move changed
+async function tableTransition(from, field, nm, val) {
+  const to = { ...from, [field]: val };
+  const a = byRules.get(key(from)), b = byRules.get(key(to));
+  const p = await newPage(1280, 900);
+  await p.goto(URL0);
+  await p.evaluate(r => window.ChipyCheatSheet.setRules(r), from);
+  await p.locator('#mode-switch').getByText('Table mode').click();
+  await p.locator('#rules-toggle').click();
+  let bad = [], marked = 0, tot = 0;
+  for (const h of HANDS) for (let j = 0; j < 10; j++) {
+    await p.evaluate(({ r, h, d }) => { const A = window.ChipyCheatSheet; A.setRules(r); A.selectHand(h); A.selectDealer(d); }, { r: from, h: h.key, d: D[j] });
+    if (await p.locator('[data-diff-dismiss]').count()) await p.locator('[data-diff-dismiss]').click(); // real Dismiss; setRules(from) just made a to->from diff
+    const before = await p.evaluate(() => !!document.querySelector('#table-result .sa-changed'));
+    await rl(p, nm, val).click();
+    const info = await p.evaluate(() => ({ chg: !!document.querySelector('#table-result .sa-changed'), txt: document.querySelector('#table-result .sa-changed')?.textContent.trim(), move: document.querySelector('#table-result .sa-rec-move')?.dataset.move }));
+    const em = a.tables[h.table].find(r => r.label === h.row).cells[j].move, nmv = b.tables[h.table].find(r => r.label === h.row).cells[j].move;
+    tot++; if (em !== nmv) marked++;
+    if (before || info.chg !== (em !== nmv) || info.move !== nmv || (info.chg && info.txt !== 'Changed for your new rules')) bad.push(`${h.text} vs ${D[j]}: ${em}->${nmv} marker=${info.chg} shown=${info.move}`);
+  }
+  await p.context().close();
+  return { n: tot, changed: marked, bad };
+}
+const tmA = await tableTransition({ decks: '4-8', soft17: 'hits', das: 'yes', surrender: 'any' }, 'decks', 'rule-decks', '1');
+const tmB = await tableTransition({ decks: '4-8', soft17: 'hits', das: 'yes', surrender: 'any' }, 'surrender', 'rule-surrender', 'none');
+const tmC = await tableTransition({ decks: '2', soft17: 'stands', das: 'no', surrender: 'none' }, 'soft17', 'rule-soft17', 'hits');
+c11.push({ n: 'table mode: result card says "Changed for your new rules" exactly when its move changed (not before the change; real rule click)', v: [tmA, tmB, tmC].every(t => t.bad.length === 0 && t.changed > 0), x: [tmA, tmB, tmC].map((t, i) => `T${i + 1}: ${t.n} hand x dealer pairs, ${t.changed} changed, ${t.bad.length} mismatches${t.bad.length ? ' e.g. ' + t.bad[0] : ''}`).join('; ') });
+// print: no marks, no count line while a diff is showing
+await p11.goto(URL0);
+await rl(p11, 'rule-decks', '1').click();
+const preChg = (await readDiff(p11)).marked;
+const printTexts = {};
+await p11.emulateMedia({ media: 'print' });
+for (const m of ['full', 'pocket']) {
+  await p11.evaluate(m => { document.documentElement.dataset.print = m; }, m);
+  printTexts[m] = await p11.evaluate(() => ({ body: document.body.innerText, vis: [...document.querySelectorAll('.chg, .diff-note, .sa-changed, [data-changed]')].filter(e => { const r = e.getBoundingClientRect(); return getComputedStyle(e).display !== 'none' && r.width > 0 && r.height > 0; }).length }));
+  const buf = await p11.pdf({ format: 'A4', landscape: m === 'pocket', printBackground: true });
+  printTexts[m].pages = pageCount(buf);
+}
+await p11.emulateMedia({ media: 'screen' });
+await p11.evaluate(() => { delete document.documentElement.dataset.print; });
+c11.push({ n: 'print output (full and pocket, with a diff showing on screen) has no "Changed"/"moves changed" text and no visible badge/outline element', v: preChg > 0 && ['full', 'pocket'].every(m => !/changed/i.test(printTexts[m].body) && printTexts[m].vis === 0 && printTexts[m].pages === 1), x: `diff showing ${preChg} cells; ` + ['full', 'pocket'].map(m => `${m}: text has "changed"=${/changed/i.test(printTexts[m].body)}, visible marker elements ${printTexts[m].vis}, ${printTexts[m].pages} page`).join('; ') + ' (method: print-media rendered text + Chrome PDF page count; no PDF text extractor installed)' });
+// screenshots + badge legibility
+for (const [w, h] of [[390, 844], [1280, 900]]) {
+  const p = await newPage(w, h);
+  await p.goto(URL0);
+  await rl(p, 'rule-decks', '1').click();
+  await p.waitForTimeout(200);
+  const d = await readDiff(p);
+  const vis = await p.evaluate(() => { const n = document.getElementById('diff-note').getBoundingClientRect(); return { top: Math.round(n.top), h: Math.round(n.height) }; });
+  await p.screenshot({ path: path.join(SHOTS, `rules-changed-${w}.png`), fullPage: true });
+  c11.push({ n: `screenshot rules-changed-${w}.png (4-8 -> 1 deck): count line + marks`, v: d.marked > 0 && !d.hidden && vis.h > 0, x: `"${d.text}", ${d.marked} marked cells` });
+  if (w === 390) {
+    const bd = await p.evaluate(() => { const b = document.querySelector('#chart .chg'); const r = b.getBoundingClientRect(), cell = b.closest('td').getBoundingClientRect(), mw = b.parentElement.querySelector('.mw').getBoundingClientRect(); const cs = getComputedStyle(b); return { fs: cs.fontSize, w: Math.round(r.width), h: Math.round(r.height), cellW: Math.round(cell.width), overlapWord: !(r.right < mw.left || r.left > mw.right || r.bottom < mw.top || r.top > mw.bottom), fg: cs.color, bg: cs.backgroundColor }; });
+    console.log('badge@390', JSON.stringify(bd));
+    const el = await p.locator('#chart [data-changed="1"]').first();
+    await el.scrollIntoViewIfNeeded();
+    const bb = await el.boundingBox();
+    await p.screenshot({ path: path.join(PW_DIR, 'badge-crop-390.png'), clip: { x: Math.max(0, bb.x - 10), y: Math.max(0, bb.y - 10), width: 200, height: bb.height + 20 } });
+  }
+}
+row(11, 'What your rules change (S-20, D-067)', c11.every(x => x.v), c11.map(x => (x.v ? 'ok' : 'FAIL') + ': ' + x.n + ' [' + x.x + ']').join(' | '));
+for (const x of c11.filter(x => !x.v)) find('high', 'Check 11: ' + x.n + ' ' + x.x);
+
 
 await browser.close();
 

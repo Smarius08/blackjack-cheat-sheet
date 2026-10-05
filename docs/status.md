@@ -6,11 +6,11 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 - Sprint 1 (engine) S-01…S-06 + S-17 pushed (ddb2a58); details in docs/archive/sprint-1.md.
 - External check: 7,680 cells vs BlackjackInfo = 0 differences. Engine Report + review.html sent to reporter.
 - Sprint 2 (D1 prototype, batch D-058): S-07 f55200c · S-08 4458d05 · S-18 e6f6dfa · S-10 ba1e478 · S-19 c9d7d7d · S-11 43b8631 — all reviewed PASS.
-- S-12 QA: 8/8 checks PASS (docs/qa/2026-10-05-qa.md); findings F1 medium (no sideways-scroll cue at 390), F2/F3 low.
-- `npm run check`: 105/105 pass. Prototype: prototype/index.html (`open prototype/index.html`).
+- S-12 QA 8/8 PASS; G3 first pass → S-20 fixes (scroll cue, 44px link, "what your rules change") 1a0410c; QA re-run 11/11 PASS.
+- `npm run check`: 118/118 pass. Prototype: prototype/index.html (`open prototype/index.html`).
 
 ## Next
-- G3: Marius signs off the prototype (S-12 stays "reviewed" until then).
+- G3 (second pass): Marius signs off the prototype (S-12, S-20 stay "reviewed" until then).
 - Then: Codex review + adversarial review --base origin/main, G6 push; Sprint 3 (Figma S-13).
 - work-lenovo clone pending.
 
