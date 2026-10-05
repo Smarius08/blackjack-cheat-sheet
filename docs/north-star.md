@@ -9,7 +9,7 @@ The player wants one chart that is right for *their* table and readable at a gla
 
 ## MVP scope — "from cheat sheet to memory" (D-051)
 A player needs (1) the right chart for their table, (2) to use it at the table fast on a phone, (3) to learn it.
-Competitors cover (1); we differentiate on (2) and (3). (3) ships as v2 "Learn this chart"; the MVP layout reserves space for it.
+Competitors cover (1); we differentiate on (2) and (3). (3) ships as v2 "Learn this chart" (planned directly below the tool, D-070; no visible slot at launch, D-075).
 - Rule controls (4): Decks (1 / 2 / 4–8) · Dealer on soft 17 (Stands / Hits) · Double after split (Yes / No) ·
   Surrender (Not allowed / Any dealer card / Except ace). Double down fixed to "any two cards".
 - Chart: Hard / Soft / Pairs × dealer upcard 2–A. One plain move per cell (Hit / Stand / Double / Split / Surrender).

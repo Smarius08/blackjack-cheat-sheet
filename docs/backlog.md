@@ -38,13 +38,13 @@ Defaults on load: 4–8 decks · dealer hits soft 17 · DAS allowed · surrender
 | S-13b | Figma tool screens 1280 + 390: default chart, reason panel (+ note), rules changed, table mode states, 390 rules collapsed + swipe cue; CHIPY tokens, F2 contrast, F4 badge (D-053, D-068, D-069) | figma-designer | 2 | G4 | done (G4 D-074) |
 | S-13c | Figma print: full-page chart + A6 pocket card, rules printed (D-064, D-069) | figma-designer | 2 | G4 | done (G4 D-074) |
 | S-14 | Jira draft: Calculation Logic & Lookup Tables (engine + snapshot; must state the 2-cell deviation from v30: Single/H17 6,6 vs 7 Ph, Multi/H17 8,8 vs A Rpa — D-046, D-049) | jira-writer | 3 | G5 | done in Jira by Cowork (BFC-55467, D-074) |
-| S-15 | Jira content for existing BFC-55465 Tool Layout (reserve space for v2 "Learn this chart", D-051; notes for the design-system owner: in-page nav item height, breadcrumb tap targets, inactive segmented label contrast 4.41:1 — D-072), Tool Functionality | jira-writer | 3 | G5 | proposed |
+| S-15 | Jira content for existing BFC-55465 Tool Layout (note: v2 "Learn this chart" goes directly below the tool, D-070/D-075 — no visible slot; notes for the design-system owner: in-page nav item height, breadcrumb tap targets, inactive segmented label contrast 4.41:1 — D-072), Tool Functionality | jira-writer | 3 | G5 | proposed |
 | S-16 | Jira drafts: SEO Content (incl. keyword split decision with Ahrefs, D-016), Common Sections, related tools, sitemaps/index/search | jira-writer | 1 | G5 | done in Jira by Cowork (BFC-55463/64/68–74, D-074) |
 
 ## Follow-ups
 | ID | Story (one output) | Agent | Goal | Gate | State |
 |---|---|---|---|---|---|
-| S-21 | Prototype sync with Figma (D-074): light outline on dark (Surrender) cells, print title #404040, pocket sheet centred, chart rows keep 52px when marked changed — use Figma marker: 2px dashed inner outline + 12px corner triangle, white on Surrender; drop the 9px "Changed" text badge | ui-dev | 2 | — | approved |
+| S-21 | Prototype full visual sync with the signed-off Figma (D-076): tokens, palette, typography/spacing, buttons, 52px changed marker, light outline on dark cells, print styling; tool only; no logic change; QA re-run + visual check vs Figma → G3 visual | ui-dev + qa-tester | 2 | G3 | approved |
 
 ## v2 (next version, not now)
 - "Learn this chart": memory rules for the player's chart (D-051).
