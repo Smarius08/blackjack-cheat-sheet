@@ -11,7 +11,8 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 
 ## Next
 - G3 signed off (D-068). Sprint 3 starts with S-13 Figma (brief incl. F2 contrast, F4 badge, v2 space, CHIPY tokens).
-- Marius: Codex review + adversarial review --base origin/main, then G6 push of 11 commits.
+- Marius: Codex review + adversarial review --base origin/main, then G6 push (13 local commits).
+- Card next session: refresh .claude/agents/ui-dev.md for D-050/D-053/D-056 (housekeeper).
 - work-lenovo clone pending.
 
 ## Lead-only decisions (Marius may veto)

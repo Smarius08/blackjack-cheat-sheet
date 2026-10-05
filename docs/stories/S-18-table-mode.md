@@ -24,7 +24,7 @@ in two taps on the rules already chosen on the page (D-051, D-055). The answer i
 - Card picking, EV values, any new strategy logic. Any edit to `engine/`, `snapshot/`, `package.json` or existing tests.
 
 ## Design (builder follows)
-- A "Table mode | Full chart" switch at the top; Full chart on load at every width (D-061).
+- A "Full chart | Table mode" switch at the top; Full chart on load at every width (D-061).
 - Table mode, tap 1, hand: Hard single totals 5–21 (chart rows: 5, 6, 7 → "5-7"; 8…17 one-to-one; 18, 19, 20, 21 → "18-21"),
   Soft A,2 … A,9 (chart rows 13…20), Pairs 2,2 … 10,10 and A,A. Tap 2, dealer card: 2…10, A.
 - Result card in the Calculator's "Recommended Play" style: hand (e.g. "Hard 16", "A,7", "8,8"), "Dealer shows 10",

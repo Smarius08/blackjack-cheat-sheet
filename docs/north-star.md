@@ -14,7 +14,9 @@ Competitors cover (1); we differentiate on (2) and (3). (3) ships as v2 "Learn t
   Surrender (Not allowed / Any dealer card / Except ace). Double down fixed to "any two cards".
 - Chart: Hard / Soft / Pairs × dealer upcard 2–A. One plain move per cell (Hit / Stand / Double / Split / Surrender).
 - Tap a cell → short reason, 1–2 sentences (reuse Trainer explanation_writer.js as is; D-028).
-- Print / save: print-friendly chart that states the chosen rules.
+- Print / save, two sizes (D-054, D-064): full page (move words + icons) and an A6 pocket card (one letter H/S/D/P/R per cell, readable in
+  black and white); the chosen rules are printed on each.
+- What your rules change (D-067): after a rule change, cells whose move changed are highlighted with a short count; not shown on first load or a my-table link.
 - Mobile: designer solves readability at 390px; no prescribed layout.
 - Table mode (S-18): tap hand, tap dealer card → one large move word (+ rule note). My-table link (S-19): rules kept in the URL.
 
