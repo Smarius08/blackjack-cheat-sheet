@@ -1,6 +1,6 @@
 # S-21 — Prototype looks like the signed-off Figma (tool only, no logic change)
 
-State: reviewed (G3 pending) · Agent: ui-dev, then qa-tester (separate step) · Goal served: 2 (usable at the table: readable, printable chart) · Gate: G3 (visual sign-off)
+State: done (G3 D-080) · Agent: ui-dev, then qa-tester (separate step) · Goal served: 2 (usable at the table: readable, printable chart) · Gate: G3 (visual sign-off)
 
 ## Why
 Figma was signed off at G4 (D-074/075), but the prototype still has the older look (olive title, 9px "Changed" badge, grey toggle text). D-076 asks the prototype to match Figma exactly in look, with no change in behaviour, so Marius can approve the visuals (G3) before Codex review, push and the S-15 handoff.
@@ -52,4 +52,4 @@ Builder part: PASS (story-reviewer + Lead, 2026-10-05); ACs 5–6 pending QA. QA
 | 6 | Pass | 8 side-by-sides in docs/qa/visual/ (prototype left, Figma right) with per-screen notes; Lead viewed rules-changed-1280, table-mode-result-390, reason-panel-390 |
 
 Overall: PASS (story-reviewer + Lead, 2026-10-05), G3 visual pending. Open for G3: 390 reason panel — prototype scrolls the table to the tapped column (8–A, by design since S-10) while Figma shows 2–5; "Surrender" is cramped in 62px cells at 390 with the fallback font.
-
+G3 (D-080): approved B — 390 chart cell word 11px / -0.2px ("Surrender" 53.3px in 62px cells, 0/10,800 over the limit); Figma 390 reason panels scrolled to the tapped cell + white outline on Surrender; QA re-run 12/12, exit 0; Lead viewed reason-panel-390 side-by-side: match.

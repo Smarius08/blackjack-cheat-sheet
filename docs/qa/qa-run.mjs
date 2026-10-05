@@ -479,6 +479,20 @@ for (const w of [390, 1280]) for (const [s, r] of Object.entries(states[w])) {
   smalls.push(`${w}/${s}: ${[...new Set(r.small)].join('; ') || 'none'}`);
 }
 c6.push({ n: 'no sideways page scroll (scrollWidth <= innerWidth) at 390 and 1280, chart / table mode+result / open panel', v: noScroll.length === 0, x: noScroll.join(' ; ') || Object.entries(states).map(([w, s]) => w + ': ' + Object.entries(s).map(([k, r]) => `${k} ${r.sw}/${r.iw}`).join(', ')).join(' | ') });
+// D-080: at 390 every chart cell word fits its cell (rendered word width <= cell width - 6px); default chart + all 36 rule sets (adjacent Surrender cells occur in several)
+const pw = await newPage(390, 844);
+await pw.goto(URL0); await pw.waitForTimeout(200);
+const measureWords = () => pw.evaluate(() => { let max = 0, maxCell = 0, worst = null, n = 0, over = 0, fs = new Set(), ls = new Set();
+  for (const td of document.querySelectorAll('#chart td[data-move]')) { const w = td.querySelector('.mw'); if (!w) continue;
+    const rg = document.createRange(); rg.selectNodeContents(w); const rw = rg.getBoundingClientRect().width, cw = td.getBoundingClientRect().width; n++;
+    const cs = getComputedStyle(w); fs.add(cs.fontSize); ls.add(cs.letterSpacing);
+    if (rw > max) { max = rw; maxCell = cw; worst = w.textContent + ' in ' + Math.round(cw) + 'px cell'; } if (rw > cw - 6) over++; }
+  return { max: +max.toFixed(1), cell: +maxCell.toFixed(1), worst, n, over, fs: [...fs], ls: [...ls] }; });
+const wDefault = await measureWords();
+let wAll = { max: 0, over: 0, n: 0, worst: '' };
+for (const c of snap) { await pw.evaluate(r => window.ChipyCheatSheet.setRules(r), c.rules); const m = await measureWords(); wAll.n += m.n; wAll.over += m.over; if (m.max > wAll.max) wAll = { ...wAll, max: m.max, worst: m.worst + ' (' + c.id + ')' }; }
+c6.push({ n: 'D-080: at 390 every chart cell word width <= cell width - 6px', v: wDefault.over === 0 && wAll.over === 0 && wDefault.n === 300, x: `default chart: max word ${wDefault.max}px (${wDefault.worst}), cell ${wDefault.cell}px, font ${wDefault.fs} spacing ${wDefault.ls}, ${wDefault.over} over; all 36 rule sets (${wAll.n} cells): max word ${wAll.max}px (${wAll.worst}), ${wAll.over} over` });
+console.log('wordwidth', JSON.stringify({ wDefault, wAll }));
 row(6, 'Layout 390x844 and 1280x900: no sideways scroll', c6.every(x => x.v), c6.map(x => x.x).join(' | '));
 const tapReport = smalls.join('\n    ');
 const lowTargets = [...new Set(Object.values(states[390]).flatMap(r => r.small))];

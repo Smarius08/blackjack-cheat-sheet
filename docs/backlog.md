@@ -44,7 +44,7 @@ Defaults on load: 4–8 decks · dealer hits soft 17 · DAS allowed · surrender
 ## Follow-ups
 | ID | Story (one output) | Agent | Goal | Gate | State |
 |---|---|---|---|---|---|
-| S-21 | Prototype full visual sync with the signed-off Figma (D-076): tokens, palette, typography/spacing, buttons, 52px changed marker, light outline on dark cells, print styling; tool only; no logic change; QA re-run + visual check vs Figma → G3 visual | ui-dev + qa-tester | 2 | G3 | reviewed (G3 pending) |
+| S-21 | Prototype full visual sync with the signed-off Figma (D-076): tokens, palette, typography/spacing, buttons, 52px changed marker, light outline on dark cells, print styling; tool only; no logic change; QA re-run + visual check vs Figma → G3 visual | ui-dev + qa-tester | 2 | G3 | done (G3 D-080) |
 
 ## v2 (next version, not now)
 - "Learn this chart": memory rules for the player's chart (D-051).

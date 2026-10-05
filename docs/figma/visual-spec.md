@@ -29,7 +29,7 @@ Font: `font-family: Roboto, system-ui, -apple-system, "Segoe UI", Helvetica, Ari
 | Split | #859c2e | #1a1d22 | #1a1d22 |
 | Surrender | #404040 | #ffffff | #ffffff |
 
-Changed cell (State=Changed): `outline: 2px dashed <colour>; outline-offset: -2px` (dash 5/3), plus a 12×12px solid right-angle triangle in the top-right corner (`clip-path: polygon(0 0,100% 0,100% 100%)`), same colour. No text badge; cell size unchanged (52px). Meaning carried by the count line + aria text. Focus/open-cell outline: keep `3px solid #404040` on light cells; use `#ffffff` on Surrender cells.
+Changed cell (State=Changed): `outline: 2px dashed <colour>; outline-offset: -2px` (dash 5/3), plus a 12×12px solid right-angle triangle in the top-right corner (`clip-path: polygon(0 0,100% 0,100% 100%)`), same colour. No text badge; cell size unchanged (52px). Meaning carried by the count line + aria text. Focus/open-cell outline: `3px solid #404040` inside on light cells; `3px solid #ffffff` inside on Surrender cells (as drawn in the Reason panel frames).
 
 ## 2. Typography (Roboto)
 | Element | Weight / size | Colour | Other |
@@ -46,7 +46,7 @@ Changed cell (State=Changed): `outline: 2px dashed <colour>; outline-offset: -2p
 | Corner "Your hand" | 500 / 12 | #5e6166 | |
 | Dealer header (2…A) | 700 / 13 | #404040 | centred |
 | Row labels (5–7, A,2, 8,8) | 700 / 14 | #404040 | left, padding-left 10 |
-| Cell word | 600 / 12 | per move | |
+| Cell word | 600 / 12 (390: 11, letter-spacing -0.2px) | per move | |
 | Swipe cue (390) | 600 / 13 | #5e6166 | |
 | Reason panel title "Hard 16 vs dealer 10" | 700 / 16 | #404040 | |
 | Reason move chip word | 800 / 20 | #404040 | uppercase |
@@ -77,7 +77,7 @@ Changed cell (State=Changed): `outline: 2px dashed <colour>; outline-offset: -2p
 - **Recommended Play card** (Calculator 12337:1558 style): `1px solid #e6e6e6`, radius 12. Header fill #b4ca09 @15%, padding 12 16. Body padding 16 20 20 20. Dealer chip #eef0f2, radius 999, padding 2 10. Move row: radius 10, fill #c4db11 @20%, `1px solid #c4db11`, padding 8 12, gap 10; circle 40×40 #c4db11 @60% with 26px icon. Link row min-height 44 (padding 10 0). Changed marker: #fff, `2px dashed #1a1a1a` (6/3), radius 8, padding 6 10.
 
 ## 4. 390 differences
-Page side margin 8 → shell 374 wide; body padding 24 16 16 16; title 18. Rule panel one column. Print buttons stacked, full width. Chart box 342: pinned "Your hand" 84 + scroll area 257 (`overflow-x:auto`), dealer columns 62px (2–5 visible, 6 peeks), swipe cue above each box, right-edge fade 20px `linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,.95))`. Page never wider than 390. Pick buttons 62×48. Card hand 34px.
+Page side margin 8 → shell 374 wide; body padding 24 16 16 16; title 18. Rule panel one column. Print buttons stacked, full width. Chart box 342: pinned "Your hand" 84 + scroll area 257 (`overflow-x:auto`), dealer columns 62px (2–5 visible, 6 peeks), swipe cue above each box, right-edge fade 20px `linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,.95))`. Page never wider than 390. Chart cell word 11px, letter-spacing -0.2px (≤600px; 1280 stays 12px). At scroll end (e.g. a tapped cell in columns 8–A scrolled into view) the swipe cue and fade are hidden for that table only. Pick buttons 62×48. Card hand 34px.
 
 ## 5. Print (pt)
 - **Full (A4 portrait)**: page padding 28, content centred. Title 700 / 17, #404040, centred. Rules line 600 / 9.5. Legend pills 24 high, icon 16, word 600 / 10.4. Table H2 700 / 9.5. Grid lines **0.75pt #5e6166** (table background #5e6166 with 0.75 gaps + 0.75 padding). Header/row-label cells #f9fafa; corner 500 / 6.5 #5e6166; dealer 700 / 8. Rows 19 high (header 14), pinned column 60, cells 47 wide: icon 9 + word 600 / 6.8, move fills as screen.
