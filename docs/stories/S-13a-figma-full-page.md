@@ -1,6 +1,6 @@
 # S-13a — Figma full page, 1280 and 390 (Quiz page pattern)
 
-State: approved · Agent: figma-designer · Goal served: 2 (usable, correct chart; page ready for goal 1 ranking) · Gate: G4 (after S-13c)
+State: reviewed (G4 pending) · Agent: figma-designer · Goal served: 2 (usable, correct chart; page ready for goal 1 ranking) · Gate: G4 (after S-13c)
 
 ## Why
 Marius needs to see the whole Cheat Sheet page as a visitor would (D-069), in the same layout as the Quiz page, before tool states (S-13b) and print (S-13c) are designed.
@@ -36,3 +36,14 @@ The Lead checks with Figma screenshots (story-reviewer cannot open Figma).
 ## Review (filled by Lead via screenshots)
 | # | Pass/Fail | Evidence |
 |---|---|---|
+| # | Pass/Fail | Evidence (Lead, Figma screenshots + PNG crops) |
+|---|---|---|
+| 1 | Pass | CS / Full page / 1280 = 14047:648859, CS / Full page / 390 = 14048:648735 on 14034:33811 |
+| 2 | Pass | Sections in order; H1 exact; placeholders "Copy from content brief BFC-55461"; v2 slot "Reserved for v2: Learn this chart. Not built at launch" below the tool (D-070) |
+| 3 | Pass | Tool strings + defaults = prototype; 300 cells = snapshot default chart; icon + word per cell; icons = Calculator/Trainer set after D-071 fix (Double bars, Split arrows); CHIPY token palette (D-072) |
+| 4 | Pass | Title #404040 on #f9fafa 9.9:1 (D-072); chart/controls ≥44px; 390: inner scroll, pinned "Your hand", swipe cue + fade, nothing past 390px. Library targets (nav, breadcrumbs) and segmented label 4.41:1 → S-15 notes (D-072) |
+| 5 | Pass | Reused: Top section, breadcrumbs, author, In page nav, Segmented buttons, Quiz / Filters, General buttons, local Icons set, Q&As Section, Other tools carousel, Authors section, Newsletter, Footer; new local CS / Move (14047:86) — no cell component existed |
+| 6 | Pass | docs/figma/cs-full-page-1280.png (1280×7472), cs-full-page-390.png (390×9369); writes only on 14034:33811 + docs/figma/; critique + a11y findings listed in the designer report |
+
+Overall: PASS (Lead, 2026-10-05), pending G4 with S-13b/c.
+
