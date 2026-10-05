@@ -27,7 +27,7 @@ Format: ID · date · decision · by. Newest at the bottom. Superseded rows move
 | D-021 | 2026-10-05 | Total passed to resolveCode: row number, or lowest of a range (5-7→5, 18-21→18); Pairs = 2× card value (A,A→12) | Marius |
 | D-022 | 2026-10-05 | Each chart cell = { move, code, note }; UI shows only the plain move | Marius |
 | D-023 | 2026-10-05 | Snapshot chart = { id, rules, label, tables }; rules = { decks: "1"\|"2"\|"4-8", soft17: "stands"\|"hits", das: "yes"\|"no", surrender: "none"\|"any"\|"except_ace" }; id = `decks=4-8\|soft17=hits\|das=yes\|surrender=any`; charts ordered decks → soft17 → das → surrender in the order listed | Lead |
-| D-024 | 2026-10-05 | Snapshot label wording, e.g. "4–8 decks · Dealer hits soft 17 · Double after split allowed · Surrender: any dealer card" ("Dealer stands on soft 17", "No double after split", "No surrender", "Surrender: except vs ace"); final wording confirmed at S-04 G2 | Lead |
+| D-024 | 2026-10-05 | Snapshot label wording, e.g. "4–8 decks · Dealer hits soft 17 · Double after split allowed · Surrender: any dealer card" ("Dealer stands on soft 17", "No double after split", "No surrender", "Surrender: except vs ace"); final wording confirmed at S-04 G2 (2 wordings superseded by D-039) | Lead |
 | D-025 | 2026-10-05 | Review page layout: snapshot/build-review.js inlines charts-36.json into snapshot/review.html (file:// can't fetch JSON); test fails if the HTML is stale | Lead |
 | D-026 | 2026-10-05 | Review page (S-05 only) colours each move as well as naming it; prototype colours are decided in S-09 | Lead |
 | D-027 | 2026-10-05 | Review page shows the engine code small under the plain move in each cell (reviewers only; prototype stays words only) | Marius |

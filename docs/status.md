@@ -11,12 +11,14 @@ Last updated: 2026-10-06 (home-mac-mini, Claude Code CLI)
 - D-036 fix: chart.js deep-freezes the vendored STRATEGY_TABLE in memory on load (vendor file untouched); 36 charts unchanged.
 - S-04 snapshot/charts-36.json = QA truth, labels per D-039 (G2 D-039) — a2007cd.
 - S-05 snapshot/review.html: all 36 charts + index + code key; open with `open snapshot/review.html` (G2 D-040).
-- `npm run check`: 37/37 pass.
+- S-06 engine/why.js `reasonFor`: vendor reason text per cell, unchanged (PASS) — 493f5bc.
+- Sprint 1 housekeeping done; archive in docs/archive/sprint-1.md.
+- `npm run check`: 58/58 pass.
 
 ## Next
 - Marius: `/codex:review --base origin/main` + `/codex:adversarial-review --base origin/main`, then G6 push.
 - Send snapshot/review.html to the reporter for engine approval.
-- engine-dev builds S-06 (reasons); then housekeeper (end of Sprint 1).
+- Sprint 2 (G1 needed first): S-07…S-12 are still "proposed".
 - work-lenovo clone pending (only when at the office).
 
 ## Lead-only decisions (Marius may veto)
@@ -24,7 +26,7 @@ Last updated: 2026-10-06 (home-mac-mini, Claude Code CLI)
 - D-025 review page built by a script with inlined data. D-026 review page colours moves.
 - D-033 chart.js API: buildChart(rules), labels, ChipyEngine.chart; extra exports RULE_VALUES, COLUMNS.
 - D-035 frozen exports (logged as Lead at Marius's request).
-- D-038 charts-36.json = { charts: [36] }, tables = buildChart output.
+- D-038 charts-36.json = { charts: [36] }, tables = buildChart output. D-041 why.js API: reasonFor({ table, row, dealer, cell }).
 
 ## Blockers
 - Reporter approval of concept and engine (spec doc ready to send). Keyword split is in S-16 (D-016), not a blocker.
