@@ -45,5 +45,11 @@ Format: ID · date · decision · by. Newest at the bottom. Superseded rows move
 | D-039 | 2026-10-05 | G2: 36-chart snapshot approved with label wording "Dealer hits on soft 17" and "Surrender: any dealer card except ace" (supersedes those two D-024 wordings); cells unchanged | Marius |
 | D-040 | 2026-10-05 | G2: review page (S-05) approved, plus a one-line key for the engine codes in the intro (checked by the test) | Marius |
 | D-041 | 2026-10-05 | why.js API: `reasonFor({ table: "hard"\|"soft"\|"pairs", row: <D-033 row label>, dealer: <column label>, cell })` → string; browser global `window.ChipyEngine.why` | Lead |
+| D-042 | 2026-10-05 | North-star Engine heading: "G2 approved: D-032, D-034, D-039, D-040, D-047 · pending reporter approval" | Marius |
+| D-043 | 2026-10-05 | Working URL /tools/blackjack-cheat-sheet; final URL decided in S-16 with the keyword split (D-016) | Marius |
+| D-044 | 2026-10-05 | AGENTS.md §3: story-reviewer reports only; the Lead writes its table into the story | Marius |
+| D-045 | 2026-10-05 | G1 Sprint 2 approved: S-07 (shell + chart at defaults; merges old S-09) → S-08 rule panel → S-10 tap/click/keyboard reason panel (no hover) → S-11 print → S-12 QA (G3). Defaults = Trainer/Quiz defaults: 4–8 decks · dealer hits soft 17 · DAS allowed · surrender any. prototype/build.js inlines engine files unchanged into prototype/index.html + byte-match test. S-07 uses the Trainer tool shell exactly as Quiz E53 | Marius |
 | D-046 | 2026-10-05 | G1: add S-17 — re-vendor corrected Trainer strategy_table.js (8b87989: Single/H17 6,6 vs 7 H→Ph; Multi/H17 8,8 vs A Rp→Rpa), regenerate snapshot + review page; exactly 12 cells change; D-042–D-045 reserved for pending housekeeping cards | Marius |
 | D-047 | 2026-10-05 | G2: re-vendored strategy_table.js (Trainer 8b87989, SHA-256 d0a272f8…) + regenerated snapshot and review page (S-17) approved; exactly 12 cells changed | Marius |
+| D-048 | 2026-10-05 | Commit package-lock.json so both machines install identically | Marius |
+| D-049 | 2026-10-05 | Backlog notes: S-14 states the 2-cell deviation from v30 (D-046); S-09 shows Soft rows as A,2–A,9 (display only; engine labels stay 13–20, D-020); S-10 tap panel shows the row label and keeps the note separate | Marius |

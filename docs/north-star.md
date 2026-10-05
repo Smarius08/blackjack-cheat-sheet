@@ -19,7 +19,7 @@ The player wants one chart that is right for *their* table and readable at a gla
 Double-restriction setting, hit-split-aces, counting/deviations, EV numbers, drill/quiz mode, accounts,
 PDF service, link-to-Calculator pre-fill.
 
-## Engine (proposed — needs G2 + reporter)
+## Engine (G2 approved: D-032, D-034, D-039, D-040, D-047 · pending reporter approval)
 Rule-Based Basic Strategy Lookup + Chart Renderer.
 - Source: chipy-blackjack-trainer/engine/strategy_table.js (from Hand Strategy Calculator v30; validated by a 395,460-combination sweep).
 - Keys: deck group (Single=1, Double=2, Multi=4–8) × H17/S17 × Hard/Soft/Pairs × dealer 2–A.
@@ -31,7 +31,7 @@ Static charts (ProfitDuel, ChasingTheFrog, Blackjack Apprenticeship) are fixed; 
 CHIPY: rule-aware + plain move per cell + tap-for-why + printable "your rules" chart.
 
 ## Open questions
-1. Final URL (proposed /tools/blackjack-cheat-sheet).
+1. Final URL: working URL /tools/blackjack-cheat-sheet; final call in S-16 with the keyword split (D-043).
 2. Reporter approval of concept and engine.
 
 ## Not a tool-development question

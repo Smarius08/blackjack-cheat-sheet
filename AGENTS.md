@@ -21,7 +21,7 @@ If any two of these disagree, STOP and raise a decision card.
 | spec-writer | Turns an approved backlog item into one story file | docs/stories/ |
 | engine-dev | Engine copy, chart resolution, snapshot, engine tests | engine/, snapshot/, test files |
 | ui-dev | HTML prototype | prototype/ |
-| story-reviewer | Checks one finished story against its acceptance criteria. Reports only | docs/stories/<id> review section |
+| story-reviewer | Checks one finished story against its acceptance criteria. Reports only | nothing (Lead writes its table into the story, D-044) |
 | qa-tester | Playwright + snapshot checks of the prototype. Reports only | docs/qa/ |
 | figma-designer | Figma page from the approved prototype | Figma "Blackjack Cheat Sheet" page only |
 | jira-writer | Jira description drafts in HTML. Never creates issues | docs/jira/ |
