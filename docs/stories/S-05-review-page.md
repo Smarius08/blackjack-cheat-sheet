@@ -1,6 +1,6 @@
 # S-05 — `snapshot/review.html`: one page where Marius and the reporter check all 36 charts by eye
 
-State: approved · Agent: engine-dev · Goal served: 2 (correct chart for the player's rules) · Gate: G2
+State: done · Agent: engine-dev · Goal served: 2 (correct chart for the player's rules) · Gate: G2
 
 ## Why
 Marius is not a Blackjack expert and the reporter (outside the team) approves concept and engine (north-star). They need to
@@ -36,3 +36,12 @@ Why inlined: a page opened by double-click (file://) cannot load a local JSON fi
 ## Review (filled by story-reviewer)
 | # | Pass/Fail | Evidence |
 |---|---|---|
+| 1 | Pass | Node built-ins only; static HTML (no script/JSON blob, D-025); two builds SHA-256 e1796bdb…8c91; LF; no http(s)/fetch/script/link/src; all 72 hrefs are "#" |
+| 2 | Pass | Index 12/12/12 under 1 deck / 2 decks / 4–8 decks, link texts = labels in order, all resolve; 36 h2 = labels in D-023 order (D-039 wording) |
+| 3 | Pass | Each chart: Hard/Soft/Pairs, columns 2…A, D-020 rows; 0 mismatches |
+| 4 | Pass | Independent parse: 10,800 cells, move word/code/note 0 mismatches; code in small text (D-027); colour class per move (D-026); 224 note cells marked + listed, null-note cells unmarked |
+| 5 | Pass | Move word in every cell; one colour per move, five distinct |
+| 6 | Pass | `npm run check` 36/36, exit 0; one-cell mutation in scratch copy fails 2 tests; only the 3 Write files added; nothing committed |
+
+Overall: PASS (story-reviewer, 2026-10-06). Observations: ~950 KB; engine codes not explained on the page; one vendor note says "Hit instead." vs "Use X instead." (engine text, not S-05).
+G2 (D-040): approved plus engine-code key in the intro (test checks every snapshot code is named); re-verified 10,800 cells, 37/37 tests; SHA-256 447a3afd…140716. Note: key's Pd line omits the "hit if double not allowed" branch, unreachable while double is fixed to any two cards (D-002).

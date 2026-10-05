@@ -1,6 +1,6 @@
 # Status
 
-Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
+Last updated: 2026-10-06 (home-mac-mini, Claude Code CLI)
 
 ## Done
 - Team setup; Sprint 1 story files S-01…S-06 approved (D-018…D-031).
@@ -9,11 +9,14 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 - S-03 engine/chart.js: 36 rule combos → Hard/Soft/Pairs plain moves; 10,800 cells cross-checked, 0 mismatches (PASS, G2 D-034) — be54e74.
 - D-035 fix: chart.js exports frozen copies of COLUMNS/RULE_VALUES (Codex adversarial finding); 36 charts unchanged.
 - D-036 fix: chart.js deep-freezes the vendored STRATEGY_TABLE in memory on load (vendor file untouched); 36 charts unchanged.
-- `npm run check`: 26/26 pass.
+- S-04 snapshot/charts-36.json = QA truth, labels per D-039 (G2 D-039) — a2007cd.
+- S-05 snapshot/review.html: all 36 charts + index + code key; open with `open snapshot/review.html` (G2 D-040).
+- `npm run check`: 37/37 pass.
 
 ## Next
-- G6 push after the final adversarial review (D-037 applies to tamper-only findings).
-- engine-dev builds S-04 (36-chart snapshot; G2 incl. label wording), then S-05 (review page, G2), S-06 (reasons).
+- Marius: `/codex:review --base origin/main` + `/codex:adversarial-review --base origin/main`, then G6 push.
+- Send snapshot/review.html to the reporter for engine approval.
+- engine-dev builds S-06 (reasons); then housekeeper (end of Sprint 1).
 - work-lenovo clone pending (only when at the office).
 
 ## Lead-only decisions (Marius may veto)
@@ -21,10 +24,11 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 - D-025 review page built by a script with inlined data. D-026 review page colours moves.
 - D-033 chart.js API: buildChart(rules), labels, ChipyEngine.chart; extra exports RULE_VALUES, COLUMNS.
 - D-035 frozen exports (logged as Lead at Marius's request).
+- D-038 charts-36.json = { charts: [36] }, tables = buildChart output.
 
 ## Blockers
 - Reporter approval of concept and engine (spec doc ready to send). Keyword split is in S-16 (D-016), not a blocker.
-- Open: `npm install` would create package-lock.json (not tracked yet) — decide at S-04 or later.
+- Open: `npm install` would create package-lock.json (not tracked yet) — decide before S-07.
 
 ## Known limitations (D-037)
 - Vendor SURRENDER_VALUES / DOUBLE_RESTRICTIONS stay mutable in memory (not used by chart.js). chart.js freezing STRATEGY_TABLE also makes it read-only for any code loaded after it (intended, D-036).
