@@ -62,3 +62,4 @@ Format: ID · date · decision · by. Newest at the bottom. Superseded rows move
 | D-054 | 2026-10-05 | S-11 = Print, both sizes (full page + pocket card, rules printed); S-19 = My-table link only (rules in URL, round-trip, invalid → defaults). Build order S-07 → S-08 → S-18 → S-10 → S-11 → S-19 → S-12 | Marius |
 | D-057 | 2026-10-05 | Positioning: the Cheat Sheet is part of the CHIPY blackjack tools suite; links to the other tools go via the existing carousel | Marius |
 | D-058 | 2026-10-05 | Sprint 2 in batch mode: per story spec-writer → builder → story-reviewer → commit, no per-story approval; stop only if a review fails twice, a test can't pass, or a product decision is needed; stop at G3 after S-12 | Marius |
+| D-059 | 2026-10-05 | .gitignore adds .playwright-mcp/ (Lead's local screenshot output, never committed) | Lead |

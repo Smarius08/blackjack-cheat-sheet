@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blackjack Cheat Sheet</title>
+<style>
+:root {
+  --lime-dark: #859c2e;
+  --ink: #1a1a1a;
+  --muted: #5b6270;
+  --line: #e3e6ea;
+  --band: #f9fafa;
+  --shadow-shell: 0 -1px 20px 2px rgba(0, 0, 0, 0.1);
+  --hit: #f4c7c3; --stand: #fff2a8; --double: #b7e1cd; --split: #c9daf8; --surrender: #d9c3e9;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; padding: 24px 12px 40px;
+  background: #eef0f2; color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.4; overflow-x: hidden;
+}
+.shell {
+  max-width: 852px; margin: 0 auto; background: #fff;
+  border: 0; border-radius: 16px; box-shadow: var(--shadow-shell); overflow: hidden;
+}
+.shell-header { background: var(--band); padding: 24px 20px 20px; }
+.shell-header h1 {
+  margin: 0; text-align: center; text-transform: uppercase; font-weight: 700;
+  color: var(--lime-dark); font-size: 20px; line-height: 1.2; letter-spacing: 0.02em;
+}
+.shell-body { padding: 24px; }
+.rules-note { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
+.rules-note strong { color: var(--ink); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 10px; margin: 0 0 24px; padding: 0; list-style: none; }
+.legend li {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px 5px 6px;
+  border-radius: 999px; font-size: 13px; font-weight: 600;
+}
+
+.chart-section { margin: 0 0 28px; }
+.chart-section:last-child { margin-bottom: 0; }
+.chart-section h2 { margin: 0 0 4px; font-size: 18px; font-weight: 700; }
+.chart-section .sub { margin: 0 0 8px; font-size: 13px; color: var(--muted); }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 10px; }
+table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 720px; table-layout: fixed; }
+.chart th, .chart td { padding: 0; text-align: center; border-right: 1px solid #fff; border-bottom: 1px solid #fff; }
+.chart thead th {
+  background: var(--band); font-size: 13px; font-weight: 700; padding: 8px 2px;
+  border-bottom: 1px solid var(--line);
+}
+.chart .corner { width: 84px; text-align: left; padding-left: 10px; font-size: 12px; color: var(--muted); }
+.chart tbody th {
+  position: sticky; left: 0; z-index: 1; width: 84px; background: var(--band);
+  font-size: 14px; font-weight: 700; text-align: left; padding: 0 10px; border-right: 1px solid var(--line);
+}
+.chart thead .corner { position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--line); }
+.chart td { height: 52px; font-size: 12px; font-weight: 600; color: var(--ink); vertical-align: middle; }
+.chart td .cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+.mi {
+  display: inline-block; width: 20px; height: 20px; flex: none;
+  background-repeat: no-repeat; background-position: center; background-size: contain;
+}
+.m-hit { background-color: var(--hit); }
+.m-stand { background-color: var(--stand); }
+.m-double { background-color: var(--double); }
+.m-split { background-color: var(--split); }
+.m-surrender { background-color: var(--surrender); }
+
+@media (max-width: 600px) {
+  body { padding: 12px 12px 32px; }
+  .shell-header h1 { font-size: 18px; }
+  .shell-body { padding: 16px; }
+  .chart td { height: 54px; }
+}
+</style>
+<style>
+.mi-hit { background-image: url("data:image/svg+xml;base64,PHN2ZyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBvdmVyZmxvdz0idmlzaWJsZSIgc3R5bGU9ImRpc3BsYXk6IGJsb2NrOyIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGlkPSJJY29ucyI+CjxwYXRoIGlkPSJWZWN0b3IiIGQ9Ik0xMiA4QzEwLjkgOCA5Ljk1ODMzIDguMzkxNjcgOS4xNzUgOS4xNzVDOC4zOTE2NyA5Ljk1ODMzIDggMTAuOSA4IDEyQzggMTIuNzUgOC4xODc1IDEzLjQ0MTcgOC41NjI1IDE0LjA3NUM4LjkzNzUgMTQuNzA4MyA5LjQ1ODMzIDE1LjIgMTAuMTI1IDE1LjU1QzEwLjM5MTcgMTUuNjgzMyAxMC41NzkyIDE1Ljg3OTIgMTAuNjg3NSAxNi4xMzc1QzEwLjc5NTggMTYuMzk1OCAxMC43OTE3IDE2LjY1ODMgMTAuNjc1IDE2LjkyNUMxMC41NTgzIDE3LjE1ODMgMTAuMzgzMyAxNy4zMzMzIDEwLjE1IDE3LjQ1QzkuOTE2NjcgMTcuNTY2NyA5LjY4MzMzIDE3LjU2NjcgOS40NSAxNy40NUM4LjQgMTYuOTUgNy41NjI1IDE2LjIwODMgNi45Mzc1IDE1LjIyNUM2LjMxMjUgMTQuMjQxNyA2IDEzLjE2NjcgNiAxMkM2IDEwLjMzMzMgNi41ODMzMyA4LjkxNjY3IDcuNzUgNy43NUM4LjkxNjY3IDYuNTgzMzMgMTAuMzMzMyA2IDEyIDZDMTMuMTgzMyA2IDE0LjI3MDggNi4zMTI1IDE1LjI2MjUgNi45Mzc1QzE2LjI1NDIgNy41NjI1IDE2Ljk5MTcgOC40MTY2NyAxNy40NzUgOS41QzE3LjU3NSA5LjczMzMzIDE3LjU3MDggOS45NjY2NyAxNy40NjI1IDEwLjJDMTcuMzU0MiAxMC40MzMzIDE3LjE4MzMgMTAuNiAxNi45NSAxMC43QzE2LjY4MzMgMTAuODE2NyAxNi40MTY3IDEwLjgxNjcgMTYuMTUgMTAuN0MxNS44ODMzIDEwLjU4MzMgMTUuNjgzMyAxMC4zOTE3IDE1LjU1IDEwLjEyNUMxNS4yIDkuNDU4MzMgMTQuNzA4MyA4LjkzNzUgMTQuMDc1IDguNTYyNUMxMy40NDE3IDguMTg3NSAxMi43NSA4IDEyIDhaTTEyIDRDOS43NjY2NyA0IDcuODc1IDQuNzc1IDYuMzI1IDYuMzI1QzQuNzc1IDcuODc1IDQgOS43NjY2NyA0IDEyQzQgMTQuMSA0LjY5MTY3IDE1LjkgNi4wNzUgMTcuNEM3LjQ1ODMzIDE4LjkgOS4xOTE2NyAxOS43NSAxMS4yNzUgMTkuOTVDMTEuNTU4MyAxOS45ODMzIDExLjgwNDIgMjAuMTA4MyAxMi4wMTI1IDIwLjMyNUMxMi4yMjA4IDIwLjU0MTcgMTIuMzE2NyAyMC43OTE3IDEyLjMgMjEuMDc1QzEyLjI4MzMgMjEuMzU4MyAxMi4xNzkyIDIxLjU5MTcgMTEuOTg3NSAyMS43NzVDMTEuNzk1OCAyMS45NTgzIDExLjU1ODMgMjIuMDQxNyAxMS4yNzUgMjIuMDI1QzkuOTc1IDIxLjk0MTcgOC43NjI1IDIxLjYxNjcgNy42Mzc1IDIxLjA1QzYuNTEyNSAyMC40ODMzIDUuNTI5MTcgMTkuNzQ1OCA0LjY4NzUgMTguODM3NUMzLjg0NTgzIDE3LjkyOTIgMy4xODc1IDE2Ljg4NzUgMi43MTI1IDE1LjcxMjVDMi4yMzc1IDE0LjUzNzUgMiAxMy4zIDIgMTJDMiAxMC42MTY3IDIuMjYyNSA5LjMxNjY3IDIuNzg3NSA4LjFDMy4zMTI1IDYuODgzMzMgNC4wMjUgNS44MjUgNC45MjUgNC45MjVDNS44MjUgNC4wMjUgNi44ODMzMyAzLjMxMjUgOC4xIDIuNzg3NUM5LjMxNjY3IDIuMjYyNSAxMC42MTY3IDIgMTIgMkMxNC42MTY3IDIgMTYuODk1OCAyLjg5MTY3IDE4LjgzNzUgNC42NzVDMjAuNzc5MiA2LjQ1ODMzIDIxLjg0MTcgOC42NTgzMyAyMi4wMjUgMTEuMjc1QzIyLjA1ODMgMTEuNTQxNyAyMS45NzkyIDExLjc3MDggMjEuNzg3NSAxMS45NjI1QzIxLjU5NTggMTIuMTU0MiAyMS4zNTgzIDEyLjI1ODMgMjEuMDc1IDEyLjI3NUMyMC43OTE3IDEyLjI5MTcgMjAuNTM3NSAxMi4yIDIwLjMxMjUgMTJDMjAuMDg3NSAxMS44IDE5Ljk1ODMgMTEuNTU4MyAxOS45MjUgMTEuMjc1QzE5LjY3NSA5LjI3NSAxOC44MDQyIDcuNTYyNSAxNy4zMTI1IDYuMTM3NUMxNS44MjA4IDQuNzEyNSAxNC4wNSA0IDEyIDRaTTE5LjU1IDIxLjVMMTYuMjUgMTguMjI1TDE1LjUgMjAuNUMxNS40MTY3IDIwLjczMzMgMTUuMjU4MyAyMC44NDU4IDE1LjAyNSAyMC44Mzc1QzE0Ljc5MTcgMjAuODI5MiAxNC42MzMzIDIwLjcwODMgMTQuNTUgMjAuNDc1TDEyLjI3NSAxMi45QzEyLjIwODMgMTIuNzE2NyAxMi4yNSAxMi41NSAxMi40IDEyLjRDMTIuNTUgMTIuMjUgMTIuNzE2NyAxMi4yMDgzIDEyLjkgMTIuMjc1TDIwLjQ3NSAxNC41NUMyMC43MDgzIDE0LjYzMzMgMjAuODI5MiAxNC43OTE3IDIwLjgzNzUgMTUuMDI1QzIwLjg0NTggMTUuMjU4MyAyMC43MzMzIDE1LjQxNjcgMjAuNSAxNS41TDE4LjIyNSAxNi4yNUwyMS41MjUgMTkuNTVDMjEuODA4MyAxOS44MzMzIDIxLjk1IDIwLjE1ODMgMjEuOTUgMjAuNTI1QzIxLjk1IDIwLjg5MTcgMjEuODA4MyAyMS4yMTY3IDIxLjUyNSAyMS41QzIxLjI0MTcgMjEuNzgzMyAyMC45MTI1IDIxLjkyNSAyMC41Mzc1IDIxLjkyNUMyMC4xNjI1IDIxLjkyNSAxOS44MzMzIDIxLjc4MzMgMTkuNTUgMjEuNVoiIGZpbGw9IiM0MDQwNDAiLz4KPC9nPgo8L3N2Zz4K"); }
+.mi-stand { background-image: url("data:image/svg+xml;base64,PHN2ZyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBvdmVyZmxvdz0idmlzaWJsZSIgc3R5bGU9ImRpc3BsYXk6IGJsb2NrOyIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGlkPSJJY29ucyI+CjxwYXRoIGlkPSJWZWN0b3IiIGQ9Ik0xMi4zNjU4IDIyLjE3NjVDMTEuMDUwMyAyMi4xNzY1IDkuODE0OTcgMjEuODc1NyA4LjY1OTg5IDIxLjI3NDFDNy41MDQ4MSAyMC42NzI1IDYuNTU4MjkgMTkuODM0MiA1LjgyMDMyIDE4Ljc1OTRMMS4yIDExLjk3MzNMMS42NTcyMiAxMS41MTZDMS45NzgwNyAxMS4xNzkxIDIuMzc1MTMgMTAuOTg2NiAyLjg0ODQgMTAuOTM4NUMzLjMyMTY2IDEwLjg5MDQgMy43NTA4IDExLjAwMjcgNC4xMzU4MyAxMS4yNzU0TDYuNzgyODkgMTMuMTA0M1YzLjg4NzdDNi43ODI4OSAzLjYxNDk3IDYuODc1MTMgMy4zODYzNiA3LjA1OTYzIDMuMjAxODdDNy4yNDQxMiAzLjAxNzM4IDcuNDcyNzMgMi45MjUxMyA3Ljc0NTQ1IDIuOTI1MTNDOC4wMTgxOCAyLjkyNTEzIDguMjQ2NzkgMy4wMTczOCA4LjQzMTI4IDMuMjAxODdDOC42MTU3OCAzLjM4NjM2IDguNzA4MDIgMy42MTQ5NyA4LjcwODAyIDMuODg3N1YxNi44MTAyTDUuMTQ2NTIgMTQuMzMxNkw3LjQzMjYyIDE3LjY1MjRDNy45OTQxMiAxOC40NzA2IDguNzA4MDIgMTkuMTA4MyA5LjU3NDMzIDE5LjU2NTVDMTAuNDQwNiAyMC4wMjI3IDExLjM3MTEgMjAuMjUxMyAxMi4zNjU4IDIwLjI1MTNDMTQuMDE4MiAyMC4yNTEzIDE1LjQyNTkgMTkuNjY5OCAxNi41ODkgMTguNTA2N0MxNy43NTIxIDE3LjM0MzYgMTguMzMzNyAxNS45MzU4IDE4LjMzMzcgMTQuMjgzNFY0Ljg1MDI3QzE4LjMzMzcgNC41Nzc1NCAxOC40MjU5IDQuMzQ4OTMgMTguNjEwNCA0LjE2NDQ0QzE4Ljc5NDkgMy45Nzk5NSAxOS4wMjM1IDMuODg3NyAxOS4yOTYzIDMuODg3N0MxOS41NjkgMy44ODc3IDE5Ljc5NzYgMy45Nzk5NSAxOS45ODIxIDQuMTY0NDRDMjAuMTY2NiA0LjM0ODkzIDIwLjI1ODggNC41Nzc1NCAyMC4yNTg4IDQuODUwMjdWMTQuMjgzNEMyMC4yNTg4IDE2LjQ4MTMgMTkuNDkyOCAxOC4zNDYzIDE3Ljk2MDcgMTkuODc4M0MxNi40Mjg2IDIxLjQxMDQgMTQuNTYzNiAyMi4xNzY1IDEyLjM2NTggMjIuMTc2NVpNMTAuNjMzMiAxMS41ODgyVjEuOTYyNTdDMTAuNjMzMiAxLjY4OTg0IDEwLjcyNTQgMS40NjEyMyAxMC45MDk5IDEuMjc2NzRDMTEuMDk0NCAxLjA5MjI1IDExLjMyMyAxIDExLjU5NTcgMUMxMS44Njg0IDEgMTIuMDk3MSAxLjA5MjI1IDEyLjI4MTYgMS4yNzY3NEMxMi40NjYgMS40NjEyMyAxMi41NTgzIDEuNjg5ODQgMTIuNTU4MyAxLjk2MjU3VjExLjU4ODJIMTAuNjMzMlpNMTQuNDgzNCAxMS41ODgyVjIuOTI1MTNDMTQuNDgzNCAyLjY1MjQxIDE0LjU3NTcgMi40MjM4IDE0Ljc2MDIgMi4yMzkzQzE0Ljk0NDcgMi4wNTQ4MSAxNS4xNzMzIDEuOTYyNTcgMTUuNDQ2IDEuOTYyNTdDMTUuNzE4NyAxLjk2MjU3IDE1Ljk0NzMgMi4wNTQ4MSAxNi4xMzE4IDIuMjM5M0MxNi4zMTYzIDIuNDIzOCAxNi40MDg2IDIuNjUyNDEgMTYuNDA4NiAyLjkyNTEzVjExLjU4ODJIMTQuNDgzNFoiIGZpbGw9IiM1RTYxNjYiLz4KPC9nPgo8L3N2Zz4K"); }
+.mi-double { background-image: url("data:image/svg+xml;base64,PHN2ZyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBvdmVyZmxvdz0idmlzaWJsZSIgc3R5bGU9ImRpc3BsYXk6IGJsb2NrOyIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGlkPSJJY29ucyI+CjxwYXRoIGlkPSJWZWN0b3IiIGQ9Ik0xNSAyMUMxNC40NSAyMSAxMy45NzkyIDIwLjgwNDIgMTMuNTg3NSAyMC40MTI1QzEzLjE5NTggMjAuMDIwOCAxMyAxOS41NSAxMyAxOVY1QzEzIDQuNDUgMTMuMTk1OCAzLjk3OTE3IDEzLjU4NzUgMy41ODc1QzEzLjk3OTIgMy4xOTU4MyAxNC40NSAzIDE1IDNIMTlDMTkuNTUgMyAyMC4wMjA4IDMuMTk1ODMgMjAuNDEyNSAzLjU4NzVDMjAuODA0MiAzLjk3OTE3IDIxIDQuNDUgMjEgNVYxOUMyMSAxOS41NSAyMC44MDQyIDIwLjAyMDggMjAuNDEyNSAyMC40MTI1QzIwLjAyMDggMjAuODA0MiAxOS41NSAyMSAxOSAyMUgxNVpNMTUgNVYxOUgxOVY1SDE1Wk01IDIxQzQuNDUgMjEgMy45NzkxNyAyMC44MDQyIDMuNTg3NSAyMC40MTI1QzMuMTk1ODMgMjAuMDIwOCAzIDE5LjU1IDMgMTlWNUMzIDQuNDUgMy4xOTU4MyAzLjk3OTE3IDMuNTg3NSAzLjU4NzVDMy45NzkxNyAzLjE5NTgzIDQuNDUgMyA1IDNIOUM5LjU1IDMgMTAuMDIwOCAzLjE5NTgzIDEwLjQxMjUgMy41ODc1QzEwLjgwNDIgMy45NzkxNyAxMSA0LjQ1IDExIDVWMTlDMTEgMTkuNTUgMTAuODA0MiAyMC4wMjA4IDEwLjQxMjUgMjAuNDEyNUMxMC4wMjA4IDIwLjgwNDIgOS41NSAyMSA5IDIxSDVaTTUgNVYxOUg5VjVINVoiIGZpbGw9IiM1RTYxNjYiLz4KPC9nPgo8L3N2Zz4K"); }
+.mi-split { background-image: url("data:image/svg+xml;base64,PHN2ZyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBvdmVyZmxvdz0idmlzaWJsZSIgc3R5bGU9ImRpc3BsYXk6IGJsb2NrOyIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGlkPSJJY29ucyI+CjxwYXRoIGlkPSJWZWN0b3IiIGQ9Ik0xOC4xNzUgMTNIMTNWMTFIMTguMTc1TDE2LjMgOS4xMjVDMTYuMTE2NyA4LjkyNSAxNi4wMjA4IDguNjg3NSAxNi4wMTI1IDguNDEyNUMxNi4wMDQyIDguMTM3NSAxNi4xIDcuOSAxNi4zIDcuN0MxNi41IDcuNSAxNi43MzMzIDcuNCAxNyA3LjRDMTcuMjY2NyA3LjQgMTcuNSA3LjUgMTcuNyA3LjdMMjEuMyAxMS4zQzIxLjQgMTEuNCAyMS40NzA4IDExLjUwODMgMjEuNTEyNSAxMS42MjVDMjEuNTU0MiAxMS43NDE3IDIxLjU3NSAxMS44NjY3IDIxLjU3NSAxMkMyMS41NzUgMTIuMTMzMyAyMS41NTQyIDEyLjI1ODMgMjEuNTEyNSAxMi4zNzVDMjEuNDcwOCAxMi40OTE3IDIxLjQgMTIuNiAyMS4zIDEyLjdMMTcuNyAxNi4zQzE3LjUgMTYuNSAxNy4yNjY3IDE2LjYgMTcgMTYuNkMxNi43MzMzIDE2LjYgMTYuNSAxNi41IDE2LjMgMTYuM0MxNi4xIDE2LjEgMTYgMTUuODYyNSAxNiAxNS41ODc1QzE2IDE1LjMxMjUgMTYuMSAxNS4wNzUgMTYuMyAxNC44NzVMMTguMTc1IDEzWk01LjgyNSAxM0w3LjcgMTQuODc1QzcuODgzMzMgMTUuMDc1IDcuOTc5MTcgMTUuMzEyNSA3Ljk4NzUgMTUuNTg3NUM3Ljk5NTgzIDE1Ljg2MjUgNy45IDE2LjEgNy43IDE2LjNDNy41IDE2LjUgNy4yNjY2NyAxNi42IDcgMTYuNkM2LjczMzMzIDE2LjYgNi41IDE2LjUgNi4zIDE2LjNMMi43IDEyLjdDMi42IDEyLjYgMi41MjkxNyAxMi40OTE3IDIuNDg3NSAxMi4zNzVDMi40NDU4MyAxMi4yNTgzIDIuNDI1IDEyLjEzMzMgMi40MjUgMTJDMi40MjUgMTEuODY2NyAyLjQ0NTgzIDExLjc0MTcgMi40ODc1IDExLjYyNUMyLjUyOTE3IDExLjUwODMgMi42IDExLjQgMi43IDExLjNMNi4zIDcuN0M2LjUgNy41IDYuNzMzMzMgNy40IDcgNy40QzcuMjY2NjcgNy40IDcuNSA3LjUgNy43IDcuN0M3LjkgNy45IDggOC4xMzc1IDggOC40MTI1QzggOC42ODc1IDcuOSA4LjkyNSA3LjcgOS4xMjVMNS44MjUgMTFIMTFWMTNINS44MjVaIiBmaWxsPSIjNUU2MTY2Ii8+CjwvZz4KPC9zdmc+Cg=="); }
+.mi-surrender { background-image: url("data:image/svg+xml;base64,PHN2ZyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBvdmVyZmxvdz0idmlzaWJsZSIgc3R5bGU9ImRpc3BsYXk6IGJsb2NrOyIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGlkPSJJY29ucyI+CjxwYXRoIGlkPSJWZWN0b3IiIGQ9Ik02LjYgMTMuMlYyMC43QzYuNiAyMC45NSA2LjUxMjUgMjEuMTYyNSA2LjMzNzUgMjEuMzM3NUM2LjE2MjUgMjEuNTEyNSA1Ljk1IDIxLjYgNS43IDIxLjZDNS40NSAyMS42IDUuMjM3NSAyMS41MTI1IDUuMDYyNSAyMS4zMzc1QzQuODg3NSAyMS4xNjI1IDQuOCAyMC45NSA0LjggMjAuN1Y0LjVDNC44IDQuMjUgNC44ODc1IDQuMDM3NSA1LjA2MjUgMy44NjI1QzUuMjM3NSAzLjY4NzUgNS40NSAzLjYgNS43IDMuNkgxOC4xNzVDMTguMzU4MyAzLjYgMTguNTE2NyAzLjY0NTgzIDE4LjY1IDMuNzM3NUMxOC43ODMzIDMuODI5MTcgMTguODkxNyAzLjk0MTY3IDE4Ljk3NSA0LjA3NUMxOS4wNTgzIDQuMjA4MzMgMTkuMDk1OCA0LjM1NDE3IDE5LjA4NzUgNC41MTI1QzE5LjA3OTIgNC42NzA4MyAxOS4wMzMzIDQuODI1IDE4Ljk1IDQuOTc1TDE2LjggOC40TDE4Ljk1IDExLjgyNUMxOS4wMzMzIDExLjk3NSAxOS4wNzkyIDEyLjEyOTIgMTkuMDg3NSAxMi4yODc1QzE5LjA5NTggMTIuNDQ1OCAxOS4wNTgzIDEyLjU5MTcgMTguOTc1IDEyLjcyNUMxOC44OTE3IDEyLjg1ODMgMTguNzgzMyAxMi45NzA4IDE4LjY1IDEzLjA2MjVDMTguNTE2NyAxMy4xNTQyIDE4LjM1ODMgMTMuMiAxOC4xNzUgMTMuMkg2LjZaTTYuNiAxMS40SDE2LjU1TDE1LjI3NSA5LjM1QzE1LjA5MTcgOS4wNjY2NyAxNSA4Ljc1IDE1IDguNEMxNSA4LjA1IDE1LjA5MTcgNy43MzMzMyAxNS4yNzUgNy40NUwxNi41NSA1LjRINi42VjExLjRaIiBmaWxsPSIjNUU2MTY2Ii8+CjwvZz4KPC9zdmc+Cg=="); }
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="shell-header"><h1>Blackjack Cheat Sheet</h1></header>
+  <div class="shell-body">
+    <p class="rules-note"><strong>Table rules:</strong> 4&ndash;8 decks, dealer hits soft 17, double after split allowed, surrender allowed on any dealer card.</p>
+    <ul class="legend" id="legend" aria-label="Key to moves"></ul>
+    <div id="chart"></div>
+  </div>
+</main>
+<script data-engine="engine/vendor/strategy_table.js">
+/**
+ * Strategy Table (Basic Strategy Lookup)
+ * ========================================
+ * Extracted from reference/blackjack_hand_strategy_calculator_mockup_v30.html
+ * (STRATEGY_TABLE constant + resolveCode() function, plus resolveCode()'s own
+ * two settings-dependent helpers, surrenderAllowedFor() and
+ * doubleAllowedForTotal(), without which resolveCode() cannot run).
+ *
+ * STRATEGY_TABLE's object literal below was extracted programmatically from
+ * the source HTML (not manually retyped) and is byte-identical to the
+ * source's `const STRATEGY_TABLE = {...}` statement EXCEPT for two cells
+ * corrected on 2026-10-05 against BlackjackInfo's Basic Strategy Engine and
+ * Wizard of Odds (Single/H17 Pair 6 vs 7: "H" -> "Ph"; Multi/H17 Pair 8 vs A:
+ * "Rp" -> "Rpa", a code v30 does not have). engine/verify_extraction.test.js
+ * lists both as INTENTIONAL_DEVIATIONS and fails on any other difference.
+ *
+ * Deviation from the source, and why: the source file holds a single
+ * mutable module-level `settings` object that resolveCode(),
+ * surrenderAllowedFor(), and doubleAllowedForTotal() all read as a closure
+ * variable. A standalone module has no such global, so `settings` is
+ * threaded through as an explicit parameter on all three functions instead
+ * (this is the only change made to their logic — see
+ * engine/verify_extraction.test.js for a behavioral cross-check against the
+ * original source across many inputs).
+ * The branching logic, return shapes, and message strings are otherwise
+ * unchanged from the source, apart from the added 'Rpa' case that the
+ * corrected Multi/H17 cell needs.
+ *
+ * settings shape (matches the source's `let settings = {...}` at the top of
+ * the HTML file): { surrender, dealerHitsSoft17, doubleRestriction,
+ * dasAllowed, hitSplitAces, deckCount }. Only settings.surrender,
+ * settings.doubleRestriction, and settings.dasAllowed are read here.
+ */
+
+/**
+ * Module format: dual-mode. Under Node (the test suite, CLI scripts) this is a
+ * CommonJS module. Loaded in a browser with a plain <script> tag it instead
+ * attaches its exports to `window.ChipyEngine.strategyTable`.
+ *
+ * The body is wrapped in a function so that top-level names stay private.
+ * Several engine modules declare the same ones (RANK_VALUES, classifyHand,
+ * rankValue), and two classic scripts declaring the same `const` at top level
+ * is a SyntaxError. engine/browser_globals.test.js loads all seven the way a
+ * browser does and pins that they stay private.
+ *
+ * Browser load order (each module must follow its dependencies):
+ *   dealer_distribution_engine_v2.js, strategy_table.js, explanation_writer.js,
+ *   player_hand_resolver.js, scorekeeper.js, hand_dealer.js, game_controller.js
+ */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) {
+    module.exports = factory();
+  } else {
+    var ns = (root.ChipyEngine = root.ChipyEngine || {});
+    ns.strategyTable = factory();
+  }
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+
+
+  const STRATEGY_TABLE = {"Multi": {"H17": {"Hard": {"18-21": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "17": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "Rs"], "16": ["S", "S", "S", "S", "S", "H", "H", "Rh", "Rh", "Rh"], "15": ["S", "S", "S", "S", "S", "H", "H", "H", "Rh", "Rh"], "14": ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], "13": ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], "12": ["H", "H", "S", "S", "S", "H", "H", "H", "H", "H"], "11": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh"], "10": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "H", "H"], "9": ["H", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "5-8": ["H", "H", "H", "H", "H", "H", "H", "H", "H", "H"]}, "Soft": {"20": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "19": ["S", "S", "S", "S", "Ds", "S", "S", "S", "S", "S"], "18": ["Ds", "Ds", "Ds", "Ds", "Ds", "S", "S", "H", "H", "H"], "17": ["H", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "16": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "15": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "14": ["H", "H", "H", "Dh", "Dh", "H", "H", "H", "H", "H"], "13": ["H", "H", "H", "Dh", "Dh", "H", "H", "H", "H", "H"], "21": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "12": ["H", "H", "H", "H", "H", "H", "H", "H", "H", "H"]}, "Pair": {"A": ["P", "P", "P", "P", "P", "P", "P", "P", "P", "P"], "10": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "9": ["P", "P", "P", "P", "P", "S", "P", "P", "S", "S"], "8": ["P", "P", "P", "P", "P", "P", "P", "P", "P", "Rpa"], "7": ["P", "P", "P", "P", "P", "P", "H", "H", "H", "H"], "6": ["Ph", "P", "P", "P", "P", "H", "H", "H", "H", "H"], "5": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "H", "H"], "4": ["H", "H", "H", "Ph", "Ph", "H", "H", "H", "H", "H"], "3": ["Ph", "Ph", "P", "P", "P", "P", "H", "H", "H", "H"], "2": ["Ph", "Ph", "P", "P", "P", "P", "H", "H", "H", "H"]}}, "S17": {"Hard": {"18-21": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "17": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "16": ["S", "S", "S", "S", "S", "H", "H", "Rh", "Rh", "Rh"], "15": ["S", "S", "S", "S", "S", "H", "H", "H", "Rh", "H"], "14": ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], "13": ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], "12": ["H", "H", "S", "S", "S", "H", "H", "H", "H", "H"], "11": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "H"], "10": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "H", "H"], "9": ["H", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "5-8": ["H", "H", "H", "H", "H", "H", "H", "H", "H", "H"]}, "Soft": {"20": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "19": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "18": ["S", "Ds", "Ds", "Ds", "Ds", "S", "S", "H", "H", "H"], "17": ["H", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "16": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "15": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "14": ["H", "H", "H", "Dh", "Dh", "H", "H", "H", "H", "H"], "13": ["H", "H", "H", "Dh", "Dh", "H", "H", "H", "H", "H"], "21": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "12": ["H", "H", "H", "H", "H", "H", "H", "H", "H", "H"]}, "Pair": {"A": ["P", "P", "P", "P", "P", "P", "P", "P", "P", "P"], "10": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "9": ["P", "P", "P", "P", "P", "S", "P", "P", "S", "S"], "7": ["P", "P", "P", "P", "P", "P", "H", "H", "H", "H"], "6": ["Ph", "P", "P", "P", "P", "H", "H", "H", "H", "H"], "5": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "H", "H"], "4": ["H", "H", "H", "Ph", "Ph", "H", "H", "H", "H", "H"], "3": ["Ph", "Ph", "P", "P", "P", "P", "H", "H", "H", "H"], "2": ["Ph", "Ph", "P", "P", "P", "P", "H", "H", "H", "H"], "8": ["P", "P", "P", "P", "P", "P", "P", "P", "P", "P"]}}}, "Double": {"H17": {"Hard": {"5-8": ["H", "H", "H", "H", "H", "H", "H", "H", "H", "H"], "9": ["Dh", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "10": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "H", "H"], "11": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh"], "12": ["H", "H", "S", "S", "S", "H", "H", "H", "H", "H"], "13": ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], "14": ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], "15": ["S", "S", "S", "S", "S", "H", "H", "H", "Rh", "Rh"], "16": ["S", "S", "S", "S", "S", "H", "H", "H", "Rh", "Rh"], "17": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "Rs"], "18-21": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"]}, "Soft": {"13": ["H", "H", "H", "Dh", "Dh", "H", "H", "H", "H", "H"], "14": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "15": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "16": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "17": ["H", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "18": ["Ds", "Ds", "Ds", "Ds", "Ds", "S", "S", "H", "H", "H"], "19": ["S", "S", "S", "S", "Ds", "S", "S", "S", "S", "S"], "20": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "21": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "12": ["H", "H", "H", "H", "H", "H", "H", "H", "H", "H"]}, "Pair": {"2": ["Ph", "Ph", "P", "P", "P", "P", "H", "H", "H", "H"], "3": ["Ph", "Ph", "P", "P", "P", "P", "H", "H", "H", "H"], "4": ["H", "H", "H", "Ph", "Ph", "H", "H", "H", "H", "H"], "6": ["P", "P", "P", "P", "P", "Ph", "H", "H", "H", "H"], "7": ["P", "P", "P", "P", "P", "P", "Ph", "H", "H", "H"], "8": ["P", "P", "P", "P", "P", "P", "P", "P", "P", "Rp"], "9": ["P", "P", "P", "P", "P", "S", "P", "P", "S", "S"], "10": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "A": ["P", "P", "P", "P", "P", "P", "P", "P", "P", "P"], "5": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "H", "H"]}}, "S17": {"Hard": {"5-8": ["H", "H", "H", "H", "H", "H", "H", "H", "H", "H"], "9": ["Dh", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "10": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "H", "H"], "11": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh"], "12": ["H", "H", "S", "S", "S", "H", "H", "H", "H", "H"], "13": ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], "14": ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], "15": ["S", "S", "S", "S", "S", "H", "H", "H", "Rh", "H"], "16": ["S", "S", "S", "S", "S", "H", "H", "H", "Rh", "Rh"], "17": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "18-21": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"]}, "Soft": {"13": ["H", "H", "H", "Dh", "Dh", "H", "H", "H", "H", "H"], "14": ["H", "H", "H", "Dh", "Dh", "H", "H", "H", "H", "H"], "15": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "16": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "17": ["H", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "18": ["S", "Ds", "Ds", "Ds", "Ds", "S", "S", "H", "H", "H"], "19": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "20": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "21": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "12": ["H", "H", "H", "H", "H", "H", "H", "H", "H", "H"]}, "Pair": {"2": ["Ph", "Ph", "P", "P", "P", "P", "H", "H", "H", "H"], "3": ["Ph", "Ph", "P", "P", "P", "P", "H", "H", "H", "H"], "4": ["H", "H", "H", "Ph", "Ph", "H", "H", "H", "H", "H"], "6": ["P", "P", "P", "P", "P", "Ph", "H", "H", "H", "H"], "7": ["P", "P", "P", "P", "P", "P", "Ph", "H", "H", "H"], "8": ["P", "P", "P", "P", "P", "P", "P", "P", "P", "P"], "9": ["P", "P", "P", "P", "P", "S", "P", "P", "S", "S"], "10": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "A": ["P", "P", "P", "P", "P", "P", "P", "P", "P", "P"], "5": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "H", "H"]}}}, "Single": {"H17": {"Hard": {"18-21": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "17": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "Rs"], "16": ["S", "S", "S", "S", "S", "H", "H", "H", "Rh", "Rh"], "15": ["S", "S", "S", "S", "S", "H", "H", "H", "H", "Rh"], "14": ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], "13": ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], "12": ["H", "H", "S", "S", "S", "H", "H", "H", "H", "H"], "11": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh"], "10": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "H", "H"], "9": ["Dh", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "8": ["H", "H", "H", "Dh", "Dh", "H", "H", "H", "H", "H"], "5-7": ["H", "H", "H", "H", "H", "H", "H", "H", "H", "H"]}, "Soft": {"20": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "19": ["S", "S", "S", "S", "Ds", "S", "S", "S", "S", "S"], "18": ["S", "Ds", "Ds", "Ds", "Ds", "S", "S", "H", "H", "H"], "17": ["Dh", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "16": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "15": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "14": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "13": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "21": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "12": ["H", "H", "H", "H", "H", "H", "H", "H", "H", "H"]}, "Pair": {"A": ["P", "P", "P", "P", "P", "P", "P", "P", "P", "P"], "9": ["P", "P", "P", "P", "P", "S", "P", "P", "S", "Ps"], "8": ["P", "P", "P", "P", "P", "P", "P", "P", "P", "P"], "7": ["P", "P", "P", "P", "P", "P", "Ph", "H", "Rs", "Rh"], "6": ["P", "P", "P", "P", "P", "Ph", "H", "H", "H", "H"], "4": ["H", "H", "Ph", "Pd", "Pd", "H", "H", "H", "H", "H"], "3": ["Ph", "Ph", "P", "P", "P", "P", "Ph", "H", "H", "H"], "2": ["Ph", "P", "P", "P", "P", "P", "H", "H", "H", "H"], "5": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "H", "H"], "10": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"]}}, "S17": {"Hard": {"17": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "18-21": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "16": ["S", "S", "S", "S", "S", "H", "H", "H", "Rh", "Rh"], "15": ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], "14": ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], "13": ["S", "S", "S", "S", "S", "H", "H", "H", "H", "H"], "12": ["H", "H", "S", "S", "S", "H", "H", "H", "H", "H"], "11": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh"], "10": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "H", "H"], "9": ["Dh", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "8": ["H", "H", "H", "Dh", "Dh", "H", "H", "H", "H", "H"], "5-7": ["H", "H", "H", "H", "H", "H", "H", "H", "H", "H"]}, "Soft": {"20": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "19": ["S", "S", "S", "S", "Ds", "S", "S", "S", "S", "S"], "18": ["S", "Ds", "Ds", "Ds", "Ds", "S", "S", "H", "H", "S"], "17": ["Dh", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "16": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "15": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "14": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "13": ["H", "H", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"], "21": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"], "12": ["H", "H", "H", "H", "H", "H", "H", "H", "H", "H"]}, "Pair": {"A": ["P", "P", "P", "P", "P", "P", "P", "P", "P", "P"], "9": ["P", "P", "P", "P", "P", "S", "P", "P", "S", "S"], "8": ["P", "P", "P", "P", "P", "P", "P", "P", "P", "P"], "7": ["P", "P", "P", "P", "P", "P", "Ph", "H", "Rs", "H"], "6": ["P", "P", "P", "P", "P", "Ph", "H", "H", "H", "H"], "4": ["H", "H", "Ph", "Pd", "Pd", "H", "H", "H", "H", "H"], "3": ["Ph", "Ph", "P", "P", "P", "P", "Ph", "H", "H", "H"], "2": ["Ph", "P", "P", "P", "P", "P", "H", "H", "H", "H"], "5": ["Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "H", "H"], "10": ["S", "S", "S", "S", "S", "S", "S", "S", "S", "S"]}}}};
+
+  // ---- resolveCode()'s settings-dependent helpers -------------------------
+  // (source lines 565-566 of the v30 mockup; not exported separately there,
+  // but resolveCode() cannot run without them)
+
+  // ---- Legal values for the settings these predicates read -----------------
+  //
+  // Exported so callers validate against ONE list rather than each keeping its
+  // own copy. The values are the `value` attributes of v30's own controls, as
+  // recorded in docs/product/01-rule-settings.md: Surrender is a dropdown of
+  // none/any/except_ace, and Double down is a dropdown of 0/1/2. They live here
+  // because the two predicates below are what give them meaning — every branch
+  // in surrenderAllowedFor() and doubleAllowedForTotal() keys off one of them.
+  const SURRENDER_VALUES = ['none', 'any', 'except_ace'];
+  const DOUBLE_RESTRICTIONS = [0, 1, 2];
+
+  function surrenderAllowedFor(d, settings){ if(settings.surrender === 'none') return false; if(settings.surrender === 'except_ace' && d === 11) return false; return true; }
+
+  function doubleAllowedForTotal(total, settings){ if(settings.doubleRestriction === 0) return true; if(settings.doubleRestriction === 1) return [9,10,11].includes(total); if(settings.doubleRestriction === 2) return [10,11].includes(total); return true; }
+
+  // ---- resolveCode() -------------------------------------------------------
+
+  /**
+   * TEMPORARY no-resplit enforcement — see options.splitAvailable below.
+   *
+   * Raised instead of returning SPLIT for a hand that already came from a split.
+   * It deliberately does NOT substitute a replacement move: choosing one requires
+   * re-looking-up the hand as its plain Hard/Soft total (what v30's evaluate()
+   * does by nulling the pair before lookup), and resolveCode() has neither the
+   * deck group nor the ruleset needed to do that. Inventing a fallback here would
+   * be wrong for real cells — a post-split pair of 9s vs 2 plays as Hard 18 and
+   * STANDS, so a blanket "fall back to Hit" would hand the player a wrong answer.
+   * Failing loudly is the honest option until the caller layer exists.
+   */
+  function noResplitAvailable(whyLabel){
+    throw new RangeError(
+      `resolveCode: Split is not available for a post-split hand (${whyLabel}) — the Trainer never ` +
+      `offers a second split. Look this hand up as its plain Hard/Soft total instead, the way v30's ` +
+      `evaluate() does by discarding the pair when allowSplit is false. Pass ` +
+      `options.splitAvailable = true only to reproduce v30's own source behavior.`
+    );
+  }
+
+  /**
+   * @param {object} [options]
+   * @param {boolean} [options.splitAvailable] — whether Split is an offerable
+   *   action for this hand. Defaults to `!postSplit`, which is the locked Trainer
+   *   rule: no resplitting, ever. Pass `true` explicitly only to reproduce v30's
+   *   unrestricted source behavior (the extraction verifier does this).
+   *
+   *   TEMPORARY STAND-IN. This belongs in a game-state layer, not in a table
+   *   lookup — v30 enforced it in evaluate() and by disabling the Split button,
+   *   neither of which exists in this repo yet. Revisit when the driver is built.
+   */
+  function resolveCode(code, d, total, firstDecision, whyLabel, postSplit, settings, options){
+    const splitAvailable = (options && options.splitAvailable !== undefined)
+      ? options.splitAvailable
+      : !postSplit;
+    const split = () => {
+      if(!splitAvailable) noResplitAvailable(whyLabel);
+      return { move:'SPLIT', why: whyLabel, note: null };
+    };
+    switch(code){
+      case 'H': return { move:'HIT', why: whyLabel, note: null };
+      case 'S': return { move:'STAND', why: whyLabel, note: null };
+      case 'P': return split();
+      case 'Dh':
+      case 'Ds': {
+        const fallback = code === 'Dh' ? 'Hit' : 'Stand';
+        if(!firstDecision) return { move: fallback.toUpperCase(), why: whyLabel, note: null }; // never legal past the first two cards, resolved silently
+        if(postSplit && !settings.dasAllowed) return { move: fallback.toUpperCase(), why: whyLabel, note: `Basic strategy says Double, but Double after split isn't allowed. Use ${fallback} instead.` };
+        if(!doubleAllowedForTotal(total, settings)) return { move: fallback.toUpperCase(), why: whyLabel, note: `Basic strategy says Double, but your Double down setting doesn't allow it on this total. Use ${fallback} instead.` };
+        return { move:'DOUBLE', why: whyLabel, note: null };
+      }
+      case 'Ph': {
+        if(settings.dasAllowed) return split();
+        return { move:'HIT', why: whyLabel, note: `Basic strategy says Split, but Double after split isn't allowed. Hit instead.` };
+      }
+      case 'Rh':
+      case 'Rs': {
+        const fallback = code === 'Rh' ? 'Hit' : 'Stand';
+        if(!firstDecision) return { move: fallback.toUpperCase(), why: whyLabel, note: null }; // never legal past the first two cards, resolved silently
+        if(postSplit) return { move: fallback.toUpperCase(), why: whyLabel, note: `Basic strategy says Surrender, but Surrender isn't allowed after a split. Use ${fallback} instead.` };
+        if(!surrenderAllowedFor(d, settings)) return { move: fallback.toUpperCase(), why: whyLabel, note: `Basic strategy says Surrender, but your Surrender setting doesn't allow it against this dealer card. Use ${fallback} instead.` };
+        return { move:'SURRENDER', why: whyLabel, note: null };
+      }
+      case 'Rp': {
+        // Rp genuinely means: Surrender if allowed AND DAS is not allowed; otherwise plain Split (DAS being available tips the balance toward splitting, not a "settings blocked it" fallback).
+        if(!firstDecision) return split();
+        if(postSplit) return split(); // Surrender never applies post-split; Rp's non-surrender branch is plain Split, so no note needed
+        if(surrenderAllowedFor(d, settings) && !settings.dasAllowed) return { move:'SURRENDER', why: whyLabel, note: null };
+        return split();
+      }
+      case 'Rpa': {
+        // Rpa: Surrender if allowed, otherwise Split — regardless of DAS. NOT in v30; added 2026-10-05 for the
+        // 4-8 deck H17 pair of 8s vs Ace only (see INTENTIONAL_DEVIATIONS in engine/verify_extraction.test.js).
+        // Unlike Rp, Split here is a settings-blocked fallback, so it carries the same note Rh/Rs do.
+        if(!firstDecision) return split();
+        if(postSplit) return split(); // Surrender never applies post-split; same as Rp
+        if(surrenderAllowedFor(d, settings)) return { move:'SURRENDER', why: whyLabel, note: null };
+        if(!splitAvailable) noResplitAvailable(whyLabel);
+        return { move:'SPLIT', why: whyLabel, note: `Basic strategy says Surrender, but your Surrender setting doesn't allow it against this dealer card. Use Split instead.` };
+      }
+      case 'Pd':
+      case 'Ps': {
+        // Split if DAS allowed. Otherwise: Pd wants Double, Ps wants Stand — but Double still has to respect
+        // the Double Down restriction setting, same as every other Double-capable code (Dh/Ds).
+        if(settings.dasAllowed) return split();
+        if(code === 'Pd'){
+          if(doubleAllowedForTotal(total, settings)) return { move:'DOUBLE', why: whyLabel, note: `Basic strategy says Split, but Double after split isn't allowed. Use Double instead.` };
+          return { move:'HIT', why: whyLabel, note: `Basic strategy says Split, but Double after split isn't allowed, and your Double down setting doesn't allow doubling this total either. Use Hit instead.` };
+        }
+        return { move:'STAND', why: whyLabel, note: `Basic strategy says Split, but Double after split isn't allowed. Use Stand instead.` };
+      }
+      default:
+        console.error(`Unrecognized strategy code: "${code}" for ${whyLabel}`);
+        return { move:'UNAVAILABLE', why: whyLabel, note: 'This is a data error, not a real Blackjack recommendation — please report it.' };
+    }
+  }
+
+  return { STRATEGY_TABLE, resolveCode, surrenderAllowedFor, doubleAllowedForTotal, SURRENDER_VALUES, DOUBLE_RESTRICTIONS };
+
+});
+</script>
+<script data-engine="engine/vendor/explanation_writer.js">
+/**
+ * Strategy Explanation Writer
+ * =============================
+ * Extracted from reference/blackjack_hand_strategy_calculator_mockup_v30.html
+ * (getStrategyExplanation() plus its one actual runtime dependency,
+ * rankValue(), used to convert dealerRank into a numeric value).
+ *
+ * Verified by direct reading of the source: isGenericWhy(), hardLabel(),
+ * and evLabelFor() are NOT called from inside getStrategyExplanation() —
+ * they're used elsewhere in the source file (evaluate() and the render
+ * path) alongside getStrategyExplanation() at its call sites, not by it.
+ * Deliberately left out of this module as unnecessary.
+ */
+
+/**
+ * Module format: dual-mode. Under Node (the test suite, CLI scripts) this is a
+ * CommonJS module. Loaded in a browser with a plain <script> tag it instead
+ * attaches its exports to `window.ChipyEngine.explanationWriter`.
+ *
+ * The body is wrapped in a function so that top-level names stay private.
+ * Several engine modules declare the same ones (RANK_VALUES, classifyHand,
+ * rankValue), and two classic scripts declaring the same `const` at top level
+ * is a SyntaxError. engine/browser_globals.test.js loads all seven the way a
+ * browser does and pins that they stay private.
+ *
+ * Browser load order (each module must follow its dependencies):
+ *   dealer_distribution_engine_v2.js, strategy_table.js, explanation_writer.js,
+ *   player_hand_resolver.js, scorekeeper.js, hand_dealer.js, game_controller.js
+ */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) {
+    module.exports = factory();
+  } else {
+    var ns = (root.ChipyEngine = root.ChipyEngine || {});
+    ns.explanationWriter = factory();
+  }
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+
+
+  const rankValue = r => (['J','Q','K'].includes(r) ? 10 : (r === 'A' ? 11 : parseInt(r)));
+
+  function getStrategyExplanation({ move, total, soft, pair, dealerRank }){
+    const dealerValue = rankValue(dealerRank);
+    const dealerIsWeak = dealerValue >= 2 && dealerValue <= 6;
+    const dealerIsStrong = dealerValue >= 7;
+
+    // Shared VERBATIM between the HIT and DOUBLE branches below: a pair of 5s
+    // is a hard 10 whichever move the table sends it to (HIT vs a strong
+    // dealer card, DOUBLE vs a weak one), and the "why not split" reasoning is
+    // the same move-agnostic story either way. One constant, not two copies,
+    // so the two return points cannot drift apart.
+    const PAIR_5_SPLIT_NOTE = `You can split this pair, but two 5s are a hard 10, one of the best totals to draw to — splitting would trade it for two hands starting at 5.`;
+
+    if(move === 'HIT'){
+      if(soft){
+        return 'Your Ace gives this hand extra flexibility because it can count as 1 or 11. Hitting gives you a chance to improve without the same immediate bust risk as a hard hand.';
+      }
+      // Splittable pairs the table says to HIT. Six return points, one per
+      // pair rank (2,3,4,5,6,7) — the same granularity the STAND clauses below
+      // already established: `pair` alone decides the string, no dealer-card
+      // condition needed, even though these cells span several different
+      // dealer up-cards each. `pair` carries the same "never claims a split is
+      // available when it isn't" guarantee documented on the STAND clauses.
+      //
+      // Only 5 and 4 name a reason (a hard 10; unbustable by one card) because
+      // their EV gap against the recommended move is large enough to say
+      // something specific and still be honest — 5-5's is 0.40–0.68, 4-4's is
+      // 0.036–0.324 (6 decks, H17, DAS, see the decision log). 2-2/3-3/6-6/7-7
+      // share one sentence making no claim about the size of the margin,
+      // because their gaps range from 0.002 to 0.29 depending on the dealer
+      // card — a single per-rank string cannot honestly characterise a range
+      // that wide.
+      if(pair === '5'){
+        return PAIR_5_SPLIT_NOTE;
+      }
+      if(pair === '4'){
+        return `You can split this pair, but no single card can bust an 8 — splitting would trade that for two hands starting at 4.`;
+      }
+      if(pair === '2'){
+        return `You can split this pair, but this is one hand you can still build on — splitting would trade it for two hands starting at 2.`;
+      }
+      if(pair === '3'){
+        return `You can split this pair, but this is one hand you can still build on — splitting would trade it for two hands starting at 3.`;
+      }
+      if(pair === '6'){
+        return `You can split this pair, but this is one hand you can still build on — splitting would trade it for two hands starting at 6.`;
+      }
+      if(pair === '7'){
+        return `You can split this pair, but this is one hand you can still build on — splitting would trade it for two hands starting at 7.`;
+      }
+      if(total <= 11){
+        return 'Your total is too low to stand. Hitting gives you a chance to improve the hand without busting on the next card.';
+      }
+      if(total >= 12 && total <= 16 && dealerIsStrong){
+        return `The dealer is showing a strong card, so standing on ${total} is unlikely to be enough. Hitting gives you a better chance to improve the hand.`;
+      }
+      if(total >= 12 && total <= 16 && dealerIsWeak){
+        return `Hard ${total} is a tough hand even against a weaker dealer card — standing here carries too much downside to be the better play. Hitting gives you the best chance to improve.`;
+      }
+      return `Hitting is the strongest play for this hand against the dealer's card.`;
+    }
+
+    if(move === 'STAND'){
+      if(soft){
+        return `Your Soft ${total} is strong enough to stand against this dealer card. Taking another card does not improve the hand often enough to make hitting the better play.`;
+      }
+      // A splittable pair the table says to STAND on. Without this the player is
+      // told only that the correct move was Stand, and the lesson of the hand —
+      // that splitting is AVAILABLE and still wrong — is never stated. `pair` is
+      // set only for a two-card, non-post-split hand (handForLookup drops
+      // pairRank once a hand comes from a split), so this cannot claim a split
+      // is available when it is not.
+      //
+      // Reached only where the strategy table already resolved to STAND, which
+      // for these two ranks is every 10-10 cell and 9-9 against 7, 10 and A —
+      // so no dealer-card condition is needed or wanted here. The second clause
+      // is deliberately identical in both, so a player who meets both hands
+      // sees one pattern rather than two.
+      if(pair === '10'){
+        return `You can split this pair, but 20 is already one of the strongest hands at the table — splitting trades it for two hands starting at 10.`;
+      }
+      if(pair === '9'){
+        return `You can split this pair, but 18 is strong enough here — splitting would trade it for two hands starting at 9.`;
+      }
+      if(total >= 17){
+        return `Your ${total} is already a strong made hand. Standing avoids the unnecessary risk of taking another card.`;
+      }
+      if(total >= 12 && total <= 16 && dealerIsWeak){
+        return `The dealer is showing a weaker card and must keep drawing to at least 17. Standing avoids adding unnecessary bust risk to your ${total}.`;
+      }
+      return `Standing is the strongest play for this hand against the dealer's card.`;
+    }
+
+    if(move === 'DOUBLE'){
+      if(soft){
+        return 'Your Ace gives this hand extra flexibility, making this a favorable spot to double for one additional card.';
+      }
+      // 5-5 is a hard 10 whichever move the table sends it to — HIT against a
+      // strong dealer card, DOUBLE against a weak one. Same note as the HIT
+      // branch above, read from the shared constant rather than duplicated,
+      // so the two return points cannot drift apart.
+      if(pair === '5'){
+        return PAIR_5_SPLIT_NOTE;
+      }
+      return 'This is a strong doubling opportunity. Taking exactly one more card gives you good potential to finish with a strong total while increasing your bet.';
+    }
+
+    if(move === 'SPLIT'){
+      if(pair === 'A'){
+        return 'Playing two Aces together gives you Soft 12. Splitting gives each Ace a separate chance to build a strong hand.';
+      }
+      // AUDIT E2. This compared against the NUMBER 8, which is what v30's own
+      // isPair() produces (it returns rankValue(), numeric for everything but
+      // Aces). Every engine in THIS repo normalizes ranks to strings, so a real
+      // Trainer caller sends '8' and the specific explanation was never reached
+      // — it degraded silently to the generic one.
+      //
+      // Both forms are accepted explicitly. A string-only comparison would have
+      // fixed the Trainer and broken parity with v30 in the opposite direction,
+      // which engine/verify_extraction.test.js diffs against directly. Two
+      // literal comparisons rather than String(pair) === '8': coercion would also
+      // admit ['8'] and any object with a toString returning '8', widening the
+      // contract to shapes that are never a pair of eights. 'A' needs no such
+      // treatment — v30 and this repo already agree on it.
+      if(pair === '8' || pair === 8){
+        return 'A pair of 8s makes a difficult Hard 16. Splitting avoids playing the cards as one weak hand and gives you two separate hands starting from 8.';
+      }
+      return 'These cards are stronger when played as two separate hands than as one combined total.';
+    }
+
+    if(move === 'SURRENDER'){
+      return 'This is a difficult hand against a strong dealer card. Surrendering limits your loss to half of your original bet instead of playing out the full hand.';
+    }
+
+    return '';
+  }
+
+  return { getStrategyExplanation, rankValue };
+
+});
+</script>
+<script data-engine="engine/chart.js">
+/**
+ * Chart resolution (story S-03)
+ * =============================
+ * The player's 4 table rules in, 3 tables of plain moves out.
+ *
+ * Every cell comes from the vendored engine (engine/vendor/strategy_table.js):
+ * the source code is read from STRATEGY_TABLE and turned into a plain move by
+ * resolveCode(). This file holds no strategy rules of its own; it only picks
+ * the table, fixes the row order and passes the arguments below.
+ *
+ *   resolveCode(code, dealer, total, firstDecision = true, whyLabel,
+ *               postSplit = false, settings)
+ *   settings = { surrender, dasAllowed, doubleRestriction: 0, ... }
+ *     doubleRestriction 0 = double on any two cards (D-002).
+ *   total = row number, or lowest of a range (5-7 -> 5, 18-21 -> 18);
+ *           Pairs = 2 x card value, A,A -> 12 (D-021).
+ *
+ * Rows (D-020), top to bottom:
+ *   Hard  5-7, 8, 9 ... 17, 18-21   (Double/Multi read "5-8" for both 5-7 and 8)
+ *   Soft  13 ... 20
+ *   Pairs 2,2 ... 10,10, A,A
+ * Cell = { move, code, note } (D-022).
+ *
+ * API (D-033): buildChart(rules)
+ *   rules = { decks: "1"|"2"|"4-8", soft17: "stands"|"hits",
+ *             das: "yes"|"no", surrender: "none"|"any"|"except_ace" } (D-023)
+ *   returns { columns, hard, soft, pairs }; each table = [{ label, cells[10] }].
+ *
+ * Module format: same dual-mode wrapper as the vendor files. Under Node it is a
+ * CommonJS module that requires ./vendor/strategy_table.js. In a browser (plain
+ * <script> after strategy_table.js) it reads window.ChipyEngine.strategyTable
+ * and attaches its exports to window.ChipyEngine.chart. No DOM use.
+ */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('./vendor/strategy_table.js'));
+  } else {
+    var ns = (root.ChipyEngine = root.ChipyEngine || {});
+    if (!ns.strategyTable) {
+      throw new Error('chart.js: load engine/vendor/strategy_table.js before chart.js');
+    }
+    ns.chart = factory(ns.strategyTable);
+  }
+})(typeof globalThis !== 'undefined' ? globalThis : this, function (strategyTable) {
+  'use strict';
+
+  // D-036: the vendor exposes STRATEGY_TABLE as a mutable nested object (Node
+  // require cache / browser ChipyEngine.strategyTable). Deep-freeze it in memory
+  // on load so no code can change a cell and silently change later charts.
+  // The vendor FILE is not touched.
+  function deepFreeze(obj) {
+    Object.keys(obj).forEach(function (k) {
+      const v = obj[k];
+      if (v !== null && typeof v === 'object' && !Object.isFrozen(v)) deepFreeze(v);
+    });
+    return Object.freeze(obj);
+  }
+
+  const STRATEGY_TABLE = deepFreeze(strategyTable.STRATEGY_TABLE);
+  const resolveCode = strategyTable.resolveCode;
+
+  // Dealer columns, index 0..9 = engine index 0..9. Ace is passed to resolveCode as 11.
+  const COLUMNS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'A'];
+  const DEALER_VALUES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+  // Allowed rule values (D-023), in the snapshot order.
+  const RULE_VALUES = {
+    decks: ['1', '2', '4-8'],
+    soft17: ['stands', 'hits'],
+    das: ['yes', 'no'],
+    surrender: ['none', 'any', 'except_ace'],
+  };
+
+  const DECK_GROUP = { '1': 'Single', '2': 'Double', '4-8': 'Multi' };
+  const DEALER_RULE = { stands: 'S17', hits: 'H17' };
+
+  // Fixed display rows (D-020). Object key order in STRATEGY_TABLE is not display order.
+  // key: engine row key (Hard 5-7 / 8 depend on deck group, see hardKey()).
+  // total: value passed to resolveCode (D-021).
+  const HARD_ROWS = [
+    { label: '5-7', total: 5 },
+    { label: '8', total: 8 },
+    { label: '9', total: 9 },
+    { label: '10', total: 10 },
+    { label: '11', total: 11 },
+    { label: '12', total: 12 },
+    { label: '13', total: 13 },
+    { label: '14', total: 14 },
+    { label: '15', total: 15 },
+    { label: '16', total: 16 },
+    { label: '17', total: 17 },
+    { label: '18-21', total: 18 },
+  ];
+
+  const SOFT_ROWS = ['13', '14', '15', '16', '17', '18', '19', '20'].map(function (n) {
+    return { label: n, key: n, total: Number(n) };
+  });
+
+  const PAIR_ROWS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'A'].map(function (c) {
+    return { label: c + ',' + c, key: c, total: c === 'A' ? 12 : 2 * Number(c) };
+  });
+
+  function hardKey(deckGroup, label) {
+    // Single has its own "5-7" and "8" rows; Double and Multi share one "5-8" row.
+    if ((label === '5-7' || label === '8') && deckGroup !== 'Single') return '5-8';
+    return label;
+  }
+
+  function validateRules(rules) {
+    if (rules === null || typeof rules !== 'object') {
+      throw new TypeError('buildChart: rules must be an object { decks, soft17, das, surrender }');
+    }
+    Object.keys(RULE_VALUES).forEach(function (name) {
+      const allowed = RULE_VALUES[name];
+      if (allowed.indexOf(rules[name]) === -1) {
+        throw new RangeError(
+          'buildChart: unknown ' + name + ' value ' + JSON.stringify(rules[name]) +
+          ' (allowed: ' + allowed.join(', ') + ')'
+        );
+      }
+    });
+  }
+
+  function buildTable(engineRows, handName, rows, keyFor, settings) {
+    return rows.map(function (row) {
+      const key = keyFor(row);
+      const codes = engineRows[key];
+      if (!Array.isArray(codes) || codes.length !== COLUMNS.length) {
+        throw new Error('buildChart: engine has no 10-cell ' + handName + ' row "' + key + '"');
+      }
+      const cells = codes.map(function (code, i) {
+        const whyLabel = handName + ' ' + row.label + ' vs ' + COLUMNS[i];
+        const r = resolveCode(code, DEALER_VALUES[i], row.total, true, whyLabel, false, settings);
+        return { move: r.move, code: code, note: r.note === undefined ? null : r.note };
+      });
+      return { label: row.label, cells: cells };
+    });
+  }
+
+  function buildChart(rules) {
+    validateRules(rules);
+    const deckGroup = DECK_GROUP[rules.decks];
+    const dealerRule = DEALER_RULE[rules.soft17];
+    const t = STRATEGY_TABLE[deckGroup][dealerRule];
+    const settings = {
+      surrender: rules.surrender,
+      dasAllowed: rules.das === 'yes',
+      doubleRestriction: 0,
+      dealerHitsSoft17: rules.soft17 === 'hits',
+      deckCount: rules.decks,
+    };
+    return {
+      columns: COLUMNS.slice(),
+      hard: buildTable(t.Hard, 'Hard', HARD_ROWS, function (row) { return hardKey(deckGroup, row.label); }, settings),
+      soft: buildTable(t.Soft, 'Soft', SOFT_ROWS, function (row) { return row.key; }, settings),
+      pairs: buildTable(t.Pair, 'Pair', PAIR_ROWS, function (row) { return row.key; }, settings),
+    };
+  }
+
+  // Exported constants are frozen copies (D-035): a consumer cannot reach the
+  // private COLUMNS / RULE_VALUES that buildChart() uses.
+  const EXPORTED_RULE_VALUES = {};
+  Object.keys(RULE_VALUES).forEach(function (name) {
+    EXPORTED_RULE_VALUES[name] = Object.freeze(RULE_VALUES[name].slice());
+  });
+
+  return {
+    buildChart: buildChart,
+    RULE_VALUES: Object.freeze(EXPORTED_RULE_VALUES),
+    COLUMNS: Object.freeze(COLUMNS.slice()),
+  };
+});
+</script>
+<script data-engine="engine/why.js">
+/**
+ * Cell reasons (story S-06)
+ * =========================
+ * A plain-words reason for one chart cell, taken from the vendored Trainer
+ * explanation writer (engine/vendor/explanation_writer.js). The text is
+ * returned exactly as the vendor writes it (D-028); the cell's note is never
+ * added (D-030). This file holds no strategy wording of its own; it only maps
+ * a chart.js cell + table + row label + dealer column to the writer inputs.
+ *
+ * API (D-041): reasonFor({ table, row, dealer, cell }) -> string
+ *   table  "hard" | "soft" | "pairs"
+ *   row    chart.js row label (D-033): Hard "5-7","8"..."17","18-21";
+ *          Soft "13"..."20"; Pairs "2,2"..."10,10","A,A"
+ *   dealer chart.js column label "2"..."10","A"
+ *   cell   a chart.js cell { move, code, note }
+ *
+ * Writer inputs:
+ *   move  = cell.move
+ *   total = row number, or lowest of a range (5-7 -> 5, 18-21 -> 18);
+ *           Pairs = 2 x card value, A,A -> 12 (D-021; D-029)
+ *   soft  = true for the Soft table and for A,A
+ *   pair  = card rank for Pairs rows ("2"..."10","A"), else null
+ *
+ * Module format: same dual-mode wrapper as chart.js. Under Node it is a
+ * CommonJS module that requires ./vendor/explanation_writer.js. In a browser
+ * (plain <script> after explanation_writer.js) it reads
+ * window.ChipyEngine.explanationWriter and attaches its exports to
+ * window.ChipyEngine.why. No DOM use.
+ */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('./vendor/explanation_writer.js'));
+  } else {
+    var ns = (root.ChipyEngine = root.ChipyEngine || {});
+    if (!ns.explanationWriter) {
+      throw new Error('why.js: load engine/vendor/explanation_writer.js before why.js');
+    }
+    ns.why = factory(ns.explanationWriter);
+  }
+})(typeof globalThis !== 'undefined' ? globalThis : this, function (explanationWriter) {
+  'use strict';
+
+  const getStrategyExplanation = explanationWriter.getStrategyExplanation;
+
+  const COLUMNS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'A'];
+  const MOVES = ['HIT', 'STAND', 'DOUBLE', 'SPLIT', 'SURRENDER'];
+
+  // Row label -> writer inputs, per table (D-020, D-021, D-033).
+  const ROWS = { hard: {}, soft: {}, pairs: {} };
+
+  ['5-7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18-21'].forEach(function (label) {
+    ROWS.hard[label] = { total: parseInt(label, 10), soft: false, pair: null };
+  });
+  ['13', '14', '15', '16', '17', '18', '19', '20'].forEach(function (label) {
+    ROWS.soft[label] = { total: Number(label), soft: true, pair: null };
+  });
+  ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'A'].forEach(function (c) {
+    ROWS.pairs[c + ',' + c] = c === 'A'
+      ? { total: 12, soft: true, pair: 'A' }
+      : { total: 2 * Number(c), soft: false, pair: c };
+  });
+
+  function reasonFor(args) {
+    if (args === null || typeof args !== 'object') {
+      throw new TypeError('reasonFor: expected { table, row, dealer, cell }');
+    }
+    const table = args.table;
+    const row = args.row;
+    const dealer = args.dealer;
+    const cell = args.cell;
+
+    if (!Object.prototype.hasOwnProperty.call(ROWS, table)) {
+      throw new RangeError('reasonFor: unknown table ' + JSON.stringify(table) + ' (allowed: hard, soft, pairs)');
+    }
+    if (typeof row !== 'string' || !Object.prototype.hasOwnProperty.call(ROWS[table], row)) {
+      throw new RangeError('reasonFor: unknown ' + table + ' row ' + JSON.stringify(row));
+    }
+    if (COLUMNS.indexOf(dealer) === -1) {
+      throw new RangeError('reasonFor: unknown dealer ' + JSON.stringify(dealer) + ' (allowed: ' + COLUMNS.join(', ') + ')');
+    }
+    if (cell === null || typeof cell !== 'object') {
+      throw new TypeError('reasonFor: cell must be a chart.js cell { move, code, note }');
+    }
+    if (MOVES.indexOf(cell.move) === -1) {
+      throw new RangeError('reasonFor: unknown move ' + JSON.stringify(cell.move) + ' (allowed: ' + MOVES.join(', ') + ')');
+    }
+
+    const r = ROWS[table][row];
+    const text = getStrategyExplanation({
+      move: cell.move,
+      total: r.total,
+      soft: r.soft,
+      pair: r.pair,
+      dealerRank: dealer,
+    });
+    if (typeof text !== 'string' || text.length === 0) {
+      throw new Error('reasonFor: vendor returned no reason for ' + table + ' ' + row + ' vs ' + dealer + ' ' + cell.move);
+    }
+    return text;
+  }
+
+  return { reasonFor: reasonFor };
+});
+</script>
+<script data-app="chipy-cheat-sheet">
+(function (root) {
+  'use strict';
+
+  var DEFAULT_RULES = { decks: '4-8', soft17: 'hits', das: 'yes', surrender: 'any' };
+
+  // Display only: engine move name -> word, CSS class suffix. Moves themselves come from chart.js.
+  var MOVE_UI = {
+    HIT: { word: 'Hit', id: 'hit' },
+    STAND: { word: 'Stand', id: 'stand' },
+    DOUBLE: { word: 'Double', id: 'double' },
+    SPLIT: { word: 'Split', id: 'split' },
+    SURRENDER: { word: 'Surrender', id: 'surrender' }
+  };
+  var MOVE_ORDER = ['HIT', 'STAND', 'DOUBLE', 'SPLIT', 'SURRENDER'];
+  var TABLES = [
+    { key: 'hard', heading: 'Hard hands', sub: 'No Ace, or an Ace that counts as 1.' },
+    { key: 'soft', heading: 'Soft hands', sub: 'An Ace that counts as 11, plus one other card.' },
+    { key: 'pairs', heading: 'Pairs', sub: 'Two cards of the same value.' }
+  ];
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  // Engine soft labels 13..20 are shown as A,2 .. A,9 (D-049, display only).
+  function displayRowLabel(table, label) {
+    if (table === 'soft') {
+      var n = parseInt(label, 10);
+      if (n >= 13 && n <= 20) return 'A,' + (n - 11);
+    }
+    return label;
+  }
+
+  function cellHTML(cell) {
+    var ui = MOVE_UI[cell.move];
+    if (!ui) throw new Error('unknown move: ' + cell.move);
+    return '<td class="m-' + ui.id + '" data-move="' + cell.move + '"><span class="cell">' +
+      '<span class="mi mi-' + ui.id + '" aria-hidden="true"></span>' +
+      '<span class="mw">' + ui.word + '</span></span></td>';
+  }
+
+  function tableHTML(def, chart) {
+    var rows = chart[def.key];
+    var out = '<section class="chart-section" id="chart-' + def.key + '">' +
+      '<h2>' + esc(def.heading) + '</h2><p class="sub">' + esc(def.sub) + '</p>' +
+      '<div class="scroll" tabindex="0" role="region" aria-label="' + esc(def.heading) + ' chart, scrolls sideways">' +
+      '<table class="chart" data-table="' + def.key + '"><thead><tr><th class="corner" scope="col">Your hand</th>';
+    chart.columns.forEach(function (c) { out += '<th scope="col" data-dealer="' + esc(c) + '">' + esc(c) + '</th>'; });
+    out += '</tr></thead><tbody>';
+    rows.forEach(function (r) {
+      out += '<tr data-row="' + esc(r.label) + '"><th scope="row">' + esc(displayRowLabel(def.key, r.label)) + '</th>';
+      r.cells.forEach(function (c) { out += cellHTML(c); });
+      out += '</tr>';
+    });
+    return out + '</tbody></table></div></section>';
+  }
+
+  function renderChartHTML(chart) {
+    return TABLES.map(function (def) { return tableHTML(def, chart); }).join('');
+  }
+
+  function renderLegendHTML() {
+    return MOVE_ORDER.map(function (m) {
+      var ui = MOVE_UI[m];
+      return '<li class="m-' + ui.id + '"><span class="mi mi-' + ui.id + '" aria-hidden="true"></span>' + ui.word + '</li>';
+    }).join('');
+  }
+
+  function init() {
+    var chart = root.ChipyEngine.chart.buildChart(DEFAULT_RULES);
+    document.getElementById('legend').innerHTML = renderLegendHTML();
+    document.getElementById('chart').innerHTML = renderChartHTML(chart);
+  }
+
+  function buildChart(rules) { return root.ChipyEngine.chart.buildChart(rules); }
+
+  root.ChipyCheatSheet = {
+    DEFAULT_RULES: DEFAULT_RULES,
+    buildChart: buildChart,
+    displayRowLabel: displayRowLabel,
+    renderChartHTML: renderChartHTML,
+    renderLegendHTML: renderLegendHTML,
+    init: init
+  };
+
+  if (typeof document !== 'undefined') init();
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+</body>
+</html>

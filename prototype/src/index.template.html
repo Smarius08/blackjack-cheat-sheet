@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blackjack Cheat Sheet</title>
+<style>
+:root {
+  --lime-dark: #859c2e;
+  --ink: #1a1a1a;
+  --muted: #5b6270;
+  --line: #e3e6ea;
+  --band: #f9fafa;
+  --shadow-shell: 0 -1px 20px 2px rgba(0, 0, 0, 0.1);
+  --hit: #f4c7c3; --stand: #fff2a8; --double: #b7e1cd; --split: #c9daf8; --surrender: #d9c3e9;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; padding: 24px 12px 40px;
+  background: #eef0f2; color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.4; overflow-x: hidden;
+}
+.shell {
+  max-width: 852px; margin: 0 auto; background: #fff;
+  border: 0; border-radius: 16px; box-shadow: var(--shadow-shell); overflow: hidden;
+}
+.shell-header { background: var(--band); padding: 24px 20px 20px; }
+.shell-header h1 {
+  margin: 0; text-align: center; text-transform: uppercase; font-weight: 700;
+  color: var(--lime-dark); font-size: 20px; line-height: 1.2; letter-spacing: 0.02em;
+}
+.shell-body { padding: 24px; }
+.rules-note { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
+.rules-note strong { color: var(--ink); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 10px; margin: 0 0 24px; padding: 0; list-style: none; }
+.legend li {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px 5px 6px;
+  border-radius: 999px; font-size: 13px; font-weight: 600;
+}
+
+.chart-section { margin: 0 0 28px; }
+.chart-section:last-child { margin-bottom: 0; }
+.chart-section h2 { margin: 0 0 4px; font-size: 18px; font-weight: 700; }
+.chart-section .sub { margin: 0 0 8px; font-size: 13px; color: var(--muted); }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 10px; }
+table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 720px; table-layout: fixed; }
+.chart th, .chart td { padding: 0; text-align: center; border-right: 1px solid #fff; border-bottom: 1px solid #fff; }
+.chart thead th {
+  background: var(--band); font-size: 13px; font-weight: 700; padding: 8px 2px;
+  border-bottom: 1px solid var(--line);
+}
+.chart .corner { width: 84px; text-align: left; padding-left: 10px; font-size: 12px; color: var(--muted); }
+.chart tbody th {
+  position: sticky; left: 0; z-index: 1; width: 84px; background: var(--band);
+  font-size: 14px; font-weight: 700; text-align: left; padding: 0 10px; border-right: 1px solid var(--line);
+}
+.chart thead .corner { position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--line); }
+.chart td { height: 52px; font-size: 12px; font-weight: 600; color: var(--ink); vertical-align: middle; }
+.chart td .cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+.mi {
+  display: inline-block; width: 20px; height: 20px; flex: none;
+  background-repeat: no-repeat; background-position: center; background-size: contain;
+}
+.m-hit { background-color: var(--hit); }
+.m-stand { background-color: var(--stand); }
+.m-double { background-color: var(--double); }
+.m-split { background-color: var(--split); }
+.m-surrender { background-color: var(--surrender); }
+
+@media (max-width: 600px) {
+  body { padding: 12px 12px 32px; }
+  .shell-header h1 { font-size: 18px; }
+  .shell-body { padding: 16px; }
+  .chart td { height: 54px; }
+}
+</style>
+<style>
+/*@@ICON_CSS@@*/
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="shell-header"><h1>Blackjack Cheat Sheet</h1></header>
+  <div class="shell-body">
+    <p class="rules-note"><strong>Table rules:</strong> 4&ndash;8 decks, dealer hits soft 17, double after split allowed, surrender allowed on any dealer card.</p>
+    <ul class="legend" id="legend" aria-label="Key to moves"></ul>
+    <div id="chart"></div>
+  </div>
+</main>
+<!--@@ENGINE_SCRIPTS@@-->
+<script data-app="chipy-cheat-sheet">
+(function (root) {
+  'use strict';
+
+  var DEFAULT_RULES = { decks: '4-8', soft17: 'hits', das: 'yes', surrender: 'any' };
+
+  // Display only: engine move name -> word, CSS class suffix. Moves themselves come from chart.js.
+  var MOVE_UI = {
+    HIT: { word: 'Hit', id: 'hit' },
+    STAND: { word: 'Stand', id: 'stand' },
+    DOUBLE: { word: 'Double', id: 'double' },
+    SPLIT: { word: 'Split', id: 'split' },
+    SURRENDER: { word: 'Surrender', id: 'surrender' }
+  };
+  var MOVE_ORDER = ['HIT', 'STAND', 'DOUBLE', 'SPLIT', 'SURRENDER'];
+  var TABLES = [
+    { key: 'hard', heading: 'Hard hands', sub: 'No Ace, or an Ace that counts as 1.' },
+    { key: 'soft', heading: 'Soft hands', sub: 'An Ace that counts as 11, plus one other card.' },
+    { key: 'pairs', heading: 'Pairs', sub: 'Two cards of the same value.' }
+  ];
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  // Engine soft labels 13..20 are shown as A,2 .. A,9 (D-049, display only).
+  function displayRowLabel(table, label) {
+    if (table === 'soft') {
+      var n = parseInt(label, 10);
+      if (n >= 13 && n <= 20) return 'A,' + (n - 11);
+    }
+    return label;
+  }
+
+  function cellHTML(cell) {
+    var ui = MOVE_UI[cell.move];
+    if (!ui) throw new Error('unknown move: ' + cell.move);
+    return '<td class="m-' + ui.id + '" data-move="' + cell.move + '"><span class="cell">' +
+      '<span class="mi mi-' + ui.id + '" aria-hidden="true"></span>' +
+      '<span class="mw">' + ui.word + '</span></span></td>';
+  }
+
+  function tableHTML(def, chart) {
+    var rows = chart[def.key];
+    var out = '<section class="chart-section" id="chart-' + def.key + '">' +
+      '<h2>' + esc(def.heading) + '</h2><p class="sub">' + esc(def.sub) + '</p>' +
+      '<div class="scroll" tabindex="0" role="region" aria-label="' + esc(def.heading) + ' chart, scrolls sideways">' +
+      '<table class="chart" data-table="' + def.key + '"><thead><tr><th class="corner" scope="col">Your hand</th>';
+    chart.columns.forEach(function (c) { out += '<th scope="col" data-dealer="' + esc(c) + '">' + esc(c) + '</th>'; });
+    out += '</tr></thead><tbody>';
+    rows.forEach(function (r) {
+      out += '<tr data-row="' + esc(r.label) + '"><th scope="row">' + esc(displayRowLabel(def.key, r.label)) + '</th>';
+      r.cells.forEach(function (c) { out += cellHTML(c); });
+      out += '</tr>';
+    });
+    return out + '</tbody></table></div></section>';
+  }
+
+  function renderChartHTML(chart) {
+    return TABLES.map(function (def) { return tableHTML(def, chart); }).join('');
+  }
+
+  function renderLegendHTML() {
+    return MOVE_ORDER.map(function (m) {
+      var ui = MOVE_UI[m];
+      return '<li class="m-' + ui.id + '"><span class="mi mi-' + ui.id + '" aria-hidden="true"></span>' + ui.word + '</li>';
+    }).join('');
+  }
+
+  function init() {
+    var chart = root.ChipyEngine.chart.buildChart(DEFAULT_RULES);
+    document.getElementById('legend').innerHTML = renderLegendHTML();
+    document.getElementById('chart').innerHTML = renderChartHTML(chart);
+  }
+
+  function buildChart(rules) { return root.ChipyEngine.chart.buildChart(rules); }
+
+  root.ChipyCheatSheet = {
+    DEFAULT_RULES: DEFAULT_RULES,
+    buildChart: buildChart,
+    displayRowLabel: displayRowLabel,
+    renderChartHTML: renderChartHTML,
+    renderLegendHTML: renderLegendHTML,
+    init: init
+  };
+
+  if (typeof document !== 'undefined') init();
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+</body>
+</html>

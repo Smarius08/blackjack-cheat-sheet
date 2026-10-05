@@ -22,7 +22,7 @@ Goal = 1 search · 2 table · 3 ship.
 Defaults on load: 4–8 decks · dealer hits soft 17 · DAS allowed · surrender any. prototype/build.js inlines engine files unchanged.
 | ID | Story (one output) | Agent | Goal | Gate | State |
 |---|---|---|---|---|---|
-| S-07 | Trainer shell (Quiz E53) + chart at default rules: Hard / Soft / Pairs, move icon + word + placeholder tint (D-053), Soft rows A,2–A,9 (D-049); prototype/build.js + byte-match test (merges old S-09) | ui-dev | 2 | — | approved |
+| S-07 | Trainer shell (Quiz E53) + chart at default rules: Hard / Soft / Pairs, move icon + word + placeholder tint (D-053), Soft rows A,2–A,9 (D-049); prototype/build.js + byte-match test (merges old S-09) | ui-dev | 2 | — | done |
 | S-08 | Rule panel (4 controls, defaults) wired to chart.js; chart redraws on change | ui-dev | 2 | — | approved |
 | S-18 | Table mode: phone-first quick view — tap player hand (hard / soft / pair), tap dealer card → one large move word + rule note; chart.js output only; answer = chart cell for every hand × dealer × 36 rule sets; two taps; 390px; "Recommended Play" card style + move icon, no card picking, no EV, link to Hand Strategy Calculator (D-051, D-055) | ui-dev | 2 | — | approved |
 | S-10 | Tap/click/keyboard a cell → panel: row label, reason (why.js), note shown separately (D-029, D-030, D-049); no hover | ui-dev | 2 | — | approved |
@@ -33,7 +33,7 @@ Defaults on load: 4–8 decks · dealer hits soft 17 · DAS allowed · surrender
 ## Sprint 3 — Figma (D2) + Jira (D3)
 | ID | Story (one output) | Agent | Goal | Gate | State |
 |---|---|---|---|---|---|
-| S-13 | Figma page from approved prototype (desktop + mobile + print); reserve space for v2 "Learn this chart" (D-051); final chart colours from CHIPY tokens (lime #c4db11 / #859c2e, neutrals), cells keep move icon + word (D-053) | figma-designer | 2 | G4 | proposed |
+| S-13 | Figma page from approved prototype (desktop + mobile + print); reserve space for v2 "Learn this chart" (D-051); final chart colours from CHIPY tokens (lime #c4db11 / #859c2e, neutrals), cells keep move icon + word (D-053); title #859c2e on #f9fafa ≈ 2.96:1 contrast — review with E53 owner | figma-designer | 2 | G4 | proposed |
 | S-14 | Jira draft: Calculation Logic & Lookup Tables (engine + snapshot; must state the 2-cell deviation from v30: Single/H17 6,6 vs 7 Ph, Multi/H17 8,8 vs A Rpa — D-046, D-049) | jira-writer | 3 | G5 | proposed |
 | S-15 | Jira drafts: Tool Layout (reserve space for v2 "Learn this chart", D-051), Tool Functionality | jira-writer | 3 | G5 | proposed |
 | S-16 | Jira drafts: SEO Content (incl. keyword split decision with Ahrefs, D-016), Common Sections, related tools, sitemaps/index/search | jira-writer | 1 | G5 | proposed |
