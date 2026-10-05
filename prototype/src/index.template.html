@@ -84,12 +84,56 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
 .m-split { background-color: var(--split); }
 .m-surrender { background-color: var(--surrender); }
 
+[hidden] { display: none !important; }
+.mode-switch { display: flex; border-radius: 8px; overflow: hidden; border: 1px solid rgba(0, 0, 0, 0.12); margin: 0 0 20px; background: #fff; }
+.mode-btn, .pick {
+  font: inherit; cursor: pointer; color: #404040; background: #fff; border: 0; margin: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.mode-btn { flex: 1 1 0; min-height: 48px; padding: 8px 12px; font-size: 15px; font-weight: 600; }
+.mode-btn + .mode-btn { border-left: 1px solid rgba(0, 0, 0, 0.12); }
+.mode-btn[aria-pressed="true"], .pick[aria-pressed="true"] { background: #c4db11; font-weight: 700; }
+.mode-btn:focus-visible, .pick:focus-visible, .sa-link:focus-visible { outline: 3px solid #404040; outline-offset: 2px; position: relative; z-index: 1; }
+
+.rules-toggle { font: inherit; cursor: pointer; min-height: 48px; padding: 8px 16px; margin: 0 0 16px; font-size: 15px; font-weight: 600; color: #404040; background: #fff; border: 1px solid rgba(0, 0, 0, 0.18); border-radius: 8px; }
+.rules-toggle:focus-visible { outline: 3px solid #404040; outline-offset: 2px; }
+.tm-step { scroll-margin-top: 12px; }
+.tm-step { margin: 0 0 18px; }
+#table-result { scroll-margin-top: 12px; }
+.tm-step h2 { margin: 0 0 8px; font-size: 16px; font-weight: 700; }
+.tm-group { margin: 0 0 12px; }
+.tm-group h3 { margin: 0 0 6px; font-size: 13px; font-weight: 700; color: var(--muted); }
+.pick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); gap: 8px; }
+.pick {
+  min-width: 44px; min-height: 48px; padding: 4px; font-size: 16px; font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.18); border-radius: 8px;
+}
+
+.sa-card { background: #fff; border: 1px solid #e6e6e6; border-radius: 12px; overflow: hidden; }
+.sa-header { padding: 12px 16px; background: rgba(180, 202, 9, 0.15); font-size: 16px; font-weight: 500; color: #404040; letter-spacing: 0.01em; }
+.sa-body { padding: 16px 20px 20px; }
+.sa-empty { margin: 0; font-size: 14px; color: #5e6166; text-align: center; padding: 16px 20px; }
+.sa-hand { margin: 0 0 6px; font-size: 40px; font-weight: 900; line-height: 1.05; color: #404040; }
+.sa-dealer { display: inline-block; margin: 0 0 14px; padding: 2px 10px; border-radius: 999px; background: #eef0f2; font-size: 13px; font-weight: 700; color: #5e6166; }
+.sa-rec-move {
+  min-height: 64px; background: rgba(196, 219, 17, 0.2); border: 1px solid #c4db11; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; gap: 10px; padding: 8px 12px;
+}
+.sa-circle { width: 40px; height: 40px; border-radius: 50%; background: rgba(196, 219, 17, 0.6); display: flex; align-items: center; justify-content: center; flex: none; }
+.sa-circle .mi { width: 26px; height: 26px; background-color: transparent; }
+.sa-rec-word { font-size: 28px; font-weight: 800; text-transform: uppercase; color: #404040; }
+.sa-rec-note { margin: 12px 0 0; font-size: 15px; font-weight: 500; color: #5e6166; line-height: 1.35; }
+.sa-link-row { margin: 16px 0 0; font-size: 14px; }
+.sa-link { color: #5f7220; font-weight: 600; display: inline-block; padding: 10px 0; }
+
 @media (max-width: 600px) {
   body { padding: 12px 12px 32px; }
   .shell-header h1 { font-size: 18px; }
   .shell-body { padding: 16px; }
   .chart td { height: 54px; }
   .rule-panel { grid-template-columns: minmax(0, 1fr); }
+  .sa-hand { font-size: 34px; }
+  .sa-body { padding: 16px; }
 }
 </style>
 <style>
@@ -100,10 +144,18 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
 <main class="shell">
   <header class="shell-header"><h1>Blackjack Cheat Sheet</h1></header>
   <div class="shell-body">
+    <div class="mode-switch" id="mode-switch" role="group" aria-label="View"></div>
     <div class="rule-panel" id="rule-panel"></div>
     <p class="rules-note" aria-live="polite"><strong>Table rules:</strong> <span id="rules-text"></span></p>
-    <ul class="legend" id="legend" aria-label="Key to moves"></ul>
-    <div id="chart"></div>
+    <button type="button" class="rules-toggle" id="rules-toggle" aria-expanded="false" aria-controls="rule-panel" hidden>Change rules</button>
+    <div id="full-view">
+      <ul class="legend" id="legend" aria-label="Key to moves"></ul>
+      <div id="chart"></div>
+    </div>
+    <div id="table-mode" hidden>
+      <div id="table-pick"></div>
+      <div id="table-result" aria-live="polite"></div>
+    </div>
   </div>
 </main>
 <!--@@ENGINE_SCRIPTS@@-->
@@ -278,18 +330,196 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     if (!setRules(rulesFromControls(values))) render(); // put the controls back on the active rules
   }
 
+  // ---- Table mode (S-18, D-055, D-061): two taps -> the chart's own cell ----
+  var CALC_HREF = '/tools/blackjack-hand-strategy-calculator';
+  var CALC_TEXT = "See every move's value in the Hand Strategy Calculator";
+  var DEALER_CARDS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'A'];
+  var HAND_OPTIONS = [];
+  (function () {
+    var n, c;
+    for (n = 5; n <= 21; n++) {
+      HAND_OPTIONS.push({ key: 'hard:' + n, table: 'hard', text: String(n), label: 'Hard ' + n,
+        row: n <= 7 ? '5-7' : (n >= 18 ? '18-21' : String(n)) });
+    }
+    for (n = 2; n <= 9; n++) {
+      HAND_OPTIONS.push({ key: 'soft:A,' + n, table: 'soft', text: 'A,' + n, label: 'A,' + n, row: String(n + 11) });
+    }
+    ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'A'].forEach(function (r) {
+      c = r + ',' + r;
+      HAND_OPTIONS.push({ key: 'pairs:' + c, table: 'pairs', text: c, label: c, row: c });
+    });
+  })();
+  var HAND_GROUPS = [
+    { table: 'hard', heading: 'Hard totals' },
+    { table: 'soft', heading: 'Soft hands (Ace + card)' },
+    { table: 'pairs', heading: 'Pairs' }
+  ];
+
+  function handOption(key) {
+    for (var i = 0; i < HAND_OPTIONS.length; i++) if (HAND_OPTIONS[i].key === key) return HAND_OPTIONS[i];
+    return null;
+  }
+
+  // Pure: rules + hand option key + dealer card -> the chart cell, or null for unknown input.
+  function tableAnswer(rules, hand, dealer) {
+    var opt = typeof hand === 'string' ? handOption(hand) : null;
+    if (!opt || DEALER_CARDS.indexOf(dealer) < 0 || !validRules(rules)) return null;
+    var chart = root.ChipyEngine.chart.buildChart(rules);
+    var col = chart.columns.indexOf(dealer);
+    var rows = chart[opt.table];
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i].label === opt.row && col >= 0) {
+        var cell = rows[i].cells[col];
+        return { move: cell.move, note: cell.note === undefined ? null : cell.note, rowLabel: opt.row,
+          table: opt.table, handLabel: opt.label, dealer: dealer };
+      }
+    }
+    return null;
+  }
+
+  function resultHTML(ans) {
+    if (!ans) return '<p class="sa-empty">Pick your hand, then the dealer’s card.</p>';
+    var ui = MOVE_UI[ans.move];
+    if (!ui) throw new Error('unknown move: ' + ans.move);
+    return '<div class="sa-card" data-result="1"><div class="sa-header">Recommended Play</div><div class="sa-body">' +
+      '<p class="sa-hand" data-hand>' + esc(ans.handLabel) + '</p>' +
+      '<p class="sa-dealer" data-dealer-shown>Dealer shows ' + esc(ans.dealer) + '</p>' +
+      '<div class="sa-rec-move" data-move="' + ans.move + '"><span class="sa-circle"><span class="mi mi-' + ui.id +
+      '" aria-hidden="true"></span></span><span class="sa-rec-word">' + ui.word + '</span></div>' +
+      (ans.note === null ? '' : '<p class="sa-rec-note" data-note>' + esc(ans.note) + '</p>') +
+      '<p class="sa-link-row"><a class="sa-link" href="' + CALC_HREF + '">' + esc(CALC_TEXT) + '</a></p>' +
+      '</div></div>';
+  }
+
+  var tm = { mode: 'full', hand: null, dealer: null, rulesOpen: false };
+
+  function pickHTML() {
+    var out = '<section class="tm-step"><h2>1. Your hand</h2>';
+    HAND_GROUPS.forEach(function (g) {
+      out += '<div class="tm-group"><h3>' + esc(g.heading) + '</h3><div class="pick-grid">';
+      HAND_OPTIONS.forEach(function (o) {
+        if (o.table !== g.table) return;
+        out += '<button type="button" class="pick" data-act="hand" data-val="' + esc(o.key) + '" aria-label="' + esc(o.label) +
+          '" aria-pressed="' + (tm.hand === o.key) + '">' + esc(o.text) + '</button>';
+      });
+      out += '</div></div>';
+    });
+    out += '</section>';
+    if (tm.hand) {
+      out += '<section class="tm-step" id="tm-dealer"><h2>2. Dealer shows</h2><div class="pick-grid">';
+      DEALER_CARDS.forEach(function (d) {
+        out += '<button type="button" class="pick" data-act="dealer" data-val="' + d + '" aria-label="Dealer shows ' + d +
+          '" aria-pressed="' + (tm.dealer === d) + '">' + d + '</button>';
+      });
+      out += '</div></section>';
+    }
+    return out;
+  }
+
+  function modeHTML() {
+    return [['full', 'Full chart'], ['table', 'Table mode']].map(function (m) {
+      return '<button type="button" class="mode-btn" data-act="mode" data-val="' + m[0] + '" aria-pressed="' +
+        (tm.mode === m[0]) + '">' + m[1] + '</button>';
+    }).join('');
+  }
+
+  function renderResult() {
+    if (!dom) return;
+    var ans = tm.hand && tm.dealer ? tableAnswer(state.rules, tm.hand, tm.dealer) : null;
+    dom.tresult.innerHTML = resultHTML(ans);
+  }
+
+  function renderTable(focusSel) {
+    if (!dom) return;
+    dom.modeSwitch.innerHTML = modeHTML();
+    dom.full.hidden = tm.mode !== 'full';
+    dom.table.hidden = tm.mode !== 'table';
+    // Rule panel stays in the DOM; in Table mode it is collapsed behind "Change rules" (D-062).
+    var collapsed = tm.mode === 'table' && !tm.rulesOpen;
+    dom.panel.hidden = collapsed;
+    dom.toggle.hidden = tm.mode !== 'table';
+    if (dom.toggle.setAttribute) dom.toggle.setAttribute('aria-expanded', String(tm.mode === 'table' && tm.rulesOpen));
+    else dom.toggle.ariaExpanded = String(tm.mode === 'table' && tm.rulesOpen);
+    dom.toggle.textContent = tm.rulesOpen ? 'Hide rules' : 'Change rules';
+    dom.tpick.innerHTML = tm.mode === 'table' ? pickHTML() : '';
+    renderResult();
+    if (focusSel && dom.root && dom.root.querySelector) {
+      var el = dom.root.querySelector(focusSel);
+      if (el && el.focus) el.focus();
+    }
+  }
+
+  function scrollTo(id) {
+    if (typeof document === 'undefined' || !document.getElementById) return;
+    var el = document.getElementById(id);
+    if (!el || typeof el.scrollIntoView !== 'function') return;
+    var calm = typeof root.matchMedia === 'function' && root.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.scrollIntoView({ block: 'start', behavior: calm ? 'auto' : 'smooth' });
+  }
+
+  function toggleRules() {
+    tm.rulesOpen = !tm.rulesOpen;
+    renderTable('#rules-toggle');
+    return tm.rulesOpen;
+  }
+
+  function setMode(m) {
+    if (m !== 'full' && m !== 'table') return false;
+    tm.mode = m;
+    renderTable('#mode-switch [data-val="' + m + '"]');
+    return true;
+  }
+  function selectHand(key) {
+    if (!handOption(key)) return false;
+    tm.hand = key;
+    renderTable('#table-pick [data-act="hand"][data-val="' + key + '"]');
+    scrollTo('tm-dealer');
+    return true;
+  }
+  function selectDealer(d) {
+    if (DEALER_CARDS.indexOf(d) < 0 || !tm.hand) return false;
+    tm.dealer = d;
+    renderTable('#table-pick [data-act="dealer"][data-val="' + d + '"]');
+    scrollTo('table-result');
+    return true;
+  }
+  function getSelection() { return { mode: tm.mode, hand: tm.hand, dealer: tm.dealer, rulesOpen: tm.rulesOpen }; }
+
+  function onTableClick(ev) {
+    var t = ev && ev.target;
+    if (!t) return;
+    var b = t.closest ? t.closest('button[data-act]') : t;
+    if (!b || !b.getAttribute) return;
+    var act = b.getAttribute('data-act'), val = b.getAttribute('data-val');
+    if (act === 'mode') setMode(val);
+    else if (act === 'hand') selectHand(val);
+    else if (act === 'dealer') selectDealer(val);
+  }
+
   function init() {
     if (inited) return;
     inited = true;
     dom = {
       panel: document.getElementById('rule-panel'),
       text: document.getElementById('rules-text'),
-      chart: document.getElementById('chart')
+      chart: document.getElementById('chart'),
+      root: typeof document !== 'undefined' ? document : null,
+      modeSwitch: document.getElementById('mode-switch'),
+      toggle: document.getElementById('rules-toggle'),
+      full: document.getElementById('full-view'),
+      table: document.getElementById('table-mode'),
+      tpick: document.getElementById('table-pick'),
+      tresult: document.getElementById('table-result')
     };
     document.getElementById('legend').innerHTML = renderLegendHTML();
     dom.panel.innerHTML = controlsHTML();
     dom.panel.addEventListener('change', onControlChange);
     render();
+    dom.modeSwitch.addEventListener('click', onTableClick);
+    dom.tpick.addEventListener('click', onTableClick);
+    dom.toggle.addEventListener('click', toggleRules);
+    onRulesChange(renderResult);
+    renderTable();
   }
 
   function buildChart(rules) { return root.ChipyEngine.chart.buildChart(rules); }
@@ -305,6 +535,15 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     getRules: getRules,
     setRules: setRules,
     onRulesChange: onRulesChange,
+    HAND_OPTIONS: HAND_OPTIONS,
+    DEALER_CARDS: DEALER_CARDS,
+    tableAnswer: tableAnswer,
+    renderResultHTML: resultHTML,
+    setMode: setMode,
+    selectHand: selectHand,
+    selectDealer: selectDealer,
+    getSelection: getSelection,
+    toggleRules: toggleRules,
     init: init
   };
 
