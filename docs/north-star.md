@@ -7,16 +7,19 @@ Concept status: NOT yet reporter-approved (reporter approves concept AND engine)
 Fixed cheat sheets are right for only one rule set and use codes ("Dh", "Rs") a beginner must decode.
 The player wants one chart that is right for *their* table and readable at a glance.
 
-## MVP scope
+## MVP scope — "from cheat sheet to memory" (D-051)
+A player needs (1) the right chart for their table, (2) to use it at the table fast on a phone, (3) to learn it.
+Competitors cover (1); we differentiate on (2) and (3). (3) ships as v2 "Learn this chart"; the MVP layout reserves space for it.
 - Rule controls (4): Decks (1 / 2 / 4–8) · Dealer on soft 17 (Stands / Hits) · Double after split (Yes / No) ·
   Surrender (Not allowed / Any dealer card / Except ace). Double down fixed to "any two cards".
 - Chart: Hard / Soft / Pairs × dealer upcard 2–A. One plain move per cell (Hit / Stand / Double / Split / Surrender).
 - Tap a cell → short reason, 1–2 sentences (reuse Trainer explanation_writer.js as is; D-028).
 - Print / save: print-friendly chart that states the chosen rules.
 - Mobile: designer solves readability at 390px; no prescribed layout.
+- Table mode (S-18): tap hand, tap dealer card → one large move word (+ rule note). My-table link (S-19): rules kept in the URL.
 
 ## Out of scope (MVP)
-Double-restriction setting, hit-split-aces, counting/deviations, EV numbers, drill/quiz mode, accounts,
+Double-restriction setting, hit-split-aces, counting/deviations, EV numbers, drill/quiz mode (v2 "Learn this chart", D-051), accounts,
 PDF service, link-to-Calculator pre-fill.
 
 ## Engine (G2 approved: D-032, D-034, D-039, D-040, D-047 · pending reporter approval)
