@@ -9,11 +9,11 @@ Font: `font-family: Roboto, system-ui, -apple-system, "Segoe UI", Helvetica, Ari
 | surface/white | #ffffff | shell, cells (Hit), card bodies |
 | surface/lightest | #f9fafa | header band, table header + row labels, unselected segment |
 | border/light | #e6e6e6 | grid lines, control outlines, card borders |
-| text/heading | #404040 | title, labels, cell text, Surrender fill |
+| text/heading | #404040 | labels, cell text, Surrender fill, print titles |
 | text/body | #5e6166 | sub-lines, rules sentence values, corner "Your hand", button text |
 | segmented inactive text (library) | #757575 | unselected Segmented option (2-option rows, mode switch) |
 | brand/lime | #c4db11 | selected segment/pick, button border, Double fill |
-| brand/lime-text (olive) | #859c2e | Split fill |
+| brand/lime-text (olive) | #859c2e | shell title (D-083), Split fill |
 | color/gray-400 | #bfbfbf | Stand fill |
 | card/black | #1a1d22 | Split text/icon, changed outline/flag |
 | ink (prototype --ink) | #1a1a1a | reason body, count line, step headings, diff/changed boxes |
@@ -34,7 +34,7 @@ Changed cell (State=Changed): `outline: 2px dashed <colour>; outline-offset: -2p
 ## 2. Typography (Roboto)
 | Element | Weight / size | Colour | Other |
 |---|---|---|---|
-| Shell title "BLACKJACK CHEAT SHEET" | 700 / 20 (390: 18) | #404040 | uppercase, letter-spacing 0.02em, centred |
+| Shell title "BLACKJACK CHEAT SHEET" | 700 / 20 (390: 18) | #859c2e (brand/lime-text) | uppercase, letter-spacing 0.02em, centred; contrast on #f9fafa 2.96:1, accepted brand choice (D-083, F2). Print title stays #404040 |
 | Rule labels (Decks…) | 500 / 16 | #404040 | |
 | Segmented 2-option (mode switch, soft 17, DAS) | 400 / 14 | selected #404040, unselected #757575 | |
 | 3-option rows (Decks, Surrender) | selected 700 / 14 #404040; unselected 400 / 14 #5e6166 | | |

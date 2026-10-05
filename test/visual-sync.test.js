@@ -11,7 +11,7 @@ const css = html.slice(html.indexOf('<style>'), html.indexOf('</style>'));
 test('font, title and move palette follow the signed-off Figma', () => {
   assert.match(css, /font-family: Roboto, system-ui/);
   assert.match(css, /--heading: #404040/);
-  assert.match(css, /\.shell-header h1 \{[^}]*color: var\(--heading\)/);
+  assert.match(css, /\.shell-header h1 \{[^}]*color: var\(--lime-dark\)/);
   assert.match(css, /--hit: #ffffff; --stand: #bfbfbf; --double: #c4db11; --split: #859c2e; --surrender: #404040/);
   assert.match(css, /\.m-split \{[^}]*color: #1a1d22/);
   assert.match(css, /\.m-surrender \{[^}]*color: #fff/);

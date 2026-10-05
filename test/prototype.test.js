@@ -144,7 +144,7 @@ test('shell matches Quiz E53 values', () => {
   assert.match(html, /--shadow-shell: 0 -1px 20px 2px rgba\(0, 0, 0, 0\.1\)/);
   assert.match(html, /\.shell-header \{ background: var\(--band\); padding: 24px 20px 20px; \}/);
   assert.match(html, /--band: #f9fafa/);
-  assert.match(html, /color: var\(--heading\)/);
+  assert.match(html, /\.shell-header h1 \{[^}]*color: var\(--lime-dark\)/);
   assert.match(html, /--heading: #404040/);
   assert.match(html, /--lime-dark: #859c2e/);
   assert.match(html, /<h1>Blackjack Cheat Sheet<\/h1>/);

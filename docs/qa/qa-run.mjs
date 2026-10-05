@@ -493,6 +493,13 @@ let wAll = { max: 0, over: 0, n: 0, worst: '' };
 for (const c of snap) { await pw.evaluate(r => window.ChipyCheatSheet.setRules(r), c.rules); const m = await measureWords(); wAll.n += m.n; wAll.over += m.over; if (m.max > wAll.max) wAll = { ...wAll, max: m.max, worst: m.worst + ' (' + c.id + ')' }; }
 c6.push({ n: 'D-080: at 390 every chart cell word width <= cell width - 6px', v: wDefault.over === 0 && wAll.over === 0 && wDefault.n === 300, x: `default chart: max word ${wDefault.max}px (${wDefault.worst}), cell ${wDefault.cell}px, font ${wDefault.fs} spacing ${wDefault.ls}, ${wDefault.over} over; all 36 rule sets (${wAll.n} cells): max word ${wAll.max}px (${wAll.worst}), ${wAll.over} over` });
 console.log('wordwidth', JSON.stringify({ wDefault, wAll }));
+// D-083: screen title = brand olive rgb(133,156,46) on #f9fafa (2.96:1, accepted brand choice, not a failure); print titles stay #404040
+const ptl = await newPage(1280, 900); await ptl.goto(URL0);
+const scr = await ptl.evaluate(() => { const h = document.querySelector('main.shell h1'); return { fg: getComputedStyle(h).color, bg: getComputedStyle(h.parentElement).backgroundColor }; });
+await ptl.emulateMedia({ media: 'print' });
+const prt = {};
+for (const m of ['full', 'pocket']) { await ptl.evaluate(m => { document.documentElement.dataset.print = m; }, m); prt[m] = await ptl.evaluate(m => { const e = document.querySelector(m === 'full' ? '#print-full [data-title]' : '#print-pocket [data-title]') || document.querySelector(m === 'full' ? '#print-full h1' : '#print-pocket h1, #print-pocket .pc-title'); return e ? getComputedStyle(e).color : null; }, m); }
+c6.push({ n: 'D-083: screen title rgb(133, 156, 46) on rgb(249, 250, 250) (2.96:1 accepted brand choice); print titles rgb(64, 64, 64)', v: scr.fg === 'rgb(133, 156, 46)' && scr.bg === 'rgb(249, 250, 250)' && prt.full === 'rgb(64, 64, 64)' && prt.pocket === 'rgb(64, 64, 64)', x: `screen ${scr.fg} on ${scr.bg}; print full ${prt.full}, pocket ${prt.pocket}` });
 row(6, 'Layout 390x844 and 1280x900: no sideways scroll', c6.every(x => x.v), c6.map(x => x.x).join(' | '));
 const tapReport = smalls.join('\n    ');
 const lowTargets = [...new Set(Object.values(states[390]).flatMap(r => r.small))];
@@ -822,7 +829,7 @@ console.log('\n| # | Check | Result | Evidence |\n|---|---|---|---|');
 for (const r of rows) console.log(`| ${r.n} | ${r.name} | ${r.pass ? 'PASS' : 'FAIL'} | ${r.ev.replace(/\|/g, '/')} |`);
 console.log('\nRe-check items');
 console.log(`- Tap targets under 44px (390 wide, per state):\n    ${tapReport}`);
-console.log(`- Title contrast: ${JSON.stringify(contrast)}`);
+console.log(`- Title contrast: ${JSON.stringify(contrast)} (olive 2.96:1 = accepted brand choice, D-083; F2 not a failure)`);
 console.log(`- Print dialog URL/date headers: manual, not automatable. Escape after tap on iOS Safari: out of reach (note only).`);
 console.log('\nFindings');
 for (const f of findings) console.log(`- [${f.sev}] ${f.text}`);
