@@ -6,7 +6,7 @@ Goal = 1 search · 2 table · 3 ship.
 ## Sprint 1 — Engine (D3 truth) · APPROVED at G1 (D-014)
 | ID | Story (one output) | Agent | Goal | Gate | State |
 |---|---|---|---|---|---|
-| S-01 | Repo scaffold: package.json `npm run check`, test runner, .gitattributes | engine-dev | 3 | — | approved |
+| S-01 | Repo scaffold: package.json `npm run check`, test runner, .gitattributes | engine-dev | 3 | — | done |
 | S-02 | Vendor strategy_table.js + explanation_writer.js unchanged + checksum test | engine-dev | 2 | G2 | approved |
 | S-03 | `engine/chart.js`: rules → 3 tables of plain moves (resolveCode, firstDecision=true) | engine-dev | 2 | G2 (D-019) | approved |
 | S-04 | `snapshot/charts-36.json` generated + test that chart.js reproduces it | engine-dev | 2 | G2 | approved |

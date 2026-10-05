@@ -1,6 +1,6 @@
 # S-01 — Repo scaffold: one command, `npm run check`, that every later story must pass
 
-State: approved · Agent: engine-dev · Goal served: 3 (fast to ship) · Gate: none
+State: done · Agent: engine-dev · Goal served: 3 (fast to ship) · Gate: none
 
 ## Why
 Every story ends with "`npm run check` must pass" (AGENTS.md §7). That command does not exist yet.
@@ -36,3 +36,10 @@ This story creates it, so later stories have one yes/no test of "is it still wor
 ## Review (filled by story-reviewer)
 | # | Pass/Fail | Evidence |
 |---|---|---|
+| 1 | Pass | package.json: `"private": true`, `"scripts": { "check": "node --test" }` |
+| 2 | Pass | `npm run check` → tests 1 / pass 1 / fail 0, exit 0 (Node v26.10.0, home-mac-mini); built-ins only (D-018) |
+| 3 | Pass | No `dependencies` / `devDependencies` key; no lockfile created |
+| 4 | Pass | Script is exactly `node --test`: no rm/cp/export, no glob; default discovery finds test/smoke.test.js |
+| 5 | Pass | .gitattributes unchanged (`* text=auto eol=lf`); diff of .gitattributes/.gitignore/SETUP.md empty; new files LF |
+
+Overall: PASS (story-reviewer, 2026-10-05). Observation: package.json also has name/version/description/engines (node >=20, matches SETUP.md).

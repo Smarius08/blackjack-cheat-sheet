@@ -1,0 +1,12 @@
+{
+  "name": "blackjack-cheat-sheet",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CHIPY Blackjack Cheat Sheet: engine, chart snapshot and HTML prototype.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "check": "node --test"
+  }
+}
