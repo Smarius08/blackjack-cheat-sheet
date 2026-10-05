@@ -46,4 +46,5 @@ The Lead checks with Figma screenshots (story-reviewer cannot open Figma).
 | 6 | Pass | docs/figma/cs-full-page-1280.png (1280×7472), cs-full-page-390.png (390×9369); writes only on 14034:33811 + docs/figma/; critique + a11y findings listed in the designer report |
 
 Overall: PASS (Lead, 2026-10-05), pending G4 with S-13b/c.
+D-073 rework (Lead check via exports): top section = "Top section full width" 12625:94021 / mobile 12625:94028 (the main component behind Quiz 13996:5601), breadcrumb + exact H1, sample text; lower content rebuilt from the Quiz parts (13996:5606 / 13996:6184 are frames, not components — Callout box, Numbered list, FAQs Widget instances), headings "How to use the Blackjack Cheat Sheet" / "Blackjack Cheat Sheet FAQs"; in-page nav new instance, tabs at content column x=190 (1280), full width (390); order per D-073; frames 1280×9398 / 390×10757; tool, v2 slot, Q&As, carousel, contributors unchanged. Open: nav label "How It Works" vs heading "How to use…".
 

@@ -10,7 +10,7 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 - `npm run check`: 118/118 pass. Prototype: prototype/index.html (`open prototype/index.html`).
 
 ## Figma frames (file mRGsMU76MmiKMnzQkwYKgG, page 14034:33811; PNGs in docs/figma/)
-- Full page 1280 14047:648859 · 390 14048:648735. Components: CS / Move 14047:86, CS / Pick 14060:14892.
+- Full page 1280 14047:648859 · 390 14048:648735 (D-073 rework). Components: CS / Move 14047:86, CS / Pick 14060:14892.
 - Default chart 14056:6031 / 14056:6546 · Reason panel 14058:7935 / 14058:8815 · Reason note 14058:654495 / 14058:656063
 - Rules changed 14060:11755 / 14060:13320 · TM empty 14060:14893 / 14060:15510 · TM hand 14061:13759 / 14061:14223
 - TM result 14061:13883 / 14061:14345 · TM result changed 14061:14048 / 14061:14508 (1280 / 390)
