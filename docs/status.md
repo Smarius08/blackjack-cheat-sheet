@@ -3,24 +3,25 @@
 Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 
 ## Done
-- Agent team files created (AGENTS.md, CLAUDE.md, .claude/agents/, docs/).
-- Repo pushed to github.com/Smarius08/blackjack-cheat-sheet (home-mac-mini).
-- Sprint 1 story files S-01…S-06 written by spec-writer and approved by Marius (docs/stories/).
-- Decisions D-018…D-030 logged. S-03 gate corrected to G2 (D-019). North-star "one-line reason" → "short reason, 1–2 sentences" (D-028).
+- Team setup; Sprint 1 story files S-01…S-06 approved (D-018…D-031).
+- S-01 repo scaffold: `npm run check` = `node --test` (reviewed PASS) — 684c2a2.
+- S-02 vendored strategy_table.js + explanation_writer.js, checksum-pinned (PASS, G2 D-032) — 4416f59.
+- S-03 engine/chart.js: 36 rule combos → Hard/Soft/Pairs plain moves; 10,800 cells cross-checked, 0 mismatches (PASS, G2 D-034) — be54e74.
+- `npm run check`: 21/21 pass.
 
 ## Next
-- engine-dev builds S-01 (repo scaffold, `npm run check` = `node --test`), then story-reviewer, then S-02.
-- G2 stops in Sprint 1: S-02 (vendor copy), S-03 (chart.js), S-04 (36-chart snapshot + label wording), S-05 (review page).
+- Marius: `/codex:review --base origin/main` + `/codex:adversarial-review` (S-02, S-03 are engine code), then G6 push.
+- engine-dev builds S-04 (36-chart snapshot; G2 incl. label wording), then S-05 (review page, G2), S-06 (reasons).
 - work-lenovo clone pending (only when at the office).
 
 ## Lead-only decisions (Marius may veto)
-- D-023 snapshot chart shape, id format, chart order.
-- D-024 plain-words label wording (final wording confirmed at S-04 G2).
-- D-025 review page built by snapshot/build-review.js with data inlined; stale-HTML test.
-- D-026 review page colours each move (review page only).
+- D-023 snapshot chart shape, id format, chart order. D-024 label wording (confirmed at S-04 G2).
+- D-025 review page built by a script with inlined data. D-026 review page colours moves.
+- D-033 chart.js API: buildChart(rules), labels, ChipyEngine.chart; extra exports RULE_VALUES, COLUMNS.
 
 ## Blockers
-- Reporter approval of concept and engine (spec doc ready to send). Keyword split is handled in S-16 (D-016), not a blocker.
+- Reporter approval of concept and engine (spec doc ready to send). Keyword split is in S-16 (D-016), not a blocker.
+- Open: `npm install` would create package-lock.json (not tracked yet) — decide at S-04 or later.
 
 ## Files to attach in Jira
 - None yet.
