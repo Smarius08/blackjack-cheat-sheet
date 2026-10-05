@@ -44,7 +44,19 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function (strategyTable) {
   'use strict';
 
-  const STRATEGY_TABLE = strategyTable.STRATEGY_TABLE;
+  // D-036: the vendor exposes STRATEGY_TABLE as a mutable nested object (Node
+  // require cache / browser ChipyEngine.strategyTable). Deep-freeze it in memory
+  // on load so no code can change a cell and silently change later charts.
+  // The vendor FILE is not touched.
+  function deepFreeze(obj) {
+    Object.keys(obj).forEach(function (k) {
+      const v = obj[k];
+      if (v !== null && typeof v === 'object' && !Object.isFrozen(v)) deepFreeze(v);
+    });
+    return Object.freeze(obj);
+  }
+
+  const STRATEGY_TABLE = deepFreeze(strategyTable.STRATEGY_TABLE);
   const resolveCode = strategyTable.resolveCode;
 
   // Dealer columns, index 0..9 = engine index 0..9. Ace is passed to resolveCode as 11.

@@ -259,6 +259,38 @@ test('mutating a returned chart.columns does not affect the next buildChart()', 
   assert.deepStrictEqual(buildChart(BASE), before);
 });
 
+// ---- D-036: vendored STRATEGY_TABLE is deep-frozen in memory -----------------
+
+test('after chart.js loads, the vendored STRATEGY_TABLE is frozen at every level', () => {
+  assert.ok(Object.isFrozen(STRATEGY_TABLE), 'top level');
+  assert.ok(Object.isFrozen(STRATEGY_TABLE.Multi), 'deck group');
+  assert.ok(Object.isFrozen(STRATEGY_TABLE.Multi.H17), 'dealer rule');
+  assert.ok(Object.isFrozen(STRATEGY_TABLE.Multi.H17.Hard), 'hand type');
+  assert.ok(Object.isFrozen(STRATEGY_TABLE.Multi.H17.Hard['16']), 'row array');
+  for (const group of Object.keys(STRATEGY_TABLE))
+    for (const rule of Object.keys(STRATEGY_TABLE[group]))
+      for (const hand of Object.keys(STRATEGY_TABLE[group][rule]))
+        for (const key of Object.keys(STRATEGY_TABLE[group][rule][hand]))
+          assert.ok(Object.isFrozen(STRATEGY_TABLE[group][rule][hand][key]), `${group}.${rule}.${hand}.${key}`);
+});
+
+test('mutating the vendored STRATEGY_TABLE does not change later buildChart() output', () => {
+  const before = allCharts();
+  const T = STRATEGY_TABLE;
+  attempt(() => { T.Multi.H17.Hard['16'][9] = 'S'; });
+  attempt(() => T.Multi.H17.Hard['16'].reverse());
+  attempt(() => T.Single.S17.Pair['4'].fill('H'));
+  attempt(() => { T.Multi.H17.Hard['16'] = ['S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S']; });
+  attempt(() => { delete T.Double.S17.Soft['18']; });
+  attempt(() => { T.Multi.H17.Hard['5-7'] = ['D', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D']; });
+  attempt(() => { T.Multi.S17 = T.Multi.H17; });
+  attempt(() => { T.Extra = {}; });
+  assert.equal(T.Multi.H17.Hard['16'][9], 'Rh');
+  assert.ok(!('5-7' in T.Multi.H17.Hard));
+  assert.ok(!('Extra' in T));
+  assert.deepStrictEqual(allCharts(), before);
+});
+
 // ---- AC 5: module format ---------------------------------------------------
 
 test('loads in a browser-like context after strategy_table.js and attaches ChipyEngine.chart', () => {
@@ -272,6 +304,15 @@ test('loads in a browser-like context after strategy_table.js and attaches Chipy
   assert.equal(typeof ns.chart.buildChart, 'function');
   const browserChart = JSON.parse(JSON.stringify(ns.chart.buildChart(BASE)));
   assert.deepEqual(browserChart, JSON.parse(JSON.stringify(buildChart(BASE))));
+  // D-036: the freeze also applies to the browser copy of the table.
+  const frozen = vm.runInContext(
+    'var t = ChipyEngine.strategyTable.STRATEGY_TABLE;' +
+    '[Object.isFrozen(t), Object.isFrozen(t.Multi.H17), Object.isFrozen(t.Multi.H17.Hard["16"])]',
+    ctx
+  );
+  assert.deepEqual(Array.from(frozen), [true, true, true]);
+  vm.runInContext('ChipyEngine.strategyTable.STRATEGY_TABLE.Multi.H17.Hard["16"][9] = "S"', ctx);
+  assert.deepEqual(JSON.parse(JSON.stringify(ns.chart.buildChart(BASE))), browserChart);
 });
 
 test('chart.js has no DOM use and no require other than the vendored strategy table', () => {

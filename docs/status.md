@@ -8,10 +8,11 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 - S-02 vendored strategy_table.js + explanation_writer.js, checksum-pinned (PASS, G2 D-032) — 4416f59.
 - S-03 engine/chart.js: 36 rule combos → Hard/Soft/Pairs plain moves; 10,800 cells cross-checked, 0 mismatches (PASS, G2 D-034) — be54e74.
 - D-035 fix: chart.js exports frozen copies of COLUMNS/RULE_VALUES (Codex adversarial finding); 36 charts unchanged.
-- `npm run check`: 24/24 pass.
+- D-036 fix: chart.js deep-freezes the vendored STRATEGY_TABLE in memory on load (vendor file untouched); 36 charts unchanged.
+- `npm run check`: 26/26 pass.
 
 ## Next
-- Marius: `/codex:review --base origin/main` + `/codex:adversarial-review` (S-02, S-03 are engine code), then G6 push.
+- G6 push after the final adversarial review (D-037 applies to tamper-only findings).
 - engine-dev builds S-04 (36-chart snapshot; G2 incl. label wording), then S-05 (review page, G2), S-06 (reasons).
 - work-lenovo clone pending (only when at the office).
 

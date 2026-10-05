@@ -44,4 +44,5 @@ after the tests pass and the Lead asks for G2. Nothing is committed until Marius
 
 Overall: PASS (story-reviewer, 2026-10-05). Observations: also exports constants RULE_VALUES and COLUMNS; settings carries unused dealerHitsSoft17/deckCount.
 Follow-up D-035 (Codex adversarial finding: exported COLUMNS/RULE_VALUES were mutable references): exports are now deep-frozen copies; 3 regression tests; story-reviewer PASS 4/4 — 36 combos, 10,800 cells identical to before the fix; `npm run check` 24/24.
+Follow-up D-036 (Codex adversarial: vendored STRATEGY_TABLE mutable in memory): chart.js deep-freezes it on load, vendor file untouched; regression + vm tests; story-reviewer PASS 4/4 — 216 objects frozen, 10,800 cells identical to before; `npm run check` 26/26.
 
