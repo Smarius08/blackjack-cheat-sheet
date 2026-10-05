@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "ask": ["Bash(git push:*)"],
+    "deny": [
+      "Bash(git add -A:*)",
+      "Bash(git add .:*)",
+      "Edit(~/chipy-blackjack-trainer/**)",
+      "Write(~/chipy-blackjack-trainer/**)",
+      "Edit(~/blackjack-quiz/**)",
+      "Write(~/blackjack-quiz/**)",
+      "Edit(engine/vendor/**)",
+      "mcp__Atlassian_MCP__createJiraIssue",
+      "mcp__Atlassian_MCP__editJiraIssue",
+      "mcp__Atlassian_Rovo__createJiraIssue",
+      "mcp__Atlassian_Rovo__editJiraIssue"
+    ]
+  }
+}
