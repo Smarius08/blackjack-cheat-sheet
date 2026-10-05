@@ -15,9 +15,10 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 - Rules changed 14060:11755 / 14060:13320 · TM empty 14060:14893 / 14060:15510 · TM hand 14061:13759 / 14061:14223
 - TM result 14061:13883 / 14061:14345 · TM result changed 14061:14048 / 14061:14508 (1280 / 390)
 - 390 only: Rules collapsed 14061:658319 · Swipe cue 14061:658393. Print: full A4 14063:15139 · pocket A4 14065:16035
+- Full page – Table mode 1280 14071:660225 · 390 14071:661008 (D-074). CS / Move State=Changed 14071:16537–16557.
 
 ## Next
-- G4: Marius signs off S-13a/b/c (Figma), then S-14/S-15/S-16 Jira drafts.
+- G4 approved (D-074). Next: S-15 Jira content for BFC-55465/66 (G5), S-21 prototype sync. S-14/S-16 done in Jira by Cowork.
 - Card next session: refresh .claude/agents/ui-dev.md for D-050/D-053/D-056 (housekeeper).
 - work-lenovo clone pending.
 

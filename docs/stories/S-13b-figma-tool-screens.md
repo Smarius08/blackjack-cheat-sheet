@@ -1,6 +1,6 @@
 # S-13b — Figma tool screens, 1280 and 390 (the tool in each state)
 
-State: reviewed (G4 pending) (G1 D-069) · Agent: figma-designer · Goal served: 2 (usable, correct chart at the table) · Gate: G4 (after S-13c)
+State: done (G4 D-074) (G1 D-069) · Agent: figma-designer · Goal served: 2 (usable, correct chart at the table) · Gate: G4 (after S-13c)
 
 ## Why
 S-13a shows the whole page. Marius also needs every state of the tool itself (chart, reason panel, rules changed, Table mode) drawn once, so the prototype can be signed off against Figma before Jira (D-069).
@@ -49,4 +49,4 @@ The Lead checks with Figma screenshots (story-reviewer cannot open Figma).
 | all | Pass | 18 frames (8 × 1280, 10 × 390) on 14034:33811, IDs in docs/status.md at G4; chart cells = snapshot in frames 1–4, 10 (designer check); 17 marked cells = Lead's own snapshot diff 4-8→1 (exact match); reason/note strings from prototype/engine; "CHANGED" badge 11px above the icon (F4); targets ≥44px; 390 frames exactly 390 wide; reuses S-13a shell + CS / Move (local icons, D-071); new local CS / Pick (14060:14892); 18 PNGs in docs/figma/ |
 
 Overall: PASS (Lead, 2026-10-05), pending G4. Designer trade-offs (badge row height, table-mode rule collapse at 1280, library button caps, open-cell outline on Surrender cells) → G4 card.
-
+D-074: changed rows back to 52px; marker = dashed inner outline + 12px corner triangle (white on Surrender), 9px text badge removed; CS / Move State=Changed variants.

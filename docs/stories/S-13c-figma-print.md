@@ -1,6 +1,6 @@
 # S-13c — Figma print: one full-page chart and one pocket card (A4)
 
-State: reviewed (G4 pending) (G1 D-069) · Agent: figma-designer · Goal served: 2 (usable at the table, printable) · Gate: G4
+State: done (G4 D-074) (G1 D-069) · Agent: figma-designer · Goal served: 2 (usable at the table, printable) · Gate: G4
 
 ## Why
 The prototype prints two sheets (S-11): a full page and a small pocket card to carry. Marius needs both drawn in Figma, at the default rules, so G4 can sign off the whole page, screens and print before Jira (D-064, D-069).

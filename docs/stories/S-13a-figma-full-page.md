@@ -1,6 +1,6 @@
 # S-13a — Figma full page, 1280 and 390 (Quiz page pattern)
 
-State: reviewed (G4 pending) · Agent: figma-designer · Goal served: 2 (usable, correct chart; page ready for goal 1 ranking) · Gate: G4 (after S-13c)
+State: done (G4 D-074) · Agent: figma-designer · Goal served: 2 (usable, correct chart; page ready for goal 1 ranking) · Gate: G4 (after S-13c)
 
 ## Why
 Marius needs to see the whole Cheat Sheet page as a visitor would (D-069), in the same layout as the Quiz page, before tool states (S-13b) and print (S-13c) are designed.
@@ -47,4 +47,4 @@ The Lead checks with Figma screenshots (story-reviewer cannot open Figma).
 
 Overall: PASS (Lead, 2026-10-05), pending G4 with S-13b/c.
 D-073 rework (Lead check via exports): top section = "Top section full width" 12625:94021 / mobile 12625:94028 (the main component behind Quiz 13996:5601), breadcrumb + exact H1, sample text; lower content rebuilt from the Quiz parts (13996:5606 / 13996:6184 are frames, not components — Callout box, Numbered list, FAQs Widget instances), headings "How to use the Blackjack Cheat Sheet" / "Blackjack Cheat Sheet FAQs"; in-page nav new instance, tabs at content column x=190 (1280), full width (390); order per D-073; frames 1280×9398 / 390×10757; tool, v2 slot, Q&As, carousel, contributors unchanged. Open: nav label "How It Works" vs heading "How to use…".
-
+D-074: nav item "How to use" (component renders "How To Use"); new CS / Full page – Table mode 1280 14071:660225 / 390 14071:661008.
