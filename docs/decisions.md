@@ -35,3 +35,4 @@ Format: ID · date · decision · by. Newest at the bottom. Superseded rows move
 | D-029 | 2026-10-05 | Range rows: reason quotes the lowest total (D-021) — accepted; S-10 may show the row label above the reason | Marius |
 | D-030 | 2026-10-05 | why.js returns the reason only; the cell's note (D-022) is shown separately by the UI | Marius |
 | D-031 | 2026-10-05 | Docs-only commits (no code, test or package changes) skip `/codex:review` before push; every other push still requires it | Marius |
+| D-032 | 2026-10-05 | G2: vendored engine copy (S-02) approved for commit; Codex review + adversarial review before next push | Marius |

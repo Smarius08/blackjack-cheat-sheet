@@ -1,6 +1,6 @@
 # S-02 — Vendor the Trainer strategy engine unchanged, with a checksum test that locks it
 
-State: approved · Agent: engine-dev · Goal served: 2 (correct chart for the player's rules) · Gate: G2
+State: done · Agent: engine-dev · Goal served: 2 (correct chart for the player's rules) · Gate: G2
 
 ## Why
 The chart must come from the same validated strategy code as the Trainer (north-star "Engine", D-004). Copying it
@@ -41,3 +41,12 @@ tests pass and the Lead asks for G2. Nothing is committed until Marius says yes.
 ## Review (filled by story-reviewer)
 | # | Pass/Fail | Evidence |
 |---|---|---|
+| 1 | Pass | Size, SHA-256 and `cmp` match the Trainer sources (21,414 B b4e5823d…9c9a25; 9,860 B 70db6675…1b67f84); also match `git show 34f3fd5:…` |
+| 2 | Pass | test/vendor-checksum.test.js pins size + SHA-256; header names source paths + 34f3fd5. Scratch-copy mutation (bit flip, appended byte) → exit 1 each |
+| 3 | Pass | Load test asserts STRATEGY_TABLE object, resolveCode and getStrategyExplanation functions; no behaviour tested |
+| 4 | Pass | `npm run check`: 5 tests, 5 pass, 0 fail, exit 0; Node built-ins only; package.json unchanged |
+| 5 | Pass | Only the three Write files added; backlog diff is the Lead's State edit; Trainer engine/ unchanged |
+| 6 | Pass | Nothing committed (HEAD 684c2a2 = S-01); State not done |
+
+Overall: PASS (story-reviewer, 2026-10-05). Observation: the in-test "one-byte change" case only hashes a modified buffer; the real proof was the reviewer's scratch-copy mutation run.
+
