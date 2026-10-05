@@ -65,7 +65,7 @@ test('icons are pinned by SHA-256 and embedded as the same bytes', () => {
   for (const n of ICONS) {
     const buf = fs.readFileSync(path.join(ROOT, 'prototype', 'src', 'icons', 'action-' + n + '.svg'));
     assert.equal(sha(buf), ICON_SHA256[n], 'icon ' + n);
-    assert.ok(html.includes('.mi-' + n + ' { background-image: url("data:image/svg+xml;base64,' + buf.toString('base64') + '"); }'));
+    assert.ok(html.includes('.mi-' + n + ' { -webkit-mask-image: url("data:image/svg+xml;base64,' + buf.toString('base64') + '"); mask-image: url("data:image/svg+xml;base64,' + buf.toString('base64') + '"); }'));
   }
 });
 
@@ -137,7 +137,8 @@ test('shell matches Quiz E53 values', () => {
   assert.match(html, /--shadow-shell: 0 -1px 20px 2px rgba\(0, 0, 0, 0\.1\)/);
   assert.match(html, /\.shell-header \{ background: var\(--band\); padding: 24px 20px 20px; \}/);
   assert.match(html, /--band: #f9fafa/);
-  assert.match(html, /color: var\(--lime-dark\)/);
+  assert.match(html, /color: var\(--heading\)/);
+  assert.match(html, /--heading: #404040/);
   assert.match(html, /--lime-dark: #859c2e/);
   assert.match(html, /<h1>Blackjack Cheat Sheet<\/h1>/);
   assert.match(html, /position: sticky; left: 0/);

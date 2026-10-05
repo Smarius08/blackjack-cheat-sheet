@@ -177,13 +177,13 @@ test('rule panel change event also marks', () => {
   assert.ok(app.getDiff().length === n);
 });
 
-test('markers are not colour only: badge text, aria-label, attribute; is-open ring is a different class', () => {
+test('markers are not colour only: aria-label, attribute (no text badge); is-open ring is a different class', () => {
   const { app, doc } = loadPage();
   app.setRules({ ...start, soft17: 'stands' });
   const h = doc.els.chart.innerHTML;
   const n = marked(doc);
   assert.ok(n > 0);
-  assert.equal((h.match(/<span class="chg" aria-hidden="true">Changed<\/span>/g) || []).length, n);
+  assert.equal((h.match(/class="chg"|>Changed</g) || []).length, 0); // D-074: marker is CSS-only (dashed outline + corner triangle)
   assert.equal((h.match(/, changed for your new rules\. Show why/g) || []).length, n);
   assert.match(html, /\.cell-hit\[data-changed\] \{ outline: 2px dashed/);
   assert.match(html, /\.cell-hit\.is-open \{ box-shadow: inset 0 0 0 3px/);

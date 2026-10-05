@@ -159,7 +159,7 @@ test('page has both buttons and the print CSS: sheets hidden on screen, chrome h
   const print = html.slice(html.indexOf('@media print'));
   assert.match(print, /\.shell, #rule-panel, #mode-switch, #table-mode, \.reason-slot, button \{ display: none !important; \}/);
   assert.match(print, /print-color-adjust: exact/);
-  assert.match(print, /html\[data-print="pocket"\] \.print-pocket \{ display: block; page: pocket; \}/);
+  assert.match(print, /html\[data-print="pocket"\] \.print-pocket \{ display: flex; flex-direction: column; justify-content: center; height: 100vh; page: pocket; \}/);
   assert.match(print, /html\[data-print="pocket"\] \.print-full \{ display: none; \}/);
   assert.match(print, /\.pc-sheet \{[^}]*width: 210mm; height: 148mm/);
   assert.match(print, /\.pc-panel \{[^}]*width: 105mm; height: 148mm/);

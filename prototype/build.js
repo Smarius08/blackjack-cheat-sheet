@@ -38,7 +38,9 @@ function build() {
   });
   const iconCss = ICONS.map((n) => {
     const b64 = fs.readFileSync(path.join(ROOT, 'prototype/src/icons/action-' + n + '.svg')).toString('base64');
-    return '.mi-' + n + ' { background-image: url("data:image/svg+xml;base64,' + b64 + '"); }';
+    // CSS mask + background-color so each icon takes its move's exact text colour (D-079)
+    const u = 'url("data:image/svg+xml;base64,' + b64 + '")';
+    return '.mi-' + n + ' { -webkit-mask-image: ' + u + '; mask-image: ' + u + '; }';
   }).join('\n');
   tpl = tpl.replace('/*@@ICON_CSS@@*/', () => iconCss);
   tpl = tpl.replace('<!--@@ENGINE_SCRIPTS@@-->', () => blocks.join('\n'));
