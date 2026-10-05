@@ -3,6 +3,7 @@
 
 <h2>Introduction</h2>
 <p>This task describes what the Blackjack Cheat Sheet does when a player uses it: choosing table rules, reading the chart, tapping a cell, using Table mode, seeing what new rules change, sharing a link and printing.</p>
+<p>The page address is https://chipy.com/tools/blackjack-cheat-sheet.</p>
 <p>How it looks is in <a href="https://gtmarketing.atlassian.net/browse/BFC-55465">BFC-55465</a> (Tool Layout). The strategy logic, rule values, charts, cell values, notes and reference counts are in <a href="https://gtmarketing.atlassian.net/browse/BFC-55467">BFC-55467</a> (Calculation Logic &amp; Lookup Tables). This task does not repeat them. Every move on screen and in print comes from that engine. No move is typed into the page.</p>
 <p>Working reference: prototype/index.html in the handoff zip blackjack-cheat-sheet-handoff-2026-10-05.zip (attached to the parent task BFC-55462). It behaves as described here.</p>
 <hr>
@@ -13,7 +14,7 @@
 <li>Rules: 4–8 decks, Dealer hits on soft 17, Double after split allowed, Surrender: any dealer card.</li>
 <li>If the page address carries rules, those are used instead (section 7).</li>
 <li>No count line and no changed markers on load.</li>
-<li>Nothing is loaded from the network. The chart, reasons and print sheets are all built in the page.</li>
+<li>Nothing is loaded from the network. The chart, reasons and print sheets are all built in the page. The only link that leaves the page is the Calculator link in Table mode (section 4).</li>
 </ul>
 
 <h3>2. Rule panel</h3>
@@ -44,9 +45,9 @@
 <li><b>Result.</b> The "Recommended Play" card: hand, "Dealer shows X", the move (icon + word), the cell's note when there is one, and the link to the Calculator. The move and note are the chart's own cell for the active rules. No EV numbers and no card picking.</li>
 <li>Until both taps are made the area says "Pick your hand, then the dealer’s card."</li>
 <li>After tap 1 the page scrolls to the dealer buttons. After tap 2 it scrolls to the result card. Without smooth scrolling if the device asks for reduced motion.</li>
-<li>In Table mode the rule panel is folded. The rules sentence stays visible. The button "Change rules" opens the panel and then reads "Hide rules".</li>
+<li>In Table mode the rule panel is folded, at every width. The rules sentence stays visible. The button "Change rules" opens the panel and then reads "Hide rules".</li>
 <li>If the rules change while a result is showing, the result updates at once. If its move changed, the card shows "Changed for your new rules" (text, not colour only).</li>
-<li>Calculator link text: "See every move's value in the Hand Strategy Calculator". Address: /tools/blackjack-hand-strategy-calculator. This address is a placeholder until the real URL is confirmed.</li>
+<li>Calculator link text: "See every move's value in the Hand Strategy Calculator". Address: https://chipy.com/tools/blackjack-calculator (the live Hand Strategy Calculator, same as in <a href="https://gtmarketing.atlassian.net/browse/BFC-55468">BFC-55468</a>). The prototype already uses this address.</li>
 </ul>
 
 <h3>5. What your rules change</h3>
@@ -72,7 +73,7 @@
 
 <h3>7. My-table link</h3>
 <ul>
-<li>The rules live in the page address: ?decks=4-8&amp;soft17=hits&amp;das=yes&amp;surrender=any (values as in <a href="https://gtmarketing.atlassian.net/browse/BFC-55467">BFC-55467</a>).</li>
+<li>The rules live in the page address: https://chipy.com/tools/blackjack-cheat-sheet?decks=4-8&amp;soft17=hits&amp;das=yes&amp;surrender=any (values as in <a href="https://gtmarketing.atlassian.net/browse/BFC-55467">BFC-55467</a>).</li>
 <li>On load the address is read before the first draw, so a shared link shows the right chart straight away.</li>
 <li>Each of the four values is checked alone. A missing, empty, unknown or repeated value falls back to its default; valid ones in the same address are kept. Nothing is shown and nothing is logged.</li>
 <li>On every real rules change the address is updated in place (replaceState). No new history entry, no reload. If the browser refuses (for example a local file), the chart still works.</li>
@@ -99,7 +100,7 @@
 <tr><td>Table mode steps</td><td>1. Your hand | 2. Dealer shows | groups: Hard totals, Soft hands (Ace + card), Pairs</td></tr>
 <tr><td>Table mode empty</td><td>Pick your hand, then the dealer’s card.</td></tr>
 <tr><td>Result card</td><td>Recommended Play | Hard 16 | Dealer shows 10 | SURRENDER | Changed for your new rules</td></tr>
-<tr><td>Calculator link</td><td>See every move's value in the Hand Strategy Calculator</td></tr>
+<tr><td>Calculator link</td><td>Text: See every move's value in the Hand Strategy Calculator. Address: https://chipy.com/tools/blackjack-calculator</td></tr>
 <tr><td>Pocket legend</td><td>H Hit · S Stand · D Double · P Split · R Surrender</td></tr>
 <tr><td>Pocket footer</td><td>Fold or cut along the dashed line. Landscape paper (A4 or Letter).</td></tr>
 </table>
@@ -108,8 +109,7 @@
 <ul>
 <li>Strategy logic, rule values, notes and the 36-chart snapshot: <a href="https://gtmarketing.atlassian.net/browse/BFC-55467">BFC-55467</a>. Do not copy values into this task or into the page.</li>
 <li>Look and layout: <a href="https://gtmarketing.atlassian.net/browse/BFC-55465">BFC-55465</a>.</li>
-<li>The prototype is one file with no network calls, because it was built to be handed over. A single offline file is not required in production. The engine files must stay byte-identical to the vendored copies (checked in BFC-55467).</li>
-<li>The Calculator address is a placeholder. Confirm it before launch.</li>
+<li>The prototype is one file that makes no network requests, because it was built to be handed over. It has exactly one navigational link, to the Calculator. A single offline file is not required in production. The engine files must stay byte-identical to the vendored copies (checked in BFC-55467).</li>
 <li>QA reference: the script docs/qa/qa-run.mjs (in the handoff zip) runs 12 checks in real Chrome and passed 12/12 on the final prototype: all 36 rule sets x 300 cells against the snapshot, Table mode answers, reason panels, my-table link, print (144 PDFs, 1 page each), layout at 390 and 1280, console and network, keyboard, scroll cue, link size, what your rules change (216 transitions), and a visual check against Figma. Report: docs/qa/2026-10-05-qa.md.</li>
 </ul>
 <hr>
@@ -133,14 +133,14 @@
 <li>Each chart table is one Tab stop. Arrow keys, Home and End move between cells without wrapping.</li>
 <li>The tapped cell and its panel are in view after opening, also at 390.</li>
 <li>Table mode: two taps give the Recommended Play card. For every hand x dealer card x the 36 rule sets the move and note equal the matching chart cell.</li>
-<li>In Table mode the rules are folded behind "Change rules". The page scrolls to the dealer buttons after tap 1 and to the result after tap 2.</li>
+<li>In Table mode the rules are folded behind "Change rules" at every width. The page scrolls to the dealer buttons after tap 1 and to the result after tap 2.</li>
 <li>A rules change updates an open reason panel and a shown Table mode result at once.</li>
 <li>After a rules change, changed cells are marked and the count line shows the right number and wording (N, 1, none), checked for all 216 single-field changes against BFC-55467 reference counts. DISMISS clears it. The next change replaces it.</li>
 <li>No marker or count line on first load, on a link load, or in print. Table mode marks "Changed for your new rules" only when the shown move changed.</li>
 <li>"Print chart" gives one portrait page and "Print pocket card" one landscape sheet, on A4 and on US Letter, each with the chosen rules, matching the snapshot. The pocket card has one letter per cell and is readable in black and white.</li>
 <li>Print hides all controls, panels and markers. Ctrl/Cmd+P gives the full page.</li>
 <li>A link with the four rule keys shows the right chart on load for all 36 sets. Bad values fall back per field without any message or error. A rules change rewrites only the four keys and keeps other parameters and the #hash, with no new history entry.</li>
-<li>The Calculator link has the exact text in section 8 and is at least 44 px high.</li>
-<li>The page makes no network request. The engine files are byte-identical to the vendored copies.</li>
+<li>The Calculator link has the exact text in section 8, points to https://chipy.com/tools/blackjack-calculator and is at least 44 px high.</li>
+<li>The page makes no network request; its only external link is the Calculator link. The engine files are byte-identical to the vendored copies.</li>
 <li>The 12 checks of docs/qa/qa-run.mjs pass on the build.</li>
 </ul>

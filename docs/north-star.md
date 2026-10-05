@@ -36,7 +36,7 @@ Static charts (ProfitDuel, ChasingTheFrog, Blackjack Apprenticeship) are fixed; 
 CHIPY: rule-aware + plain move per cell + tap-for-why + printable "your rules" chart.
 
 ## Open questions
-1. Final URL: working URL /tools/blackjack-cheat-sheet; final call in S-16 with the keyword split (D-043).
+1. Final URL: https://chipy.com/tools/blackjack-cheat-sheet (D-082).
 2. Reporter approval of concept and engine.
 
 ## Not a tool-development question

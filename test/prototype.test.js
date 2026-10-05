@@ -69,16 +69,23 @@ test('icons are pinned by SHA-256 and embedded as the same bytes', () => {
   }
 });
 
-test('no network: no http(s) src/href/url(), no fetch, no external link/script', () => {
-  const stripped = html.replace(/xmlns="http:\/\/www\.w3\.org\/2000\/svg"/g, '');
+test('no network: no http(s) src/href/url(), no fetch, no external link/script (one allowed anchor, D-082)', () => {
+  const ALLOWED = '<a class="sa-link" href="https://chipy.com/tools/blackjack-calculator">';
+  const ALLOWED_URL = 'https://chipy.com/tools/blackjack-calculator';
+  // markup form is built in the page script as href="' + CALC_HREF + '"; the URL itself appears once as a constant
+  const stripped = html
+    .split(ALLOWED).join('')
+    .replace(/xmlns="http:\/\/www\.w3\.org\/2000\/svg"/g, '');
   assert.ok(!/\b(src|href)\s*=\s*["']?\s*(https?:)?\/\//i.test(stripped));
   assert.ok(!/url\(\s*["']?\s*(https?:)?\/\//i.test(stripped));
+  assert.ok(!/@import/i.test(stripped));
   assert.ok(!/fetch\s*\(/.test(stripped));
+  assert.ok(!/XMLHttpRequest/.test(stripped));
   assert.ok(!/<link\b/i.test(stripped));
   assert.ok(!/<script[^>]*\bsrc=/i.test(stripped));
-  // the page itself has no http(s):// outside engine comments' text of the SVG namespace
-  const app = scripts().pop().body;
-  assert.ok(!/https?:\/\//.test(app));
+  // no http(s) URL anywhere except the one allowed Calculator URL and the SVG xmlns
+  const urls = (html.replace(/xmlns="http:\/\/www\.w3\.org\/2000\/svg"/g, '').match(/https?:\/\/[^\s"'<>)]+/g) || []);
+  assert.ok(urls.length > 0 && urls.every((u) => u === ALLOWED_URL), 'unexpected URL: ' + urls.filter((u) => u !== ALLOWED_URL));
 });
 
 function loadPage() {

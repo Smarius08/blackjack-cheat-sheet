@@ -19,7 +19,7 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 
 ## Next
 - S-21 visual sync done (G3 D-080), pushed 4025487. Handoff zip handoff/blackjack-cheat-sheet-handoff-2026-10-05.zip (git-ignored).
-- G5: S-15 drafts docs/jira/BFC-55465-tool-layout.html, BFC-55466-tool-functionality.html. S-14/S-16 done in Jira by Cowork.
+- S-15 approved (G5 D-081): Cowork writes BFC-55465/66 from docs/jira/*.html; Marius attaches the zip. Final URLs D-082 (page + Calculator link in prototype). QA 12/12.
 - Card next session: refresh .claude/agents/ui-dev.md for D-050/D-053/D-056 (housekeeper).
 - work-lenovo clone pending.
 

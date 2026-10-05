@@ -127,7 +127,7 @@ test('two taps: switch, hand, dealer -> result card with all parts', () => {
   assert.match(card, new RegExp('<span class="sa-rec-word">' + WORDS[want.move] + '</span>'));
   assert.equal(card.includes('data-note'), want.note !== null);
   if (want.note !== null) assert.ok(card.includes(want.note.replace(/&/g, '&amp;')));
-  assert.match(card, /<a class="sa-link" href="\/tools\/blackjack-hand-strategy-calculator">See every move's value in the Hand Strategy Calculator<\/a>/);
+  assert.match(card, /<a class="sa-link" href="https:\/\/chipy\.com\/tools\/blackjack-calculator">See every move's value in the Hand Strategy Calculator<\/a>/);
   const text = card.replace(/<[^>]*>/g, ' ');
   assert.ok(!/\bEV\b|expected value|optimal|%|\d\.\d/i.test(text), 'no EV / optimal wording');
   assert.ok(!/card-slot|<img/.test(card), 'no card picking');

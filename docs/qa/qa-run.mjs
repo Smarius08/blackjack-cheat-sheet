@@ -620,6 +620,7 @@ for (const x of c9.filter(x => !x.v)) find('medium', 'Check 9: ' + x.n + ' ' + x
 // CHECK 10: Calculator link >= 44px
 // =====================================================================
 const c10 = [];
+const CALC_URL = 'https://chipy.com/tools/blackjack-calculator'; // D-082
 for (const [w, h] of [[390, 844], [1280, 900]]) {
   const p = await newPage(w, h);
   await p.goto(URL0);
@@ -627,9 +628,12 @@ for (const [w, h] of [[390, 844], [1280, 900]]) {
   await p.locator('#table-pick button[data-act="hand"][data-val="hard:16"]').click();
   await p.locator('#table-pick button[data-act="dealer"][data-val="10"]').click();
   const bb = await p.locator('#table-result a.sa-link').boundingBox();
-  c10.push({ n: `link box at ${w}`, v: !!bb && bb.height >= 44, x: bb ? `${Math.round(bb.width)}x${bb.height}` : 'link missing' });
+  const anchors = await p.evaluate(() => [...document.querySelectorAll('a')].map(a => ({ href: a.getAttribute('href'), cls: a.className })));
+  const calcLinks = anchors.filter(a => a.cls.includes('sa-link'));
+  const hrefOk = calcLinks.length === 1 && calcLinks[0].href === CALC_URL && anchors.length === 1;
+  c10.push({ n: `link at ${w}: href exactly ${CALC_URL}, the only <a> on the page, box >= 44px`, v: !!bb && bb.height >= 44 && hrefOk, x: (bb ? `${Math.round(bb.width)}x${bb.height}` : 'link missing') + `; anchors on page ${JSON.stringify(anchors)}` });
 }
-row(10, 'Calculator link tap target >= 44px (S-20 F3, D-055)', c10.every(x => x.v), c10.map(x => (x.v ? 'ok' : 'FAIL') + ': ' + x.n + ' [' + x.x + ']').join(' | '));
+row(10, 'Calculator link: exact href (D-082) + tap target >= 44px (S-20 F3, D-055)', c10.every(x => x.v), c10.map(x => (x.v ? 'ok' : 'FAIL') + ': ' + x.n + ' [' + x.x + ']').join(' | '));
 for (const x of c10.filter(x => !x.v)) find('low', 'Check 10: ' + x.n + ' ' + x.x);
 
 // =====================================================================
@@ -810,8 +814,8 @@ await browser.close();
 const bad7 = consoleMsgs.filter(m => ['error', 'warning'].includes(m.type));
 const nonFile = requests.filter(u => !u.startsWith(URL0));
 row(7, 'Whole run: no console errors/warnings/page errors; no network except the file',
-  bad7.length === 0 && pageErrors.length === 0 && nonFile.length === 0,
-  `console messages total ${consoleMsgs.length} (errors/warnings ${bad7.length}${bad7.length ? ': ' + bad7.slice(0, 3).map(m => m.text).join(' ; ') : ''}), page errors ${pageErrors.length}, requests ${requests.length} (${new Set(requests.map(u => u.split('?')[0])).size} unique URL: ${[...new Set(requests.map(u => u.split('?')[0]))].join(', ')}), non-file requests ${nonFile.length}`);
+  bad7.length === 0 && pageErrors.length === 0 && nonFile.length === 0 && !requests.some(u => /chipy\.com/.test(u)),
+  `requests to chipy.com ${requests.filter(u => /chipy\.com/.test(u)).length} (link is navigational only, never clicked); console messages total ${consoleMsgs.length} (errors/warnings ${bad7.length}${bad7.length ? ': ' + bad7.slice(0, 3).map(m => m.text).join(' ; ') : ''}), page errors ${pageErrors.length}, requests ${requests.length} (${new Set(requests.map(u => u.split('?')[0])).size} unique URL: ${[...new Set(requests.map(u => u.split('?')[0]))].join(', ')}), non-file requests ${nonFile.length}`);
 rows.sort((a, b) => a.n - b.n);
 
 console.log('\n| # | Check | Result | Evidence |\n|---|---|---|---|');

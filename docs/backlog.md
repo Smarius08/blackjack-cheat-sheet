@@ -38,7 +38,7 @@ Defaults on load: 4–8 decks · dealer hits soft 17 · DAS allowed · surrender
 | S-13b | Figma tool screens 1280 + 390: default chart, reason panel (+ note), rules changed, table mode states, 390 rules collapsed + swipe cue; CHIPY tokens, F2 contrast, F4 badge (D-053, D-068, D-069) | figma-designer | 2 | G4 | done (G4 D-074) |
 | S-13c | Figma print: full-page chart + A6 pocket card, rules printed (D-064, D-069) | figma-designer | 2 | G4 | done (G4 D-074) |
 | S-14 | Jira draft: Calculation Logic & Lookup Tables (engine + snapshot; must state the 2-cell deviation from v30: Single/H17 6,6 vs 7 Ph, Multi/H17 8,8 vs A Rpa — D-046, D-049) | jira-writer | 3 | G5 | done in Jira by Cowork (BFC-55467, D-074) |
-| S-15 | Jira content for existing BFC-55465 Tool Layout (note: v2 "Learn this chart" goes directly below the tool, D-070/D-075 — no visible slot; notes for the design-system owner: in-page nav item height, breadcrumb tap targets, inactive segmented label contrast 4.41:1 — D-072), Tool Functionality | jira-writer | 3 | G5 | drafted (G5 pending) |
+| S-15 | Jira content for existing BFC-55465 Tool Layout (note: v2 "Learn this chart" goes directly below the tool, D-070/D-075 — no visible slot; notes for the design-system owner: in-page nav item height, breadcrumb tap targets, inactive segmented label contrast 4.41:1 — D-072), Tool Functionality | jira-writer | 3 | G5 | done (G5 D-081; Cowork writes to Jira) |
 | S-16 | Jira drafts: SEO Content (incl. keyword split decision with Ahrefs, D-016), Common Sections, related tools, sitemaps/index/search | jira-writer | 1 | G5 | done in Jira by Cowork (BFC-55463/64/68–74, D-074) |
 
 ## Follow-ups
