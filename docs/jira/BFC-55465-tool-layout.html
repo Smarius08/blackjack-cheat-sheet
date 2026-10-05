@@ -1,0 +1,173 @@
+<!-- Draft for BFC-55465 "Blackjack Cheat Sheet: Tool Layout" (parent BFC-55462). G5: Marius approves before pasting into Jira. -->
+<p>This tool should be protected from being copied by our competitors! See related task: <a href="https://gtmarketing.atlassian.net/browse/BFC-52392">https://gtmarketing.atlassian.net/browse/BFC-52392</a></p>
+
+<h2>Introduction</h2>
+<p>This task covers how the Blackjack Cheat Sheet page and tool must look. Build it from the Figma frames listed below. The Figma design is final (signed off).</p>
+<p>What the tool does when someone taps or types is in <a href="https://gtmarketing.atlassian.net/browse/BFC-55466">BFC-55466</a> (Tool Functionality). The strategy logic, charts, cell values and texts are in <a href="https://gtmarketing.atlassian.net/browse/BFC-55467">BFC-55467</a> (Calculation Logic &amp; Lookup Tables). This task does not repeat them.</p>
+<p>Working reference: prototype/index.html in the handoff zip blackjack-cheat-sheet-handoff-2026-10-05.zip (attached to the parent task BFC-55462). It is dressed in this Figma design, at 1280 and 390 px. Where Figma and the prototype differ, Figma wins, except for the accepted differences in section 8.</p>
+<hr>
+
+<h3>1. Figma</h3>
+<p>File and page: <a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14034-33811">Tools---Calculators, page "-&gt; Blackjack Cheat Sheet"</a> (node 14034:33811). Frame names follow "CS / &lt;screen&gt; / &lt;width&gt;". Link pattern: the same URL with node-id=&lt;id with "-" instead of ":"&gt;.</p>
+<table>
+<tr><th>Screen</th><th>1280</th><th>390</th></tr>
+<tr><td>Full page</td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14047-648859">14047:648859</a></td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14048-648735">14048:648735</a></td></tr>
+<tr><td>Full page – Table mode (result Hard 16 vs 10 = Surrender)</td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14071-660225">14071:660225</a></td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14071-661008">14071:661008</a></td></tr>
+<tr><td>Tool: default chart</td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14056-6031">14056:6031</a></td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14056-6546">14056:6546</a></td></tr>
+<tr><td>Tool: reason panel</td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14058-7935">14058:7935</a></td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14058-8815">14058:8815</a></td></tr>
+<tr><td>Tool: reason panel with note</td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14058-654495">14058:654495</a></td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14058-656063">14058:656063</a></td></tr>
+<tr><td>Tool: rules changed</td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14060-11755">14060:11755</a></td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14060-13320">14060:13320</a></td></tr>
+<tr><td>Table mode: empty</td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14060-14893">14060:14893</a></td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14060-15510">14060:15510</a></td></tr>
+<tr><td>Table mode: hand picked</td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14061-13759">14061:13759</a></td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14061-14223">14061:14223</a></td></tr>
+<tr><td>Table mode: result</td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14061-13883">14061:13883</a></td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14061-14345">14061:14345</a></td></tr>
+<tr><td>Table mode: result, changed for new rules</td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14061-14048">14061:14048</a></td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14061-14508">14061:14508</a></td></tr>
+<tr><td>Table mode: rules collapsed (390 only; 1280 shows the same in the Table-mode frames above)</td><td>-</td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14061-658319">14061:658319</a></td></tr>
+<tr><td>Swipe cue (390 only)</td><td>-</td><td><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14061-658393">14061:658393</a></td></tr>
+<tr><td>Print: full page, A4 portrait</td><td colspan="2"><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14063-15139">14063:15139</a></td></tr>
+<tr><td>Print: pocket card, A4 landscape (2 x A6)</td><td colspan="2"><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14065-16035">14065:16035</a></td></tr>
+<tr><td>Component "CS / Move" (move cell, States incl. Changed 14071:16537–16557)</td><td colspan="2"><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14047-86">14047:86</a></td></tr>
+<tr><td>Component "CS / Pick" (table-mode button)</td><td colspan="2"><a href="https://www.figma.com/design/mRGsMU76MmiKMnzQkwYKgG/Tools---Calculators?node-id=14060-14892">14060:14892</a></td></tr>
+</table>
+
+<h3>2. Page structure (top to bottom)</h3>
+<table>
+<tr><th>#</th><th>Block</th><th>Library component</th><th>On our page (1280 / 390)</th></tr>
+<tr><td>1</td><td>Top section. Breadcrumb "Blackjack Cheat Sheet", H1 "Blackjack Cheat Sheet: Basic Strategy Chart for Your Table Rules".</td><td>"Top section full width": Desktop 12625:94021, Mobile 12625:94028</td><td>14070:16438 / 14070:660152</td></tr>
+<tr><td>2</td><td>In-page nav: "Blackjack Cheat Sheet", "How to use", "Q&amp;As", "Other tools". The component shows them in title case. Same as on the Quiz full page.</td><td>12625:95136 (desktop), 12625:95141 (mobile)</td><td>14070:16495 / 14070:660208</td></tr>
+<tr><td>3</td><td>The tool (sections 3 and 4)</td><td>Built for this page (components CS / Move, CS / Pick)</td><td>see section 1</td></tr>
+<tr><td>4</td><td>How to use block: "How to use the Blackjack Cheat Sheet", info and tip callouts, steps, then "Blackjack Cheat Sheet FAQs". Real copy comes from the content brief BFC-55461.</td><td>Rebuilt from the Quiz frames 13996:5606 (desktop) / 13996:6184 (mobile), using Callout box 12625:96904 / 12625:96906, Numbered list 6506:39722, FAQs Widget 12625:104305 / 12625:104310 (see section 7)</td><td>14070:16526 / 14070:660239</td></tr>
+<tr><td>5</td><td>Q&amp;As: existing section, standard state (3 questions + Load More), as on the Quiz page</td><td>Q&amp;As section</td><td>14048:160643 / 14049:649314</td></tr>
+<tr><td>6</td><td>Other Blackjack Tools carousel: Calculator, Trainer, Quiz, Simulator (heading "Discover Other Blackjack Tools")</td><td>Carousel</td><td>14048:160760 / 14049:649432</td></tr>
+<tr><td>7</td><td>Page contributors</td><td>Authors section</td><td>14048:161371 / 14049:650030</td></tr>
+</table>
+<p>At 390 the Mobile variants are used. No empty slot is shown anywhere (see "v2 note", section 7).</p>
+
+<h3>3. Tool layout at 1280</h3>
+<p>Top to bottom inside the tool card:</p>
+<ul>
+<li><b>Shell</b>: same shell as the CHIPY Quiz and Trainer. Card 852 px wide on desktop (804 px content, 24 px padding), 16 px radius, soft shadow, no border. Header band #f9fafa with the title "BLACKJACK CHEAT SHEET" (centred, uppercase, bold, #404040).</li>
+<li><b>Mode switch</b>: "Full chart | Table mode", segmented control, 48 px high, Full chart selected first.</li>
+<li><b>Rule panel</b>: 4 controls in 2 columns (Decks, Dealer on soft 17, Double after split, Surrender), label above each, segmented, 48 px high.</li>
+<li><b>Rules sentence</b> ("Table rules: ...") and, when shown, the <b>count line</b> with a DISMISS button (box with a 1 px dark border).</li>
+<li><b>Print buttons</b>: "PRINT CHART" and "PRINT POCKET CARD" side by side. Secondary style: lime 2 px outline, upper case.</li>
+<li><b>Legend</b>: five pills (icon + word) for Hit, Stand, Double, Split, Surrender.</li>
+<li><b>Chart</b>: three tables (Hard hands, Soft hands, Pairs), each with H2, one-line sub-line, then the grid. The grid has a pinned left column "Your hand" (84 px), a header row of 36 px and dealer columns 2 to A. At 1280 all 10 dealer columns are visible (71 px each).</li>
+<li><b>Rows are always 52 px high</b>, whatever the rules, markers or open panels. Each cell: move icon (20 px) above the move word, on the move colour.</li>
+<li><b>Changed marker</b> (after a rules change): dashed 2 px inner outline plus a 12 x 12 px solid triangle in the top-right corner. The cell does not grow. No text label in the cell.</li>
+<li><b>Reason panel</b>: opens inline directly under the table that was tapped (one per table). Light green header with title (e.g. "Hard 16 vs dealer 10") and a CLOSE button. Body: move chip (icon + word), reason, then the note in a separate line when there is one. The tapped cell shows a 3 px dark outline (white on Surrender).</li>
+<li><b>Table mode</b> (instead of the legend and chart): "1. Your hand" with groups Hard totals, Soft hands (Ace + card), Pairs, as 60 x 48 px buttons. Then "2. Dealer shows" with 2 to A. Then the <b>Recommended Play card</b>: header "Recommended Play", hand (e.g. "Hard 16", 40 px), chip "Dealer shows 10", big move row with icon (e.g. SURRENDER), optional note, and the Calculator link (44 px tall). When the answer changed because of new rules, a dashed box "Changed for your new rules" sits at the top of the card body.</li>
+<li>In Table mode the rule panel is folded behind a "CHANGE RULES" button at every width (it shows "HIDE RULES" while open). The rules sentence stays visible. See the Table-mode frames at 1280 and 390.</li>
+</ul>
+
+<h3>4. Tool layout at 390</h3>
+<ul>
+<li>Page side margin 8 px, so the shell is 374 px wide. Body padding 24 / 16 / 16 / 16. Title 18 px.</li>
+<li>Rule panel in one column. The two print buttons are stacked, full width.</li>
+<li>Chart box is 342 px wide: pinned "Your hand" column (84 px) plus a sideways-scrolling area. Dealer columns are 62 px, so 2 to 5 are visible and 6 peeks in. The cell word is 11 px with -0.2 px letter-spacing so "Surrender" never touches its neighbour.</li>
+<li><b>Swipe cue</b>: above each chart, the text "Swipe for dealer 6–A", and a 20 px white fade on the right edge of the scroll area. Both disappear for a table once it is scrolled to the end, and come back when scrolled back. They never show at 1280.</li>
+<li>The page itself never scrolls sideways.</li>
+<li>Reason panel: same as 1280. The table scrolls so the tapped cell stays visible (e.g. dealer 8 to A for a tap on dealer 10), and the panel sits right under it.</li>
+<li>Table mode: pick buttons 62 x 48, card hand 34 px, rules folded behind "CHANGE RULES" (frame 14061:658319).</li>
+</ul>
+
+<h3>5. Visual tokens and typography</h3>
+<p>Font: Roboto (weights 400 to 900). Full values for every element are in the Figma frames; the main ones are below.</p>
+<table>
+<tr><th>Token</th><th>Value</th><th>Used for</th></tr>
+<tr><td>Heading text</td><td>#404040</td><td>Title, labels, cell text, chart headings</td></tr>
+<tr><td>Body text</td><td>#5e6166</td><td>Sub-lines, rules sentence, button text, unselected toggle text</td></tr>
+<tr><td>Ink</td><td>#1a1a1a</td><td>Reason text, count line, step headings</td></tr>
+<tr><td>Surface</td><td>#ffffff / #f9fafa</td><td>Cards, cells / header band, row labels, unselected segment</td></tr>
+<tr><td>Line</td><td>#e6e6e6</td><td>Grid lines, outlines, card borders</td></tr>
+<tr><td>Brand lime</td><td>#c4db11</td><td>Selected segment, button outline, Double</td></tr>
+<tr><td>Olive</td><td>#859c2e</td><td>Split</td></tr>
+<tr><td>Link green</td><td>#5f7220</td><td>Calculator link</td></tr>
+</table>
+<table>
+<tr><th>Move</th><th>Cell fill</th><th>Text + icon</th><th>Icon</th></tr>
+<tr><td>Hit</td><td>#ffffff</td><td>#404040</td><td>Pointer</td></tr>
+<tr><td>Stand</td><td>#bfbfbf</td><td>#404040</td><td>Open hand</td></tr>
+<tr><td>Double</td><td>#c4db11</td><td>#404040</td><td>Two bars</td></tr>
+<tr><td>Split</td><td>#859c2e</td><td>#1a1d22</td><td>Arrows left-right</td></tr>
+<tr><td>Surrender</td><td>#404040</td><td>#ffffff</td><td>Flag</td></tr>
+</table>
+<p>Same icons as the Trainer and Calculator (CS / Move uses the Action-button icons, not the library "2x" and bars set).</p>
+<table>
+<tr><th>Element</th><th>Weight / size</th></tr>
+<tr><td>Shell title</td><td>700 / 20 px (390: 18), upper case, letter-spacing 0.02em</td></tr>
+<tr><td>Rule labels</td><td>500 / 16</td></tr>
+<tr><td>Segmented text, rules sentence</td><td>400 / 14 (3-option rows: selected 700)</td></tr>
+<tr><td>Buttons</td><td>700 / 14, upper case</td></tr>
+<tr><td>Chart H2 / sub-line</td><td>700 / 18 and 400 / 13</td></tr>
+<tr><td>Dealer header / row label</td><td>700 / 13 and 700 / 14</td></tr>
+<tr><td>Cell word</td><td>600 / 12 (390: 11)</td></tr>
+<tr><td>Reason title / body / note</td><td>700 / 16, 400 / 16 (line 1.45), 400 / 14</td></tr>
+<tr><td>Recommended Play hand / move word</td><td>900 / 40 (390: 34) and 800 / 28</td></tr>
+</table>
+
+<h3>6. Accessibility</h3>
+<ul>
+<li>Every tap target is at least 44 px high and wide: segments, buttons, cells (52 px rows), pick buttons (48 px) and the Calculator link (44 px).</li>
+<li>Colour is never the only signal. Every cell shows the move word and icon. Changed cells have a dashed outline and corner triangle and a screen-reader text ("changed for your new rules"). The Recommended Play marker is a text box with a dashed border. The pocket card uses letters.</li>
+<li>Contrast: title and headings #404040 on #f9fafa = 9.9:1. Unselected toggle text is #5e6166 on purpose, because the library grey #757575 is only 4.41:1 (see section 7).</li>
+<li>Focus ring: 3 px #404040 inside the control. On Surrender cells it is white, because dark on dark is invisible.</li>
+<li>The icons are decoration only (hidden from screen readers). The word carries the meaning.</li>
+</ul>
+
+<h3>7. Notes for the design-system owner</h3>
+<p>These are not part of the Cheat Sheet build. They are issues found in the library while designing it (decision D-072).</p>
+<ul>
+<li><b>In-page nav</b> items are 35 px high. Below the 44 px target.</li>
+<li><b>Breadcrumb</b> targets are 15 to 16 px high.</li>
+<li><b>"Read more"</b> is 26 px high.</li>
+<li><b>Segmented control, inactive label</b> is #757575 on #f9fafa = 4.41:1, just under 4.5:1. The Cheat Sheet uses #5e6166 instead.</li>
+</ul>
+<p><b>Proposal (D-073):</b> make "Lower content" a real library component with a Desktop and a Mobile variant. It is the block with How to use, info and tip callouts, steps and FAQs (today Quiz 13996:5606 and 13996:6184). Every tool page needs it, and today it is a one-off block on the Quiz page, so for this page it was rebuilt from those frames.</p>
+<p><b>v2 note:</b> "Learn this chart" (memory rules) is planned directly below the tool. No slot is rendered at launch (D-070, D-075). The page flows from the tool straight to How to use.</p>
+
+<h3>8. Differences between prototype and Figma (accepted)</h3>
+<ul>
+<li>Font: the prototype is one offline file and does not download Roboto. Where Roboto is not installed it uses the system font, so some lines are a little wider and a few blocks are 15 to 70 px different in height.</li>
+<li>Row labels in the chart show the engine text with a hyphen ("5-7", "18-21"). The reason panel title uses an en dash ("Hard 18–21"). Strings are not changed (D-076).</li>
+<li>The dashed outline of changed cells uses the browser's default dash pattern, so it looks slightly bolder than Figma.</li>
+<li>Print, full page: rows are 6 mm in the prototype (19 pt in Figma) so the page fits one Letter sheet.</li>
+<li>Unselected toggle text is #5e6166 in the prototype and in this task's tokens (the Figma frames show the library #757575, see section 7).</li>
+</ul>
+
+<h3>Developer notes</h3>
+<ul>
+<li>This task is look and layout only. Behaviour: <a href="https://gtmarketing.atlassian.net/browse/BFC-55466">BFC-55466</a>. Logic and texts: <a href="https://gtmarketing.atlassian.net/browse/BFC-55467">BFC-55467</a>.</li>
+<li>Page copy outside the tool (How to use, FAQs, Q&amp;As) is a sample in Figma. Real copy comes from the content brief BFC-55461.</li>
+<li>Use the existing library components for the top section, in-page nav, Q&amp;As and carousel. Do not redraw them.</li>
+<li>Row height is fixed at 52 px. A changed marker, an open panel or a rules change must never change it.</li>
+</ul>
+<hr>
+
+<h2>Resource Files</h2>
+<table>
+<tr><th>File</th><th>What it is</th><th>Short description</th></tr>
+<tr><td>Figma page "-&gt; Blackjack Cheat Sheet" (link in section 1)</td><td>Final design</td><td>All frames at 1280 and 390, print frames, components CS / Move and CS / Pick.</td></tr>
+<tr><td>prototype/index.html (in blackjack-cheat-sheet-handoff-2026-10-05.zip, attached to BFC-55462)</td><td>Working reference</td><td>One HTML file in the Figma design. Open it at 1280 and 390 px to compare.</td></tr>
+<tr><td>docs/figma/visual-spec.md (in the zip)</td><td>Visual spec</td><td>Exact colours, sizes and spacing for every tool element, taken from Figma.</td></tr>
+<tr><td>docs/qa/visual/*-side-by-side.png (in the zip, 8 files)</td><td>Prototype vs Figma</td><td>Prototype left, Figma right, at 1280 and 390.</td></tr>
+</table>
+<hr>
+
+<h2>Acceptance Criteria</h2>
+<ul>
+<li>At 1280 and at 390 the page and the tool match the Figma frames in section 1: order, spacing, colours, type and move palette. Differences listed in section 8 are accepted.</li>
+<li>The page has the order and components from section 2, with no empty slot.</li>
+<li>At 390 the page never scrolls sideways. Only each chart scrolls inside its own box, with "Your hand" pinned.</li>
+<li>At 390 each chart shows "Swipe for dealer 6–A" and the right fade while columns are hidden, and hides both at the end of the scroll. Neither shows at 1280.</li>
+<li>Chart rows are 52 px high in every state: default, rules changed, panel open, 36 rule sets.</li>
+<li>Changed cells show the dashed inner outline and the 12 px corner triangle (white on Surrender), with no text in the cell.</li>
+<li>The word "Surrender" has clear space to its neighbour in 62 px cells at 390.</li>
+<li>The reason panel opens directly under its table and shows the title, the move chip, the reason, and the note on its own line only when there is one.</li>
+<li>Table mode, empty, hand picked, result and result changed frames are matched. At 1280 and 390 the rules are folded behind "CHANGE RULES".</li>
+<li>All tap targets are at least 44 px. The focus ring is visible on every control, white on Surrender cells.</li>
+<li>Title and heading text is #404040. Unselected toggle text is #5e6166.</li>
+<li>Print, full page: one page on A4 and on US Letter, portrait, centred, title #404040, grid 0.75 pt #5e6166, no on-screen controls.</li>
+<li>Print, pocket card: one landscape sheet on A4 and on US Letter, two A6 panels side by side with a dashed fold line, centred, letters readable in black and white.</li>
+<li>The changed markers and count line never appear in print.</li>
+<li>The notes in section 7 are handed to the design-system owner.</li>
+</ul>

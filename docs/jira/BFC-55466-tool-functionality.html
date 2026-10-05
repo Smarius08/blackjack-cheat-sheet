@@ -1,0 +1,146 @@
+<!-- Draft for BFC-55466 "Blackjack Cheat Sheet: Tool Functionality" (parent BFC-55462). G5: Marius approves before pasting into Jira. -->
+<p>This tool should be protected from being copied by our competitors! See related task: <a href="https://gtmarketing.atlassian.net/browse/BFC-52392">https://gtmarketing.atlassian.net/browse/BFC-52392</a></p>
+
+<h2>Introduction</h2>
+<p>This task describes what the Blackjack Cheat Sheet does when a player uses it: choosing table rules, reading the chart, tapping a cell, using Table mode, seeing what new rules change, sharing a link and printing.</p>
+<p>How it looks is in <a href="https://gtmarketing.atlassian.net/browse/BFC-55465">BFC-55465</a> (Tool Layout). The strategy logic, rule values, charts, cell values, notes and reference counts are in <a href="https://gtmarketing.atlassian.net/browse/BFC-55467">BFC-55467</a> (Calculation Logic &amp; Lookup Tables). This task does not repeat them. Every move on screen and in print comes from that engine. No move is typed into the page.</p>
+<p>Working reference: prototype/index.html in the handoff zip blackjack-cheat-sheet-handoff-2026-10-05.zip (attached to the parent task BFC-55462). It behaves as described here.</p>
+<hr>
+
+<h3>1. Defaults on load</h3>
+<ul>
+<li>Full chart view. At every screen width.</li>
+<li>Rules: 4–8 decks, Dealer hits on soft 17, Double after split allowed, Surrender: any dealer card.</li>
+<li>If the page address carries rules, those are used instead (section 7).</li>
+<li>No count line and no changed markers on load.</li>
+<li>Nothing is loaded from the network. The chart, reasons and print sheets are all built in the page.</li>
+</ul>
+
+<h3>2. Rule panel</h3>
+<ul>
+<li>Four controls, each a group of radio buttons shown as a segmented control: Decks (1 / 2 / 4–8), Dealer on soft 17 (Stands / Hits), Double after split (Yes / No), Surrender (Not allowed / Any dealer card / Except ace). Double down is not a control. The rule values and their meaning are in <a href="https://gtmarketing.atlassian.net/browse/BFC-55467">BFC-55467</a>.</li>
+<li>Choosing an option redraws the chart, the "Table rules:" sentence, the open reason panels, the Table mode result, the print sheets and the address (section 7).</li>
+<li>Keyboard: Tab goes to a group, the arrow keys change the option, there is a visible focus ring.</li>
+<li>Choosing the option that is already selected changes nothing.</li>
+</ul>
+
+<h3>3. Full chart and reason panel</h3>
+<ul>
+<li>Three tables: Hard hands, Soft hands (rows A,2 to A,9), Pairs. Dealer columns 2 to 10 and A. Every cell shows the move icon and the move word. No engine codes anywhere.</li>
+<li>Tap, click, or press Enter or Space on a cell: a panel opens directly under that table. It shows the row label and dealer card (e.g. "Hard 16 vs dealer 10", "A,7 vs dealer 3"), the move (icon + word), the reason, and the cell's note on a separate line only when the cell has one. Reason and note text come from <a href="https://gtmarketing.atlassian.net/browse/BFC-55467">BFC-55467</a> and are never edited.</li>
+<li>One panel per table. Tapping another cell in the same table replaces its content. There is no hover behaviour.</li>
+<li>The CLOSE button and the Escape key close the panel. Focus goes back to the cell.</li>
+<li>The page scrolls so the tapped cell and its panel are both in view. At 390 the table also scrolls sideways to the tapped column.</li>
+<li>Keyboard: each table is one Tab stop (roving tabindex). Arrow keys move between cells and stop at the edges. Home and End go to the first and last dealer column.</li>
+<li>If the rules change while a panel is open, the panel is redrawn for the new rules.</li>
+<li>Screen readers: each cell is announced as "Hard 16 vs dealer 10: Surrender. Show why". Panels are announced politely when they open.</li>
+</ul>
+
+<h3>4. Table mode</h3>
+<ul>
+<li>Switch at the top: "Full chart | Table mode". The two options are buttons and the active one is marked. Switching hides the legend and charts and shows Table mode, and back. Print buttons stay.</li>
+<li><b>Tap 1, your hand.</b> Hard totals 5 to 21, Soft hands A,2 to A,9, Pairs 2,2 to 10,10 and A,A. Hard totals map to the chart rows (5, 6, 7 = row 5-7; 8 to 17 = same row; 18 to 21 = row 18-21). Soft A,2 to A,9 are chart rows 13 to 20.</li>
+<li><b>Tap 2, dealer card.</b> 2 to 10 and A. The dealer buttons show after the hand is picked.</li>
+<li><b>Result.</b> The "Recommended Play" card: hand, "Dealer shows X", the move (icon + word), the cell's note when there is one, and the link to the Calculator. The move and note are the chart's own cell for the active rules. No EV numbers and no card picking.</li>
+<li>Until both taps are made the area says "Pick your hand, then the dealer’s card."</li>
+<li>After tap 1 the page scrolls to the dealer buttons. After tap 2 it scrolls to the result card. Without smooth scrolling if the device asks for reduced motion.</li>
+<li>In Table mode the rule panel is folded. The rules sentence stays visible. The button "Change rules" opens the panel and then reads "Hide rules".</li>
+<li>If the rules change while a result is showing, the result updates at once. If its move changed, the card shows "Changed for your new rules" (text, not colour only).</li>
+<li>Calculator link text: "See every move's value in the Hand Strategy Calculator". Address: /tools/blackjack-hand-strategy-calculator. This address is a placeholder until the real URL is confirmed.</li>
+</ul>
+
+<h3>5. What your rules change</h3>
+<p>Details, wording rules and the reference counts are in <a href="https://gtmarketing.atlassian.net/browse/BFC-55467">BFC-55467</a> section 5. Behaviour on screen:</p>
+<ul>
+<li>When the player changes a rule, every chart cell whose move is different from before gets the changed marker. A line shows the count with a DISMISS button.</li>
+<li>Count wording: "5 moves changed for your new rules"; singular "1 move changed for your new rules"; none "No moves changed for your new rules".</li>
+<li>It stays until DISMISS or the next rules change. The next change shows the difference from the previous rules. After DISMISS, focus goes to the active mode button.</li>
+<li>It stays when the player switches between Full chart and Table mode.</li>
+<li>Never shown: on first load, on a page opened with rules in the address, and in print.</li>
+</ul>
+
+<h3>6. Print</h3>
+<ul>
+<li>Two buttons: "Print chart" (full page) and "Print pocket card".</li>
+<li><b>Full page</b>: title, rules sentence, legend, Hard / Soft / Pairs tables with the word and the icon in every cell. One page, portrait, A4 and US Letter. Centred.</li>
+<li><b>Pocket card</b>: one landscape sheet (A4 or Letter) with two A6 panels (105 x 148 mm) side by side and a dashed fold or cut line. Left panel Hard, right panel Soft and Pairs. One letter per cell: H Hit, S Stand, D Double, P Split, R Surrender, bold and readable in black and white. Each panel has the legend and the rules sentence.</li>
+<li>The chosen rules are printed on both sheets, always equal to the "Table rules:" sentence.</li>
+<li>Print shows only the sheet. No rule panel, mode switch, Table mode, panels, buttons or markers.</li>
+<li>The print sheets are rebuilt from the active rules every time, also just before the print dialog opens. Ctrl/Cmd+P without a button prints the full page.</li>
+<li>Browser headers and footers (address, date) belong to the print dialog and are not controlled by the page.</li>
+</ul>
+
+<h3>7. My-table link</h3>
+<ul>
+<li>The rules live in the page address: ?decks=4-8&amp;soft17=hits&amp;das=yes&amp;surrender=any (values as in <a href="https://gtmarketing.atlassian.net/browse/BFC-55467">BFC-55467</a>).</li>
+<li>On load the address is read before the first draw, so a shared link shows the right chart straight away.</li>
+<li>Each of the four values is checked alone. A missing, empty, unknown or repeated value falls back to its default; valid ones in the same address are kept. Nothing is shown and nothing is logged.</li>
+<li>On every real rules change the address is updated in place (replaceState). No new history entry, no reload. If the browser refuses (for example a local file), the chart still works.</li>
+<li>Other parameters and the #hash are kept. Only the four rule keys are rewritten.</li>
+<li>There is no "Copy link" button. The address bar holds the link.</li>
+</ul>
+
+<h3>8. Exact texts</h3>
+<table>
+<tr><th>Where</th><th>Text</th></tr>
+<tr><td>Shell title</td><td>Blackjack Cheat Sheet (shown upper case)</td></tr>
+<tr><td>Mode switch</td><td>Full chart | Table mode (group label "View")</td></tr>
+<tr><td>Rule labels</td><td>Decks | Dealer on soft 17 | Double after split | Surrender</td></tr>
+<tr><td>Rule options</td><td>1, 2, 4–8 | Stands, Hits | Yes, No | Not allowed, Any dealer card, Except ace</td></tr>
+<tr><td>Rules sentence</td><td>"Table rules:" then the rules text from BFC-55467, separated by " · "</td></tr>
+<tr><td>Buttons</td><td>Print chart | Print pocket card | Change rules | Hide rules | Close | Dismiss</td></tr>
+<tr><td>Legend</td><td>Hit | Stand | Double | Split | Surrender</td></tr>
+<tr><td>Chart headings</td><td>Hard hands: "No Ace, or an Ace that counts as 1." | Soft hands: "An Ace that counts as 11, plus one other card." | Pairs: "Two cards of the same value."</td></tr>
+<tr><td>Chart header cell</td><td>Your hand</td></tr>
+<tr><td>Swipe cue (390)</td><td>Swipe for dealer 6–A</td></tr>
+<tr><td>Cell label (screen reader)</td><td>Hard 16 vs dealer 10: Surrender. Show why (changed: "..., changed for your new rules. Show why")</td></tr>
+<tr><td>Reason panel title</td><td>Hard 16 vs dealer 10 | Hard 18–21 vs dealer 10 | A,7 vs dealer 3 | 8,8 vs dealer A</td></tr>
+<tr><td>Count line</td><td>N moves changed for your new rules | 1 move changed for your new rules | No moves changed for your new rules</td></tr>
+<tr><td>Table mode steps</td><td>1. Your hand | 2. Dealer shows | groups: Hard totals, Soft hands (Ace + card), Pairs</td></tr>
+<tr><td>Table mode empty</td><td>Pick your hand, then the dealer’s card.</td></tr>
+<tr><td>Result card</td><td>Recommended Play | Hard 16 | Dealer shows 10 | SURRENDER | Changed for your new rules</td></tr>
+<tr><td>Calculator link</td><td>See every move's value in the Hand Strategy Calculator</td></tr>
+<tr><td>Pocket legend</td><td>H Hit · S Stand · D Double · P Split · R Surrender</td></tr>
+<tr><td>Pocket footer</td><td>Fold or cut along the dashed line. Landscape paper (A4 or Letter).</td></tr>
+</table>
+
+<h3>Developer notes</h3>
+<ul>
+<li>Strategy logic, rule values, notes and the 36-chart snapshot: <a href="https://gtmarketing.atlassian.net/browse/BFC-55467">BFC-55467</a>. Do not copy values into this task or into the page.</li>
+<li>Look and layout: <a href="https://gtmarketing.atlassian.net/browse/BFC-55465">BFC-55465</a>.</li>
+<li>The prototype is one file with no network calls, because it was built to be handed over. A single offline file is not required in production. The engine files must stay byte-identical to the vendored copies (checked in BFC-55467).</li>
+<li>The Calculator address is a placeholder. Confirm it before launch.</li>
+<li>QA reference: the script docs/qa/qa-run.mjs (in the handoff zip) runs 12 checks in real Chrome and passed 12/12 on the final prototype: all 36 rule sets x 300 cells against the snapshot, Table mode answers, reason panels, my-table link, print (144 PDFs, 1 page each), layout at 390 and 1280, console and network, keyboard, scroll cue, link size, what your rules change (216 transitions), and a visual check against Figma. Report: docs/qa/2026-10-05-qa.md.</li>
+</ul>
+<hr>
+
+<h2>Resource Files</h2>
+<table>
+<tr><th>File</th><th>What it is</th><th>Short description</th></tr>
+<tr><td>prototype/index.html (in blackjack-cheat-sheet-handoff-2026-10-05.zip, attached to BFC-55462)</td><td>Working reference</td><td>Open it in a browser. Try the rules, a cell tap, Table mode, print and a link with ?decks=1&amp;soft17=stands.</td></tr>
+<tr><td>docs/qa/2026-10-05-qa.md (in the zip)</td><td>QA report</td><td>Checks, results and findings for the final prototype.</td></tr>
+<tr><td>docs/qa/qa-run.mjs (in the zip)</td><td>QA script</td><td>The 12 checks, to run again on the production build.</td></tr>
+<tr><td>docs/qa/screenshots/*.png (in the zip)</td><td>Screenshots</td><td>Default chart, reason panel, rules changed and Table mode result, at 390 and 1280.</td></tr>
+</table>
+<hr>
+
+<h2>Acceptance Criteria</h2>
+<ul>
+<li>On load: Full chart, 4–8 decks, hits soft 17, double after split allowed, surrender any dealer card; no count line and no markers.</li>
+<li>The rule panel has the four controls with the options in section 2 and can be used with the keyboard.</li>
+<li>For all 36 rule sets, every cell move and the rules sentence equal the snapshot in BFC-55467.</li>
+<li>Tapping, clicking, or pressing Enter or Space on any cell opens a panel under its table with row label, dealer, move, reason, and the note on a separate line only when present. CLOSE and Escape close it and return focus to the cell.</li>
+<li>Each chart table is one Tab stop. Arrow keys, Home and End move between cells without wrapping.</li>
+<li>The tapped cell and its panel are in view after opening, also at 390.</li>
+<li>Table mode: two taps give the Recommended Play card. For every hand x dealer card x the 36 rule sets the move and note equal the matching chart cell.</li>
+<li>In Table mode the rules are folded behind "Change rules". The page scrolls to the dealer buttons after tap 1 and to the result after tap 2.</li>
+<li>A rules change updates an open reason panel and a shown Table mode result at once.</li>
+<li>After a rules change, changed cells are marked and the count line shows the right number and wording (N, 1, none), checked for all 216 single-field changes against BFC-55467 reference counts. DISMISS clears it. The next change replaces it.</li>
+<li>No marker or count line on first load, on a link load, or in print. Table mode marks "Changed for your new rules" only when the shown move changed.</li>
+<li>"Print chart" gives one portrait page and "Print pocket card" one landscape sheet, on A4 and on US Letter, each with the chosen rules, matching the snapshot. The pocket card has one letter per cell and is readable in black and white.</li>
+<li>Print hides all controls, panels and markers. Ctrl/Cmd+P gives the full page.</li>
+<li>A link with the four rule keys shows the right chart on load for all 36 sets. Bad values fall back per field without any message or error. A rules change rewrites only the four keys and keeps other parameters and the #hash, with no new history entry.</li>
+<li>The Calculator link has the exact text in section 8 and is at least 44 px high.</li>
+<li>The page makes no network request. The engine files are byte-identical to the vendored copies.</li>
+<li>The 12 checks of docs/qa/qa-run.mjs pass on the build.</li>
+</ul>

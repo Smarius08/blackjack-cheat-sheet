@@ -18,7 +18,8 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 - Full page – Table mode 1280 14071:660225 · 390 14071:661008 (D-074). CS / Move State=Changed 14071:16537–16557.
 
 ## Next
-- G4 approved (D-074). Next: S-15 Jira content for BFC-55465/66 (G5), S-21 prototype sync. S-14/S-16 done in Jira by Cowork.
+- S-21 visual sync done (G3 D-080), pushed 4025487. Handoff zip handoff/blackjack-cheat-sheet-handoff-2026-10-05.zip (git-ignored).
+- G5: S-15 drafts docs/jira/BFC-55465-tool-layout.html, BFC-55466-tool-functionality.html. S-14/S-16 done in Jira by Cowork.
 - Card next session: refresh .claude/agents/ui-dev.md for D-050/D-053/D-056 (housekeeper).
 - work-lenovo clone pending.
 
@@ -34,4 +35,4 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 - chart.js freezing STRATEGY_TABLE makes it read-only for code loaded after it (intended, D-036).
 
 ## Files to attach in Jira
-- After S-14/S-15: prototype/index.html, docs/qa/2026-10-05-qa.md, docs/qa/screenshots/*.png.
+- On BFC-55462: handoff/blackjack-cheat-sheet-handoff-2026-10-05.zip (prototype, engine, snapshot, docs incl. figma + qa).
