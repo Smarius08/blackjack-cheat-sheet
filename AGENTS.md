@@ -23,7 +23,7 @@ If any two of these disagree, STOP and raise a decision card.
 | ui-dev | HTML prototype | prototype/ |
 | story-reviewer | Checks one finished story against its acceptance criteria. Reports only | nothing (Lead writes its table into the story, D-044) |
 | qa-tester | Playwright + snapshot checks of the prototype. Reports only | docs/qa/ |
-| figma-designer | Figma page from the approved prototype | Figma "Blackjack Cheat Sheet" page only |
+| figma-designer | Figma page from the approved prototype | Figma "Blackjack Cheat Sheet" page + docs/figma/*.png (D-069) |
 | jira-writer | Jira description drafts in HTML. Never creates issues | docs/jira/ |
 | housekeeper | Keeps docs lean, finds contradictions. Docs only | docs/ |
 
