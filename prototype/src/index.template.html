@@ -59,7 +59,7 @@ body {
 .chart-section:last-child { margin-bottom: 0; }
 .chart-section h2 { margin: 0 0 4px; font-size: 18px; font-weight: 700; }
 .chart-section .sub { margin: 0 0 8px; font-size: 13px; color: var(--muted); }
-.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 10px; }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 10px; scroll-padding-left: 84px; scroll-padding-right: 8px; }
 table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 720px; table-layout: fixed; }
 .chart th, .chart td { padding: 0; text-align: center; border-right: 1px solid #fff; border-bottom: 1px solid #fff; }
 .chart thead th {
@@ -68,16 +68,23 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
 }
 .chart .corner { width: 84px; text-align: left; padding-left: 10px; font-size: 12px; color: var(--muted); }
 .chart tbody th {
-  position: sticky; left: 0; z-index: 1; width: 84px; background: var(--band);
+  position: sticky; left: 0; z-index: 2; width: 84px; background: var(--band);
   font-size: 14px; font-weight: 700; text-align: left; padding: 0 10px; border-right: 1px solid var(--line);
 }
-.chart thead .corner { position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--line); }
+.chart thead .corner { position: sticky; left: 0; z-index: 3; border-right: 1px solid var(--line); }
 .chart td { height: 52px; font-size: 12px; font-weight: 600; color: var(--ink); vertical-align: middle; }
 .chart td .cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
 .mi {
   display: inline-block; width: 20px; height: 20px; flex: none;
   background-repeat: no-repeat; background-position: center; background-size: contain;
 }
+.chart td { position: relative; }
+.cell-hit {
+  position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; border-radius: 0;
+  background: transparent; cursor: pointer; font: inherit; -webkit-tap-highlight-color: transparent;
+}
+.cell-hit:focus-visible { outline: 3px solid #404040; outline-offset: -3px; }
+.cell-hit.is-open { box-shadow: inset 0 0 0 3px #404040; }
 .m-hit { background-color: var(--hit); }
 .m-stand { background-color: var(--stand); }
 .m-double { background-color: var(--double); }
@@ -85,6 +92,22 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
 .m-surrender { background-color: var(--surrender); }
 
 [hidden] { display: none !important; }
+.reason-slot { margin: 10px 0 0; }
+.rp-card { background: #fff; border: 1px solid #e6e6e6; border-radius: 12px; overflow: hidden; }
+.rp-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 8px 8px 16px; background: rgba(180, 202, 9, 0.15); }
+.rp-title { margin: 0; font-size: 16px; font-weight: 700; color: #404040; }
+.rp-close {
+  font: inherit; cursor: pointer; flex: none; min-width: 44px; min-height: 44px; padding: 6px 14px; font-size: 14px; font-weight: 600;
+  color: #404040; background: #fff; border: 1px solid rgba(0, 0, 0, 0.18); border-radius: 8px;
+}
+.rp-close:focus-visible { outline: 3px solid #404040; outline-offset: 2px; }
+.rp-body { padding: 14px 16px 16px; }
+.rp-move { display: inline-flex; align-items: center; gap: 10px; padding: 6px 14px 6px 8px; border-radius: 999px; background: rgba(196, 219, 17, 0.2); border: 1px solid #c4db11; }
+.rp-circle { width: 32px; height: 32px; border-radius: 50%; background: rgba(196, 219, 17, 0.6); display: flex; align-items: center; justify-content: center; flex: none; }
+.rp-circle .mi { width: 22px; height: 22px; background-color: transparent; }
+.rp-word { font-size: 20px; font-weight: 800; text-transform: uppercase; color: #404040; }
+.rp-reason { margin: 12px 0 0; font-size: 16px; line-height: 1.45; color: var(--ink); }
+.rp-note { margin: 10px 0 0; font-size: 14px; color: #5e6166; }
 .mode-switch { display: flex; border-radius: 8px; overflow: hidden; border: 1px solid rgba(0, 0, 0, 0.12); margin: 0 0 20px; background: #fff; }
 .mode-btn, .pick {
   font: inherit; cursor: pointer; color: #404040; background: #fff; border: 0; margin: 0;
@@ -193,32 +216,51 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     return label;
   }
 
-  function cellHTML(cell) {
+  // Row title as shown in the reason panel: "Hard 18\u201321", "A,7", "8,8" (D-029, D-049).
+  function rowTitle(table, label) {
+    if (table === 'hard') return 'Hard ' + String(label).replace('-', '\u2013');
+    return displayRowLabel(table, label);
+  }
+  function detailTitle(table, label, dealer) { return rowTitle(table, label) + ' vs dealer ' + dealer; }
+
+  // ctx: { table, row (engine label), dealer, ri, ci, tab } -> the tap target inside the cell (S-10).
+  // It sits after the move word so the S-07 cell markup (td, .cell, .mi, .mw) is unchanged.
+  function cellHTML(cell, ctx) {
     var ui = MOVE_UI[cell.move];
     if (!ui) throw new Error('unknown move: ' + cell.move);
     return '<td class="m-' + ui.id + '" data-move="' + cell.move + '"><span class="cell">' +
       '<span class="mi mi-' + ui.id + '" aria-hidden="true"></span>' +
-      '<span class="mw">' + ui.word + '</span></span></td>';
+      '<span class="mw">' + ui.word + '</span>' +
+      '<button type="button" class="cell-hit" data-cell data-table="' + ctx.table + '" data-erow="' + esc(ctx.row) +
+      '" data-dealer="' + esc(ctx.dealer) + '" data-ri="' + ctx.ri + '" data-ci="' + ctx.ci + '" tabindex="' + (ctx.tab ? 0 : -1) +
+      '" aria-label="' + esc(detailTitle(ctx.table, ctx.row, ctx.dealer) + ': ' + ui.word + '. Show why') + '"></button>' +
+      '</span></td>';
   }
 
-  function tableHTML(def, chart) {
+  function tableHTML(def, chart, rv) {
     var rows = chart[def.key];
     var out = '<section class="chart-section" id="chart-' + def.key + '">' +
       '<h2>' + esc(def.heading) + '</h2><p class="sub">' + esc(def.sub) + '</p>' +
-      '<div class="scroll" tabindex="0" role="region" aria-label="' + esc(def.heading) + ' chart, scrolls sideways">' +
+      '<div class="scroll" role="region" aria-label="' + esc(def.heading) + ' chart, scrolls sideways">' +
       '<table class="chart" data-table="' + def.key + '"><thead><tr><th class="corner" scope="col">Your hand</th>';
     chart.columns.forEach(function (c) { out += '<th scope="col" data-dealer="' + esc(c) + '">' + esc(c) + '</th>'; });
     out += '</tr></thead><tbody>';
-    rows.forEach(function (r) {
+    var pos = (rv && rv[def.key]) || [0, 0];
+    rows.forEach(function (r, ri) {
       out += '<tr data-row="' + esc(r.label) + '"><th scope="row">' + esc(displayRowLabel(def.key, r.label)) + '</th>';
-      r.cells.forEach(function (c) { out += cellHTML(c); });
+      r.cells.forEach(function (c, ci) {
+        out += cellHTML(c, { table: def.key, row: r.label, dealer: chart.columns[ci], ri: ri, ci: ci, tab: pos[0] === ri && pos[1] === ci });
+      });
       out += '</tr>';
     });
-    return out + '</tbody></table></div></section>';
+    // One reason panel per table, outside the sideways-scroll box (D-063, D-050).
+    return out + '</tbody></table></div>' +
+      '<div class="reason-slot" id="reason-' + def.key + '" aria-live="polite" hidden></div></section>';
   }
 
-  function renderChartHTML(chart) {
-    return TABLES.map(function (def) { return tableHTML(def, chart); }).join('');
+  // rv (optional): roving focus position per table { hard: [ri, ci], ... }; default is the first cell.
+  function renderChartHTML(chart, rv) {
+    return TABLES.map(function (def) { return tableHTML(def, chart, rv); }).join('');
   }
 
   function renderLegendHTML() {
@@ -286,10 +328,176 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     }).join('');
   }
 
+  // ---- Cell reason panel (S-10, D-063): tap a cell -> why that move is right ----
+  // Pure: rules + table + engine row label + dealer column -> { title, move, reason, note }, or null for unknown input.
+  // `reason` is ChipyEngine.why.reasonFor unchanged (D-028); `note` is the cell's note, separate (D-030).
+  function cellDetail(rules, table, engineRow, dealer) {
+    if (!validRules(rules) || !has(TABLE_KEYS, table) || typeof engineRow !== 'string') return null;
+    var chart = root.ChipyEngine.chart.buildChart(rules);
+    var col = chart.columns.indexOf(dealer);
+    var rows = chart[table];
+    if (col < 0) return null;
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i].label === engineRow) {
+        var cell = rows[i].cells[col];
+        return {
+          title: detailTitle(table, engineRow, dealer),
+          table: table, row: engineRow, dealer: dealer,
+          move: cell.move,
+          reason: root.ChipyEngine.why.reasonFor({ table: table, row: engineRow, dealer: dealer, cell: cell }),
+          note: cell.note === undefined ? null : cell.note
+        };
+      }
+    }
+    return null;
+  }
+
+  function detailHTML(d, table) {
+    var ui = MOVE_UI[d.move];
+    if (!ui) throw new Error('unknown move: ' + d.move);
+    return '<div class="rp-card" data-reason-card>' +
+      '<div class="rp-head"><p class="rp-title" data-title>' + esc(d.title) + '</p>' +
+      '<button type="button" class="rp-close" data-close data-table="' + table + '" aria-label="Close reason">Close</button></div>' +
+      '<div class="rp-body"><div class="rp-move" data-move="' + d.move + '"><span class="rp-circle"><span class="mi mi-' + ui.id +
+      '" aria-hidden="true"></span></span><span class="rp-word">' + ui.word + '</span></div>' +
+      '<p class="rp-reason" data-reason>' + esc(d.reason) + '</p>' +
+      (d.note === null ? '' : '<p class="rp-note" data-note>' + esc(d.note) + '</p>') +
+      '</div></div>';
+  }
+
+  // Pure: arrow-key move inside one table; stops at the edges (no wrap). Home/End = first/last column.
+  function navCell(nRows, nCols, ri, ci, key) {
+    if (key === 'ArrowRight') ci = Math.min(nCols - 1, ci + 1);
+    else if (key === 'ArrowLeft') ci = Math.max(0, ci - 1);
+    else if (key === 'ArrowDown') ri = Math.min(nRows - 1, ri + 1);
+    else if (key === 'ArrowUp') ri = Math.max(0, ri - 1);
+    else if (key === 'Home') ci = 0;
+    else if (key === 'End') ci = nCols - 1;
+    else return null;
+    return [ri, ci];
+  }
+
+  var TABLE_KEYS = { hard: 1, soft: 1, pairs: 1 };
+  var rove = { hard: [0, 0], soft: [0, 0], pairs: [0, 0] }; // the one tabbable cell per table
+  var openAt = { hard: null, soft: null, pairs: null };     // open reason cell per table: [ri, ci]
+  var lastChart = null;
+
+  function cellButtons() {
+    var list = dom && dom.chart && dom.chart.querySelectorAll ? dom.chart.querySelectorAll('button[data-cell]') : [];
+    var out = [];
+    for (var i = 0; list && i < list.length; i++) if (list[i] && typeof list[i].getAttribute === 'function') out.push(list[i]);
+    return out;
+  }
+
+  function findCell(table, ri, ci) {
+    var all = cellButtons();
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].getAttribute('data-table') === table && all[i].getAttribute('data-ri') === String(ri) &&
+        all[i].getAttribute('data-ci') === String(ci)) return all[i];
+    }
+    return null;
+  }
+
+  // Roving tabindex + "open" mark, applied to the live buttons.
+  function syncCells() {
+    cellButtons().forEach(function (b) {
+      var t = b.getAttribute('data-table'), ri = Number(b.getAttribute('data-ri')), ci = Number(b.getAttribute('data-ci'));
+      if (!has(rove, t)) return;
+      b.setAttribute('tabindex', rove[t][0] === ri && rove[t][1] === ci ? '0' : '-1');
+      if (b.classList) b.classList.toggle('is-open', !!openAt[t] && openAt[t][0] === ri && openAt[t][1] === ci);
+    });
+  }
+
+  function refreshPanels() {
+    if (!dom || !lastChart) return;
+    TABLES.forEach(function (def) {
+      var el = document.getElementById('reason-' + def.key);
+      if (!el) return;
+      var at = openAt[def.key], d = null;
+      if (at && lastChart[def.key][at[0]]) d = cellDetail(state.rules, def.key, lastChart[def.key][at[0]].label, lastChart.columns[at[1]]);
+      if (!d) openAt[def.key] = null;
+      el.innerHTML = d ? detailHTML(d, def.key) : '';
+      el.hidden = !d;
+    });
+    syncCells();
+  }
+
+  function setRove(table, ri, ci) { rove[table] = [ri, ci]; syncCells(); }
+  function focusCell(table, ri, ci) { var b = findCell(table, ri, ci); if (b && b.focus) b.focus(); }
+
+  // Returns true when opened. Opening another cell replaces the table's panel content.
+  function openReason(table, ri, ci) {
+    if (!has(TABLE_KEYS, table) || !lastChart || !lastChart[table][ri] || ci < 0 || ci >= lastChart.columns.length) return false;
+    openAt[table] = [ri, ci];
+    rove[table] = [ri, ci];
+    refreshPanels();
+    var cb = findCell(table, ri, ci);
+    if (cb && typeof cb.scrollIntoView === 'function') cb.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    var el = document.getElementById('reason-' + table);
+    if (el && typeof el.scrollIntoView === 'function') {
+      var calm = typeof root.matchMedia === 'function' && root.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      el.scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' });
+    }
+    return true;
+  }
+
+  function closeReason(table, refocus) {
+    if (!has(TABLE_KEYS, table) || !openAt[table]) return false;
+    var at = openAt[table];
+    openAt[table] = null;
+    rove[table] = [at[0], at[1]];
+    refreshPanels();
+    if (refocus) focusCell(table, at[0], at[1]);
+    return true;
+  }
+
+  function getOpenReason() {
+    var out = {};
+    TABLES.forEach(function (d) { out[d.key] = openAt[d.key] ? [openAt[d.key][0], openAt[d.key][1]] : null; });
+    return out;
+  }
+
+  function closestBtn(t, sel) { return t && typeof t.closest === 'function' ? t.closest(sel) : null; }
+  function num(b, k) { return Number(b.getAttribute(k)); }
+
+  function onChartClick(ev) {
+    var t = ev && ev.target;
+    var c = closestBtn(t, 'button[data-cell]');
+    if (c) { openReason(c.getAttribute('data-table'), num(c, 'data-ri'), num(c, 'data-ci')); return; }
+    var x = closestBtn(t, 'button[data-close]');
+    if (x) closeReason(x.getAttribute('data-table'), true);
+  }
+
+  function onChartKey(ev) {
+    var t = ev && ev.target, key = ev && ev.key;
+    var c = closestBtn(t, 'button[data-cell]');
+    var x = c ? null : closestBtn(t, 'button[data-close]');
+    var stop = function () { if (ev.preventDefault) ev.preventDefault(); };
+    if (key === 'Escape') {
+      var tb = c || x;
+      if (tb && closeReason(tb.getAttribute('data-table'), true)) stop();
+      return;
+    }
+    if (!c || !lastChart) return;
+    var table = c.getAttribute('data-table'), ri = num(c, 'data-ri'), ci = num(c, 'data-ci');
+    if (key === 'Enter' || key === ' ' || key === 'Spacebar') { stop(); openReason(table, ri, ci); return; }
+    var next = navCell(lastChart[table].length, lastChart.columns.length, ri, ci, key);
+    if (!next) return;
+    stop();
+    setRove(table, next[0], next[1]);
+    focusCell(table, next[0], next[1]);
+  }
+
   function render() {
     if (!dom) return;
     var rules = state.rules;
-    dom.chart.innerHTML = renderChartHTML(root.ChipyEngine.chart.buildChart(rules));
+    var act = typeof document !== 'undefined' ? document.activeElement : null;
+    var hadFocus = !!(act && typeof act.getAttribute === 'function' && act.getAttribute('data-cell') !== null);
+    var focusAt = hadFocus ? [act.getAttribute('data-table'), num(act, 'data-ri'), num(act, 'data-ci')] : null;
+    lastChart = root.ChipyEngine.chart.buildChart(rules);
+    dom.chart.innerHTML = renderChartHTML(lastChart, rove);
+    refreshPanels();
+    if (focusAt) focusCell(focusAt[0], focusAt[1], focusAt[2]);
     dom.text.textContent = rulesSentence(rules);
     var radios = dom.panel.querySelectorAll('input[type="radio"]');
     for (var i = 0; i < radios.length; i++) {
@@ -514,6 +722,8 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     document.getElementById('legend').innerHTML = renderLegendHTML();
     dom.panel.innerHTML = controlsHTML();
     dom.panel.addEventListener('change', onControlChange);
+    dom.chart.addEventListener('click', onChartClick);
+    dom.chart.addEventListener('keydown', onChartKey);
     render();
     dom.modeSwitch.addEventListener('click', onTableClick);
     dom.tpick.addEventListener('click', onTableClick);
@@ -539,6 +749,11 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     DEALER_CARDS: DEALER_CARDS,
     tableAnswer: tableAnswer,
     renderResultHTML: resultHTML,
+    cellDetail: cellDetail,
+    navCell: navCell,
+    openReason: openReason,
+    closeReason: closeReason,
+    getOpenReason: getOpenReason,
     setMode: setMode,
     selectHand: selectHand,
     selectDealer: selectDealer,
