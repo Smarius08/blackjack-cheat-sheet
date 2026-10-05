@@ -21,3 +21,17 @@ Format: ID · date · decision · by. Newest at the bottom. Superseded rows move
 | D-015 | 2026-10-05 | Rename folder/repo to blackjack-cheat-sheet before first commit | Marius |
 | D-016 | 2026-10-05 | Keyword split is part of the SEO Content task (S-16), not tool development; it blocks nothing else | Marius |
 | D-017 | 2026-10-05 | Claude Code CLI (terminal) on both machines, not the Desktop Code tab; Cowork stays the planning chat | Marius |
+| D-018 | 2026-10-05 | Test runner for `npm run check` = Node built-in `node --test`, no dependencies | Marius |
+| D-019 | 2026-10-05 | S-03 carries G2 (cell-resolution rules, AGENTS.md §5); backlog row corrected | Marius |
+| D-020 | 2026-10-05 | One fixed row set for all 36 charts, low→high: Hard 5-7, 8, 9…17, 18-21 (Double/Multi 5-7 and 8 both use "5-8"); Soft 13–20 (no soft 12, no soft 21); Pairs 2,2…10,10, A,A | Marius |
+| D-021 | 2026-10-05 | Total passed to resolveCode: row number, or lowest of a range (5-7→5, 18-21→18); Pairs = 2× card value (A,A→12) | Marius |
+| D-022 | 2026-10-05 | Each chart cell = { move, code, note }; UI shows only the plain move | Marius |
+| D-023 | 2026-10-05 | Snapshot chart = { id, rules, label, tables }; rules = { decks: "1"\|"2"\|"4-8", soft17: "stands"\|"hits", das: "yes"\|"no", surrender: "none"\|"any"\|"except_ace" }; id = `decks=4-8\|soft17=hits\|das=yes\|surrender=any`; charts ordered decks → soft17 → das → surrender in the order listed | Lead |
+| D-024 | 2026-10-05 | Snapshot label wording, e.g. "4–8 decks · Dealer hits soft 17 · Double after split allowed · Surrender: any dealer card" ("Dealer stands on soft 17", "No double after split", "No surrender", "Surrender: except vs ace"); final wording confirmed at S-04 G2 | Lead |
+| D-025 | 2026-10-05 | Review page layout: snapshot/build-review.js inlines charts-36.json into snapshot/review.html (file:// can't fetch JSON); test fails if the HTML is stale | Lead |
+| D-026 | 2026-10-05 | Review page (S-05 only) colours each move as well as naming it; prototype colours are decided in S-09 | Lead |
+| D-027 | 2026-10-05 | Review page shows the engine code small under the plain move in each cell (reviewers only; prototype stays words only) | Marius |
+| D-028 | 2026-10-05 | Cell reason = vendor explanation text as is (usually 1–2 sentences); north-star wording changed from "one-line reason" to "short reason (1–2 sentences)" | Marius |
+| D-029 | 2026-10-05 | Range rows: reason quotes the lowest total (D-021) — accepted; S-10 may show the row label above the reason | Marius |
+| D-030 | 2026-10-05 | why.js returns the reason only; the cell's note (D-022) is shown separately by the UI | Marius |
+| D-031 | 2026-10-05 | Docs-only commits (no code, test or package changes) skip `/codex:review` before push; every other push still requires it | Marius |

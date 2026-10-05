@@ -11,7 +11,7 @@ The player wants one chart that is right for *their* table and readable at a gla
 - Rule controls (4): Decks (1 / 2 / 4–8) · Dealer on soft 17 (Stands / Hits) · Double after split (Yes / No) ·
   Surrender (Not allowed / Any dealer card / Except ace). Double down fixed to "any two cards".
 - Chart: Hard / Soft / Pairs × dealer upcard 2–A. One plain move per cell (Hit / Stand / Double / Split / Surrender).
-- Tap a cell → one-line reason (reuse Trainer explanation_writer.js).
+- Tap a cell → short reason, 1–2 sentences (reuse Trainer explanation_writer.js as is; D-028).
 - Print / save: print-friendly chart that states the chosen rules.
 - Mobile: designer solves readability at 390px; no prescribed layout.
 

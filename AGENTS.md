@@ -67,7 +67,7 @@ Reply: approve A / approve B / change: …
 4. story-reviewer (fresh) checks it against the acceptance criteria → pass/fail list.
 5. Fail → back to the builder with the reviewer's list. Pass → Lead commits by path.
 6. Lead updates backlog.md + status.md. Next story.
-Engine stories also get `/codex:adversarial-review` (Marius runs it). Every push: `/codex:review --base origin/main`, then G6.
+Engine stories also get `/codex:adversarial-review` (Marius runs it). Every push: `/codex:review --base origin/main`, then G6. Docs-only pushes (no code, test or package changes) skip Codex (D-031).
 
 ## 8. Root cause before fixing
 Before any fix, the Lead writes one line: symptom → root cause → goal served. Fix the cause.
