@@ -35,6 +35,20 @@ body {
 .rules-note { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
 .rules-note strong { color: var(--ink); }
 
+.rule-panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; margin: 0 0 20px; }
+.rule-field { margin: 0; padding: 0; border: 0; min-width: 0; }
+.rule-field legend { padding: 0; margin: 0 0 6px; font-size: 13px; font-weight: 700; color: var(--ink); }
+.toggle-row { display: flex; flex-wrap: wrap; border-radius: 6px; overflow: hidden; border: 1px solid rgba(0, 0, 0, 0.12); background: #fff; }
+.toggle-opt { position: relative; flex: 1 1 0; min-width: 72px; display: flex; cursor: pointer; }
+.toggle-opt input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.toggle-opt span {
+  flex: 1; display: flex; align-items: center; justify-content: center; text-align: center;
+  min-height: 44px; padding: 6px 8px; font-size: 13px; font-weight: 500; color: #5e6166; background: #fff;
+}
+.toggle-opt + .toggle-opt span { border-left: 1px solid rgba(0, 0, 0, 0.12); }
+.toggle-opt input:checked + span { background: #c4db11; color: #404040; font-weight: 700; }
+.toggle-opt input:focus-visible + span { outline: 3px solid #404040; outline-offset: -3px; }
+
 .legend { display: flex; flex-wrap: wrap; gap: 8px 10px; margin: 0 0 24px; padding: 0; list-style: none; }
 .legend li {
   display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px 5px 6px;
@@ -75,6 +89,7 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
   .shell-header h1 { font-size: 18px; }
   .shell-body { padding: 16px; }
   .chart td { height: 54px; }
+  .rule-panel { grid-template-columns: minmax(0, 1fr); }
 }
 </style>
 <style>
@@ -89,7 +104,8 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
 <main class="shell">
   <header class="shell-header"><h1>Blackjack Cheat Sheet</h1></header>
   <div class="shell-body">
-    <p class="rules-note"><strong>Table rules:</strong> 4&ndash;8 decks, dealer hits soft 17, double after split allowed, surrender allowed on any dealer card.</p>
+    <div class="rule-panel" id="rule-panel"></div>
+    <p class="rules-note" aria-live="polite"><strong>Table rules:</strong> <span id="rules-text"></span></p>
     <ul class="legend" id="legend" aria-label="Key to moves"></ul>
     <div id="chart"></div>
   </div>
@@ -809,10 +825,120 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     }).join('');
   }
 
+  // Rules sentence words (D-039). One map; the tests compare the result to snapshot `label` for all 36.
+  var LABEL_WORDS = {
+    decks: { '1': '1 deck', '2': '2 decks', '4-8': '4\u20138 decks' },
+    soft17: { stands: 'Dealer stands on soft 17', hits: 'Dealer hits on soft 17' },
+    das: { yes: 'Double after split allowed', no: 'No double after split' },
+    surrender: { none: 'No surrender', any: 'Surrender: any dealer card', except_ace: 'Surrender: any dealer card except ace' }
+  };
+  // Control definitions: field, group label, [value, button text] (D-002, D-045). Double down is not a control.
+  var CONTROLS = [
+    { field: 'decks', label: 'Decks', options: [['1', '1'], ['2', '2'], ['4-8', '4\u20138']] },
+    { field: 'soft17', label: 'Dealer on soft 17', options: [['stands', 'Stands'], ['hits', 'Hits']] },
+    { field: 'das', label: 'Double after split', options: [['yes', 'Yes'], ['no', 'No']] },
+    { field: 'surrender', label: 'Surrender', options: [['none', 'Not allowed'], ['any', 'Any dealer card'], ['except_ace', 'Except ace']] }
+  ];
+  var FIELDS = CONTROLS.map(function (c) { return c.field; });
+  var SEP = ' \u00b7 ';
+
+  var state = { rules: copyRules(DEFAULT_RULES) };
+  var listeners = [];
+  var dom = null; // set by init() only
+  var inited = false;
+
+  function copyRules(r) {
+    return { decks: r.decks, soft17: r.soft17, das: r.das, surrender: r.surrender };
+  }
+
+  function has(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
+
+  // Returns a clean rules object, or null when anything is missing or unknown (D-023).
+  function validRules(r) {
+    if (!r || typeof r !== 'object' || Array.isArray(r)) return null;
+    var out = {};
+    for (var i = 0; i < FIELDS.length; i++) {
+      var f = FIELDS[i], v = has(r, f) ? r[f] : undefined;
+      if (typeof v !== 'string' || !has(LABEL_WORDS[f], v)) return null;
+      out[f] = v;
+    }
+    return out;
+  }
+
+  function rulesSentence(rules) {
+    return FIELDS.map(function (f) { return LABEL_WORDS[f][rules[f]]; }).join(SEP);
+  }
+
+  // Pure: control values { decks, soft17, das, surrender } -> rules, or null if incomplete/invalid.
+  function rulesFromControls(values) { return validRules(values); }
+
+  function controlsHTML() {
+    return CONTROLS.map(function (c) {
+      var out = '<fieldset class="rule-field" data-field="' + c.field + '"><legend>' + esc(c.label) + '</legend><div class="toggle-row">';
+      c.options.forEach(function (o) {
+        out += '<label class="toggle-opt"><input type="radio" name="rule-' + c.field + '" value="' + esc(o[0]) + '">' +
+          '<span>' + esc(o[1]) + '</span></label>';
+      });
+      return out + '</div></fieldset>';
+    }).join('');
+  }
+
+  function render() {
+    if (!dom) return;
+    var rules = state.rules;
+    dom.chart.innerHTML = renderChartHTML(root.ChipyEngine.chart.buildChart(rules));
+    dom.text.textContent = rulesSentence(rules);
+    var radios = dom.panel.querySelectorAll('input[type="radio"]');
+    for (var i = 0; i < radios.length; i++) {
+      var f = radios[i].name.replace(/^rule-/, '');
+      radios[i].checked = rules[f] === radios[i].value;
+    }
+  }
+
+  // Returns true when applied. Invalid input changes nothing and fires nothing.
+  function setRules(rules) {
+    var next = validRules(rules);
+    if (!next) return false;
+    var changed = FIELDS.some(function (f) { return state.rules[f] !== next[f]; });
+    state.rules = next;
+    render();
+    if (!changed) return true;
+    var snapshot = copyRules(next);
+    listeners.slice().forEach(function (fn) { fn(copyRules(snapshot)); });
+    return true;
+  }
+
+  function getRules() { return copyRules(state.rules); }
+
+  // Fires once per valid setRules call with the new rules. Returns an unsubscribe function.
+  function onRulesChange(fn) {
+    if (typeof fn !== 'function') throw new Error('onRulesChange needs a function');
+    listeners.push(fn);
+    return function () { var i = listeners.indexOf(fn); if (i >= 0) listeners.splice(i, 1); };
+  }
+
+  function onControlChange(ev) {
+    var t = ev && ev.target;
+    if (!t || t.type !== 'radio' || typeof t.name !== 'string') return;
+    var f = t.name.replace(/^rule-/, '');
+    if (FIELDS.indexOf(f) < 0) return;
+    var values = copyRules(state.rules);
+    values[f] = t.value;
+    if (!setRules(rulesFromControls(values))) render(); // put the controls back on the active rules
+  }
+
   function init() {
-    var chart = root.ChipyEngine.chart.buildChart(DEFAULT_RULES);
+    if (inited) return;
+    inited = true;
+    dom = {
+      panel: document.getElementById('rule-panel'),
+      text: document.getElementById('rules-text'),
+      chart: document.getElementById('chart')
+    };
     document.getElementById('legend').innerHTML = renderLegendHTML();
-    document.getElementById('chart').innerHTML = renderChartHTML(chart);
+    dom.panel.innerHTML = controlsHTML();
+    dom.panel.addEventListener('change', onControlChange);
+    render();
   }
 
   function buildChart(rules) { return root.ChipyEngine.chart.buildChart(rules); }
@@ -823,6 +949,11 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     displayRowLabel: displayRowLabel,
     renderChartHTML: renderChartHTML,
     renderLegendHTML: renderLegendHTML,
+    rulesSentence: rulesSentence,
+    rulesFromControls: rulesFromControls,
+    getRules: getRules,
+    setRules: setRules,
+    onRulesChange: onRulesChange,
     init: init
   };
 

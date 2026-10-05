@@ -63,3 +63,4 @@ Format: ID · date · decision · by. Newest at the bottom. Superseded rows move
 | D-057 | 2026-10-05 | Positioning: the Cheat Sheet is part of the CHIPY blackjack tools suite; links to the other tools go via the existing carousel | Marius |
 | D-058 | 2026-10-05 | Sprint 2 in batch mode: per story spec-writer → builder → story-reviewer → commit, no per-story approval; stop only if a review fails twice, a test can't pass, or a product decision is needed; stop at G3 after S-12 | Marius |
 | D-059 | 2026-10-05 | .gitignore adds .playwright-mcp/ (Lead's local screenshot output, never committed) | Lead |
+| D-060 | 2026-10-05 | Prototype rules state: setRules accepts only own-property D-023 keys (extras ignored); init() idempotent; onRulesChange fires only when the rules actually change (S-08 review; protects S-19 URL input) | Lead |

@@ -23,7 +23,7 @@ Defaults on load: 4–8 decks · dealer hits soft 17 · DAS allowed · surrender
 | ID | Story (one output) | Agent | Goal | Gate | State |
 |---|---|---|---|---|---|
 | S-07 | Trainer shell (Quiz E53) + chart at default rules: Hard / Soft / Pairs, move icon + word + placeholder tint (D-053), Soft rows A,2–A,9 (D-049); prototype/build.js + byte-match test (merges old S-09) | ui-dev | 2 | — | done |
-| S-08 | Rule panel (4 controls, defaults) wired to chart.js; chart redraws on change | ui-dev | 2 | — | approved |
+| S-08 | Rule panel (4 controls, defaults) wired to chart.js; chart redraws on change | ui-dev | 2 | — | done |
 | S-18 | Table mode: phone-first quick view — tap player hand (hard / soft / pair), tap dealer card → one large move word + rule note; chart.js output only; answer = chart cell for every hand × dealer × 36 rule sets; two taps; 390px; "Recommended Play" card style + move icon, no card picking, no EV, link to Hand Strategy Calculator (D-051, D-055) | ui-dev | 2 | — | approved |
 | S-10 | Tap/click/keyboard a cell → panel: row label, reason (why.js), note shown separately (D-029, D-030, D-049); no hover | ui-dev | 2 | — | approved |
 | S-11 | Print, both sizes: full page + pocket card, chosen rules printed on each (D-054) | ui-dev | 2 | — | approved |
