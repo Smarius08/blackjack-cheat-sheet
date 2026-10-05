@@ -36,3 +36,5 @@ Format: ID · date · decision · by. Newest at the bottom. Superseded rows move
 | D-030 | 2026-10-05 | why.js returns the reason only; the cell's note (D-022) is shown separately by the UI | Marius |
 | D-031 | 2026-10-05 | Docs-only commits (no code, test or package changes) skip `/codex:review` before push; every other push still requires it | Marius |
 | D-032 | 2026-10-05 | G2: vendored engine copy (S-02) approved for commit; Codex review + adversarial review before next push | Marius |
+| D-033 | 2026-10-05 | chart.js API: `buildChart(rules)`, rules = D-023 shape; returns { columns: ["2"…"10","A"], hard, soft, pairs }, each an array of { label, cells[10] }; labels Hard "5-7","8"…"17","18-21", Soft "13"…"20", Pairs "2,2"…"10,10","A,A"; browser global `window.ChipyEngine.chart`; also exports constants RULE_VALUES, COLUMNS | Lead |
+| D-034 | 2026-10-05 | G2: chart.js cell-resolution (S-03) approved for commit | Marius |

@@ -1,6 +1,6 @@
 # S-03 — `engine/chart.js`: the player's 4 rules in, 3 tables of plain moves out
 
-State: approved · Agent: engine-dev · Goal served: 2 (correct chart for the player's rules) · Gate: G2 (D-019)
+State: done · Agent: engine-dev · Goal served: 2 (correct chart for the player's rules) · Gate: G2 (D-019)
 
 ## Why
 The player wants one chart that is right for their table, with plain words instead of codes like "Rh" (north-star "User problem").
@@ -35,3 +35,12 @@ after the tests pass and the Lead asks for G2. Nothing is committed until Marius
 ## Review (filled by story-reviewer)
 | # | Pass/Fail | Evidence |
 |---|---|---|
+| 1 | Pass | `buildChart(rules)` (D-023 rules, validated); rows/labels per D-020/D-033; Double/Multi 5-7 & 8 → engine "5-8", Single own rows; cell = { move, code, note }; only the 5 moves found |
+| 2 | Pass | resolveCode(code, d, total, true, label, false, {…, doubleRestriction: 0}); D-021 totals; no rule tables in chart.js. Independent script: 36 combos, 10,800 cells, 0 mismatches vs STRATEGY_TABLE + direct resolveCode |
+| 3 | Pass | Pair 8,8 vs A (Rp), Hard 16 vs 10 (Rh), Pair 2,2 vs 2 (Ph) each flipped, note checked; decks (Hard 8 vs 5) and soft-17 (Hard 17 vs A) pick different tables |
+| 4 | Pass | 36-combo test: same labels/order, 10 cells per row, no UNAVAILABLE (HIT 4249, STAND 2809, DOUBLE 1860, SPLIT 1798, SURRENDER 84) |
+| 5 | Pass | Vendor-style UMD wrapper; only require is ./vendor/strategy_table.js; browser global ChipyEngine.chart; vm-context test matches Node; no DOM |
+| 6 | Pass | `npm run check`: 21/21 pass, exit 0; only the two Write files added; engine/vendor unchanged; nothing committed |
+
+Overall: PASS (story-reviewer, 2026-10-05). Observations: also exports constants RULE_VALUES and COLUMNS; settings carries unused dealerHitsSoft17/deckCount.
+
