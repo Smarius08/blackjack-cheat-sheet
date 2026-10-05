@@ -27,7 +27,7 @@ Defaults on load: 4–8 decks · dealer hits soft 17 · DAS allowed · surrender
 | S-18 | Table mode: phone-first quick view — tap player hand (hard / soft / pair), tap dealer card → one large move word + rule note; chart.js output only; answer = chart cell for every hand × dealer × 36 rule sets; two taps; 390px; "Recommended Play" card style + move icon, no card picking, no EV, link to Hand Strategy Calculator (D-051, D-055) | ui-dev | 2 | — | done |
 | S-10 | Tap/click/keyboard a cell → panel: row label, reason (why.js), note shown separately (D-029, D-030, D-049); no hover | ui-dev | 2 | — | done |
 | S-11 | Print, both sizes: full page + pocket card, chosen rules printed on each (D-054) | ui-dev | 2 | — | approved |
-| S-19 | My-table link: active rules kept in the page URL; every combo round-trips; invalid values fall back to defaults with no error (D-051, D-054) | ui-dev | 2 | — | approved |
+| S-19 | My-table link: active rules kept in the page URL; every combo round-trips; invalid values fall back to defaults with no error (D-051, D-054) | ui-dev | 2 | — | done |
 | S-12 | QA run: Playwright 390 / 1280, all 36 combos vs snapshot, incl. S-18 and S-19 → docs/qa/ | qa-tester | 2 | G3 | approved |
 
 ## Sprint 3 — Figma (D2) + Jira (D3)

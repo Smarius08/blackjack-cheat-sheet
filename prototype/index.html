@@ -959,6 +959,48 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     return out;
   }
 
+  // ---- My-table link (S-19, D-023, D-054): rules live in the query, silently ----
+  function queryEntries(search) {
+    try { return Array.from(new URLSearchParams(String(search || ''))); } catch (e) { return []; }
+  }
+
+  // Full rules from a query string. Each field alone: missing, empty, unknown or duplicated -> default (D-045).
+  function rulesFromQuery(search) {
+    var seen = Object.create(null), vals = Object.create(null), out = copyRules(DEFAULT_RULES);
+    queryEntries(search).forEach(function (kv) {
+      var k = kv[0];
+      if (FIELDS.indexOf(k) < 0) return;
+      seen[k] = (seen[k] || 0) + 1;
+      vals[k] = kv[1];
+    });
+    FIELDS.forEach(function (f) {
+      if (seen[f] === 1 && has(LABEL_WORDS[f], vals[f])) out[f] = vals[f];
+    });
+    return out;
+  }
+
+  // New "?..." string: other params kept as written and in order, the four rule keys rewritten at the end.
+  function queryFromRules(rules, existingSearch) {
+    var kept = String(existingSearch || '').replace(/^\?/, '').split('&').filter(function (part) {
+      if (!part) return false;
+      var raw = part.split('=')[0], key = raw;
+      try { key = decodeURIComponent(raw.replace(/\+/g, ' ')); } catch (e) { /* keep raw */ }
+      return FIELDS.indexOf(key) < 0;
+    });
+    var next = validRules(rules) || copyRules(DEFAULT_RULES);
+    FIELDS.forEach(function (f) { kept.push(f + '=' + encodeURIComponent(next[f])); });
+    return '?' + kept.join('&');
+  }
+
+  function syncUrl(rules) {
+    try {
+      if (typeof location === 'undefined' || typeof history === 'undefined' || !history.replaceState) return;
+      var search = queryFromRules(rules, location.search);
+      if (search === (location.search || '')) return;
+      history.replaceState(null, '', search + (location.hash || ''));
+    } catch (e) { /* e.g. file:// restrictions: the chart still works */ }
+  }
+
   function rulesSentence(rules) {
     return FIELDS.map(function (f) { return LABEL_WORDS[f][rules[f]]; }).join(SEP);
   }
@@ -1368,6 +1410,7 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
       tpick: document.getElementById('table-pick'),
       tresult: document.getElementById('table-result')
     };
+    try { if (typeof location !== 'undefined') state.rules = rulesFromQuery(location.search); } catch (e) { /* defaults */ }
     document.getElementById('legend').innerHTML = renderLegendHTML();
     dom.panel.innerHTML = controlsHTML();
     dom.panel.addEventListener('change', onControlChange);
@@ -1378,6 +1421,7 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     dom.tpick.addEventListener('click', onTableClick);
     dom.toggle.addEventListener('click', toggleRules);
     onRulesChange(renderResult);
+    onRulesChange(syncUrl);
     renderTable();
   }
 
@@ -1391,6 +1435,8 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     renderLegendHTML: renderLegendHTML,
     rulesSentence: rulesSentence,
     rulesFromControls: rulesFromControls,
+    rulesFromQuery: rulesFromQuery,
+    queryFromRules: queryFromRules,
     getRules: getRules,
     setRules: setRules,
     onRulesChange: onRulesChange,
