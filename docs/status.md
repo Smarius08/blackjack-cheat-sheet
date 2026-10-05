@@ -26,5 +26,8 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 - Reporter approval of concept and engine (spec doc ready to send). Keyword split is in S-16 (D-016), not a blocker.
 - Open: `npm install` would create package-lock.json (not tracked yet) — decide at S-04 or later.
 
+## Known limitations (D-037)
+- Vendor SURRENDER_VALUES / DOUBLE_RESTRICTIONS stay mutable in memory (not used by chart.js). chart.js freezing STRATEGY_TABLE also makes it read-only for any code loaded after it (intended, D-036).
+
 ## Files to attach in Jira
 - None yet.
