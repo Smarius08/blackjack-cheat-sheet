@@ -149,6 +149,72 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
 .sa-link-row { margin: 16px 0 0; font-size: 14px; }
 .sa-link { color: #5f7220; font-weight: 600; display: inline-block; padding: 10px 0; }
 
+.print-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 20px; }
+.print-btn {
+  font: inherit; cursor: pointer; min-height: 48px; padding: 8px 16px; font-size: 15px; font-weight: 600;
+  color: #404040; background: #fff; border: 1px solid rgba(0, 0, 0, 0.18); border-radius: 8px;
+}
+.print-btn:focus-visible { outline: 3px solid #404040; outline-offset: 2px; }
+.print-sheet { display: none; }
+
+/* ---- Print (S-11, D-054, D-064): full page and pocket card; only the chosen sheet prints ---- */
+@page { size: portrait; margin: 10mm; }
+@page pocket { size: landscape; margin: 8mm; }
+@media print {
+  html, body { background: #fff !important; margin: 0; padding: 0; }
+  body { overflow: visible; }
+  .shell, #rule-panel, #mode-switch, #table-mode, .reason-slot, button { display: none !important; }
+  .print-sheet { -webkit-print-color-adjust: exact; print-color-adjust: exact; color: #000; }
+  .print-full { display: block; }
+  .print-pocket { display: none; }
+  html[data-print="pocket"] .print-full { display: none; }
+  html[data-print="pocket"] .print-pocket { display: block; page: pocket; }
+
+  /* Full page: 190 mm wide; fits Letter's 259 mm of height with room to spare */
+  .pf-title { margin: 0; text-align: center; text-transform: uppercase; font-size: 17pt; font-weight: 700; color: var(--lime-dark); line-height: 1.2; }
+  .pf-rules { margin: 1.5mm 0 2mm; text-align: center; font-size: 9.5pt; font-weight: 600; }
+  .pf-legend { display: flex; justify-content: center; gap: 3mm; margin: 0 0 3mm; padding: 0; list-style: none; }
+  .pf-legend li { display: inline-flex; align-items: center; gap: 1.5mm; padding: 0.8mm 2.5mm 0.8mm 1.5mm; border: 0.2mm solid #888; border-radius: 4mm; font-size: 8pt; font-weight: 700; }
+  .pf-legend .mi { width: 3.6mm; height: 3.6mm; }
+  .pf-sec { margin: 0 0 2mm; break-inside: avoid; }
+  .pf-sec h2 { margin: 0 0 0.8mm; font-size: 9.5pt; font-weight: 700; }
+  table.pf { width: 190mm; border-collapse: collapse; table-layout: fixed; }
+  .pf th, .pf td { padding: 0; border: 0.2mm solid #9aa0a6; text-align: center; height: 6mm; }
+  .pf thead th { background: #eef0f2; font-size: 8pt; font-weight: 700; height: 5mm; }
+  .pf th.pf-corner { width: 20mm; font-size: 6.5pt; color: #444; text-align: left; padding-left: 1.5mm; }
+  .pf tbody th { background: #eef0f2; font-size: 8pt; font-weight: 700; text-align: left; padding-left: 1.5mm; }
+  .pf td .pc { display: inline-flex; align-items: center; justify-content: center; gap: 0.8mm; }
+  .pf td .mi { width: 3.2mm; height: 3.2mm; }
+  .pf td .mw { font-size: 6.8pt; font-weight: 700; color: #000; }
+
+  /* Pocket card: two A6 panels (105 x 148 mm) side by side = 210 x 148 mm, centred on a landscape sheet */
+  .pc-sheet { position: relative; width: 210mm; height: 148mm; margin: 12mm auto 0; display: flex; }
+  .pc-panel { position: relative; width: 105mm; height: 148mm; padding: 5mm 5mm 4mm; overflow: hidden; display: flex; flex-direction: column; }
+  .pc-panel + .pc-panel { border-left: 0.3mm dashed #555; }
+  .pc-mark { position: absolute; width: 3mm; height: 3mm; border: 0 solid #888; }
+  .pc-mark.tl { left: -4.5mm; top: -4.5mm; border-right-width: 0.2mm; border-bottom-width: 0.2mm; }
+  .pc-mark.tr { right: -4.5mm; top: -4.5mm; border-left-width: 0.2mm; border-bottom-width: 0.2mm; }
+  .pc-mark.bl { left: -4.5mm; bottom: -4.5mm; border-right-width: 0.2mm; border-top-width: 0.2mm; }
+  .pc-mark.br { right: -4.5mm; bottom: -4.5mm; border-left-width: 0.2mm; border-top-width: 0.2mm; }
+  .pc-title { margin: 0; font-size: 10.5pt; font-weight: 800; text-transform: uppercase; color: var(--lime-dark); line-height: 1.2; }
+  .pc-rules { margin: 1mm 0 2.5mm; font-size: 6.8pt; font-weight: 600; line-height: 1.3; }
+  .pc-body { flex: 1 1 auto; }
+  .pc-sec { margin: 0 0 2.5mm; }
+  .pc-sec h2 { margin: 0 0 0.6mm; font-size: 7.5pt; font-weight: 800; }
+  table.pc-t { width: 95mm; border-collapse: collapse; table-layout: fixed; }
+  .pc-t th, .pc-t td { padding: 0; text-align: center; border: 0.2mm solid #555; }
+  .pc-t thead th { background: #e4e6e8; font-size: 7pt; font-weight: 800; height: 4.6mm; }
+  .pc-t th.pc-corner { width: 13mm; font-size: 5.5pt; font-weight: 700; text-align: left; padding-left: 1mm; }
+  .pc-t tbody th { background: #e4e6e8; font-size: 7pt; font-weight: 800; text-align: left; padding-left: 1mm; }
+  .pc-t td { font-size: 9pt; font-weight: 900; color: #000; line-height: 1; }
+  .pc-t tbody tr { height: 4.9mm; }
+  .pc-panel.pc-roomy .pc-t tbody tr { height: 7.2mm; }
+  .pc-panel.pc-roomy .pc-t td { font-size: 11pt; }
+  .pc-legend { margin: 1mm 0 0; font-size: 7pt; font-weight: 800; text-align: center; line-height: 1.3; }
+  .pc-dealer { margin: 0 0 0.8mm; font-size: 5.5pt; font-weight: 700; color: #333; text-align: right; padding-right: 0; }
+  .pc-fold { margin: 1mm 0 0; font-size: 5.5pt; color: #444; text-align: center; }
+}
+
 @media (max-width: 600px) {
   body { padding: 12px 12px 32px; }
   .shell-header h1 { font-size: 18px; }
@@ -171,6 +237,7 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     <div class="rule-panel" id="rule-panel"></div>
     <p class="rules-note" aria-live="polite"><strong>Table rules:</strong> <span id="rules-text"></span></p>
     <button type="button" class="rules-toggle" id="rules-toggle" aria-expanded="false" aria-controls="rule-panel" hidden>Change rules</button>
+    <div class="print-row"><button type="button" class="print-btn" id="print-full-btn">Print chart</button><button type="button" class="print-btn" id="print-pocket-btn">Print pocket card</button></div>
     <div id="full-view">
       <ul class="legend" id="legend" aria-label="Key to moves"></ul>
       <div id="chart"></div>
@@ -181,6 +248,8 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     </div>
   </div>
 </main>
+<div class="print-sheet print-full" id="print-full" aria-hidden="true"></div>
+<div class="print-sheet print-pocket" id="print-pocket" aria-hidden="true"></div>
 <!--@@ENGINE_SCRIPTS@@-->
 <script data-app="chipy-cheat-sheet">
 (function (root) {
@@ -540,6 +609,7 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     dom.chart.innerHTML = renderChartHTML(lastChart, rove);
     refreshPanels();
     if (focusAt) focusCell(focusAt[0], focusAt[1], focusAt[2]);
+    renderPrint();
     dom.text.textContent = rulesSentence(rules);
     var radios = dom.panel.querySelectorAll('input[type="radio"]');
     for (var i = 0; i < radios.length; i++) {
@@ -746,6 +816,99 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     else if (act === 'dealer') selectDealer(val);
   }
 
+  // ---- Print (S-11, D-054, D-064): markup built from buildChart(rules); same moves as the screen chart ----
+  var POCKET_LETTER = { HIT: 'H', STAND: 'S', DOUBLE: 'D', SPLIT: 'P', SURRENDER: 'R' };
+
+  function pocketLegendText() {
+    return MOVE_ORDER.map(function (m) { return POCKET_LETTER[m] + ' ' + MOVE_UI[m].word; }).join(SEP);
+  }
+
+  // Full page: title, rules sentence, legend (icon + word), three tables with word + icon per cell.
+  function renderPrintFullHTML(rules) {
+    var r = validRules(rules) || copyRules(DEFAULT_RULES);
+    var chart = buildChart(r);
+    var out = '<div class="pf-page"><h1 class="pf-title" data-title>Blackjack Cheat Sheet</h1>' +
+      '<p class="pf-rules" data-rules>' + esc(rulesSentence(r)) + '</p>' +
+      '<ul class="pf-legend" data-legend>' + renderLegendHTML() + '</ul>';
+    TABLES.forEach(function (def) {
+      out += '<section class="pf-sec" data-table="' + def.key + '"><h2>' + esc(def.heading) + '</h2>' +
+        '<table class="pf"><thead><tr><th class="pf-corner" scope="col">Your hand</th>';
+      chart.columns.forEach(function (c) { out += '<th scope="col">' + esc(c) + '</th>'; });
+      out += '</tr></thead><tbody>';
+      chart[def.key].forEach(function (row) {
+        out += '<tr data-row="' + esc(row.label) + '"><th scope="row">' + esc(displayRowLabel(def.key, row.label)) + '</th>';
+        row.cells.forEach(function (cell) {
+          var ui = MOVE_UI[cell.move];
+          if (!ui) throw new Error('unknown move: ' + cell.move);
+          out += '<td class="m-' + ui.id + '" data-move="' + cell.move + '"><span class="pc"><span class="mi mi-' + ui.id +
+            '" aria-hidden="true"></span><span class="mw">' + ui.word + '</span></span></td>';
+        });
+        out += '</tr>';
+      });
+      out += '</tbody></table></section>';
+    });
+    return out + '</div>';
+  }
+
+  function pocketTableHTML(def, chart, heading) {
+    var out = '<section class="pc-sec" data-table="' + def.key + '"><h2>' + esc(heading) + '</h2>' +
+      '<table class="pc-t"><thead><tr><th class="pc-corner" scope="col">Dealer:</th>';
+    chart.columns.forEach(function (c) { out += '<th scope="col">' + esc(c) + '</th>'; });
+    out += '</tr></thead><tbody>';
+    chart[def.key].forEach(function (row) {
+      out += '<tr data-row="' + esc(row.label) + '"><th scope="row">' + esc(displayRowLabel(def.key, row.label)) + '</th>';
+      row.cells.forEach(function (cell) {
+        var ui = MOVE_UI[cell.move], letter = POCKET_LETTER[cell.move];
+        if (!ui || !letter) throw new Error('unknown move: ' + cell.move);
+        out += '<td class="m-' + ui.id + '" data-move="' + cell.move + '">' + letter + '</td>';
+      });
+      out += '</tr>';
+    });
+    return out + '</tbody></table></section>';
+  }
+
+  // Pocket card: panel 1 = Hard, panel 2 = Soft + Pairs; one bold letter per cell; two 105x148 mm panels.
+  function renderPocketHTML(rules) {
+    var r = validRules(rules) || copyRules(DEFAULT_RULES);
+    var chart = buildChart(r);
+    function panel(n, cls, body) {
+      return '<div class="pc-panel ' + cls + '" data-panel="' + n + '"><p class="pc-title">Blackjack Cheat Sheet</p>' +
+        '<p class="pc-rules" data-rules>' + esc(rulesSentence(r)) + '</p><div class="pc-body">' + body + '</div>' +
+        '<p class="pc-legend" data-legend>' + esc(pocketLegendText()) + '</p></div>';
+    }
+    var hard = TABLES[0], soft = TABLES[1], pairs = TABLES[2];
+    return '<div class="pc-sheet"><span class="pc-mark tl"></span><span class="pc-mark tr"></span>' +
+      '<span class="pc-mark bl"></span><span class="pc-mark br"></span>' +
+      panel(1, 'pc-roomy', pocketTableHTML(hard, chart, 'Hard hands')) +
+      panel(2, '', pocketTableHTML(soft, chart, 'Soft hands (Ace + card)') + pocketTableHTML(pairs, chart, 'Pairs')) +
+      '</div><p class="pc-fold">Fold or cut along the dashed line. Landscape paper (A4 or Letter).</p>';
+  }
+
+  // Rebuilt from the live rules; called on every render() and again right before printing.
+  function renderPrint() {
+    if (!dom) return;
+    if (dom.printFull) dom.printFull.innerHTML = renderPrintFullHTML(state.rules);
+    if (dom.printPocket) dom.printPocket.innerHTML = renderPocketHTML(state.rules);
+  }
+
+  function setPrintFlag(mode) {
+    var de = typeof document !== 'undefined' ? document.documentElement : null;
+    if (!de) return;
+    if (mode) { if (de.dataset) de.dataset.print = mode; else de.setAttribute('data-print', mode); }
+    else if (de.dataset) delete de.dataset.print;
+    else if (de.removeAttribute) de.removeAttribute('data-print');
+  }
+
+  // mode: 'full' | 'pocket'. Sets the flag, refreshes the markup, prints, clears the flag on afterprint.
+  function printSheet(mode) {
+    if (mode !== 'full' && mode !== 'pocket') return false;
+    renderPrint();
+    setPrintFlag(mode);
+    if (typeof root.print !== 'function') { setPrintFlag(null); return false; }
+    root.print();
+    return true;
+  }
+
   function init() {
     if (inited) return;
     inited = true;
@@ -759,7 +922,9 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
       full: document.getElementById('full-view'),
       table: document.getElementById('table-mode'),
       tpick: document.getElementById('table-pick'),
-      tresult: document.getElementById('table-result')
+      tresult: document.getElementById('table-result'),
+      printFull: document.getElementById('print-full'),
+      printPocket: document.getElementById('print-pocket')
     };
     try { if (typeof location !== 'undefined') state.rules = rulesFromQuery(location.search); } catch (e) { /* defaults */ }
     document.getElementById('legend').innerHTML = renderLegendHTML();
@@ -774,6 +939,13 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     onRulesChange(renderResult);
     onRulesChange(syncUrl);
     renderTable();
+    var bf = document.getElementById('print-full-btn'), bp = document.getElementById('print-pocket-btn');
+    if (bf && bf.addEventListener) bf.addEventListener('click', function () { printSheet('full'); });
+    if (bp && bp.addEventListener) bp.addEventListener('click', function () { printSheet('pocket'); });
+    if (typeof root.addEventListener === 'function') {
+      root.addEventListener('beforeprint', renderPrint);
+      root.addEventListener('afterprint', function () { setPrintFlag(null); });
+    }
   }
 
   function buildChart(rules) { return root.ChipyEngine.chart.buildChart(rules); }
@@ -805,6 +977,10 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     selectDealer: selectDealer,
     getSelection: getSelection,
     toggleRules: toggleRules,
+    POCKET_LETTER: POCKET_LETTER,
+    renderPrintFullHTML: renderPrintFullHTML,
+    renderPocketHTML: renderPocketHTML,
+    printSheet: printSheet,
     init: init
   };
 
