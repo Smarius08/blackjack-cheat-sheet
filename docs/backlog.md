@@ -36,7 +36,7 @@ Defaults on load: 4–8 decks · dealer hits soft 17 · DAS allowed · surrender
 |---|---|---|---|---|---|
 | S-13a | Figma full page 1280 + 390 (Quiz pattern), real H1 (BFC-55463), placeholder copy (BFC-55461), Q&As component sample state, carousel, "Learn this chart" v2 slot (D-051, D-069) | figma-designer | 1 | G4 | reviewed (G4 pending) |
 | S-13b | Figma tool screens 1280 + 390: default chart, reason panel (+ note), rules changed, table mode states, 390 rules collapsed + swipe cue; CHIPY tokens, F2 contrast, F4 badge (D-053, D-068, D-069) | figma-designer | 2 | G4 | reviewed (G4 pending) |
-| S-13c | Figma print: full-page chart + A6 pocket card, rules printed (D-064, D-069) | figma-designer | 2 | G4 | in progress |
+| S-13c | Figma print: full-page chart + A6 pocket card, rules printed (D-064, D-069) | figma-designer | 2 | G4 | reviewed (G4 pending) |
 | S-14 | Jira draft: Calculation Logic & Lookup Tables (engine + snapshot; must state the 2-cell deviation from v30: Single/H17 6,6 vs 7 Ph, Multi/H17 8,8 vs A Rpa — D-046, D-049) | jira-writer | 3 | G5 | proposed |
 | S-15 | Jira drafts: Tool Layout (reserve space for v2 "Learn this chart", D-051; notes for the design-system owner: in-page nav item height, breadcrumb tap targets, inactive segmented label contrast 4.41:1 — D-072), Tool Functionality | jira-writer | 3 | G5 | proposed |
 | S-16 | Jira drafts: SEO Content (incl. keyword split decision with Ahrefs, D-016), Common Sections, related tools, sitemaps/index/search | jira-writer | 1 | G5 | proposed |
