@@ -11456,8 +11456,8 @@
                 "note": null
               },
               {
-                "move": "HIT",
-                "code": "H",
+                "move": "SPLIT",
+                "code": "Ph",
                 "note": null
               },
               {
@@ -13136,8 +13136,8 @@
                 "note": null
               },
               {
-                "move": "HIT",
-                "code": "H",
+                "move": "SPLIT",
+                "code": "Ph",
                 "note": null
               },
               {
@@ -14816,8 +14816,8 @@
                 "note": null
               },
               {
-                "move": "HIT",
-                "code": "H",
+                "move": "SPLIT",
+                "code": "Ph",
                 "note": null
               },
               {
@@ -16497,8 +16497,8 @@
               },
               {
                 "move": "HIT",
-                "code": "H",
-                "note": null
+                "code": "Ph",
+                "note": "Basic strategy says Split, but Double after split isn't allowed. Hit instead."
               },
               {
                 "move": "HIT",
@@ -18177,8 +18177,8 @@
               },
               {
                 "move": "HIT",
-                "code": "H",
-                "note": null
+                "code": "Ph",
+                "note": "Basic strategy says Split, but Double after split isn't allowed. Hit instead."
               },
               {
                 "move": "HIT",
@@ -19857,8 +19857,8 @@
               },
               {
                 "move": "HIT",
-                "code": "H",
-                "note": null
+                "code": "Ph",
+                "note": "Basic strategy says Split, but Double after split isn't allowed. Hit instead."
               },
               {
                 "move": "HIT",
@@ -51907,8 +51907,8 @@
               },
               {
                 "move": "SPLIT",
-                "code": "Rp",
-                "note": null
+                "code": "Rpa",
+                "note": "Basic strategy says Surrender, but your Surrender setting doesn't allow it against this dealer card. Use Split instead."
               }
             ]
           },
@@ -53586,8 +53586,8 @@
                 "note": null
               },
               {
-                "move": "SPLIT",
-                "code": "Rp",
+                "move": "SURRENDER",
+                "code": "Rpa",
                 "note": null
               }
             ]
@@ -55267,8 +55267,8 @@
               },
               {
                 "move": "SPLIT",
-                "code": "Rp",
-                "note": null
+                "code": "Rpa",
+                "note": "Basic strategy says Surrender, but your Surrender setting doesn't allow it against this dealer card. Use Split instead."
               }
             ]
           },
@@ -56947,8 +56947,8 @@
               },
               {
                 "move": "SPLIT",
-                "code": "Rp",
-                "note": null
+                "code": "Rpa",
+                "note": "Basic strategy says Surrender, but your Surrender setting doesn't allow it against this dealer card. Use Split instead."
               }
             ]
           },
@@ -58627,7 +58627,7 @@
               },
               {
                 "move": "SURRENDER",
-                "code": "Rp",
+                "code": "Rpa",
                 "note": null
               }
             ]
@@ -60307,8 +60307,8 @@
               },
               {
                 "move": "SPLIT",
-                "code": "Rp",
-                "note": null
+                "code": "Rpa",
+                "note": "Basic strategy says Surrender, but your Surrender setting doesn't allow it against this dealer card. Use Split instead."
               }
             ]
           },

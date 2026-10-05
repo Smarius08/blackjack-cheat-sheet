@@ -1,4 +1,4 @@
-# Archive — Sprint 1 (Engine), all done 2026-10-06
+# Archive — Sprint 1 (Engine), all done 2026-10-05
 
 Story files stay in `docs/stories/` (S-01…S-06, each with its review table); the reviewer and jira-writer still read them.
 

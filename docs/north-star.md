@@ -24,7 +24,7 @@ Rule-Based Basic Strategy Lookup + Chart Renderer.
 - Source: chipy-blackjack-trainer/engine/strategy_table.js (from Hand Strategy Calculator v30; validated by a 395,460-combination sweep).
 - Keys: deck group (Single=1, Double=2, Multi=4–8) × H17/S17 × Hard/Soft/Pairs × dealer 2–A.
 - Cell = resolveCode(code, dealer, total, firstDecision=true, postSplit=false, settings).
-- Codes: H S P Dh Ds Ph Rh Rs Rp Pd Ps. Rule combinations: 3×2×2×3 = 36 charts → JSON snapshot = QA truth.
+- Codes: H S P Dh Ds Ph Rh Rs Rp Rpa Pd Ps (Rpa added by the Trainer fix 8b87989, D-046). Rule combinations: 3×2×2×3 = 36 charts → JSON snapshot = QA truth.
 
 ## Competitor gap
 Static charts (ProfitDuel, ChasingTheFrog, Blackjack Apprenticeship) are fixed; BlackjackInfo is rule-based but shows codes + legend.

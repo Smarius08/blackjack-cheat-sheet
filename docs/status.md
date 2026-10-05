@@ -1,6 +1,6 @@
 # Status
 
-Last updated: 2026-10-06 (home-mac-mini, Claude Code CLI)
+Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 
 ## Done
 - Team setup; Sprint 1 story files S-01…S-06 approved (D-018…D-031).
@@ -13,11 +13,12 @@ Last updated: 2026-10-06 (home-mac-mini, Claude Code CLI)
 - S-05 snapshot/review.html: all 36 charts + index + code key; open with `open snapshot/review.html` (G2 D-040).
 - S-06 engine/why.js `reasonFor`: vendor reason text per cell, unchanged (PASS) — 493f5bc.
 - Sprint 1 housekeeping done; archive in docs/archive/sprint-1.md.
-- `npm run check`: 58/58 pass.
+- S-17 re-vendored corrected Trainer engine 8b87989 (6,6 vs 7 Single/H17; 8,8 vs A Multi/H17 Rpa); 12 cells changed (G2 D-047).
+- `npm run check`: 60/60 pass.
 
 ## Next
 - Marius: `/codex:review --base origin/main` + `/codex:adversarial-review --base origin/main`, then G6 push.
-- Send snapshot/review.html to the reporter for engine approval.
+- Marius: re-run external comparison (expect 0 differences), then send snapshot/review.html to the reporter.
 - Sprint 2 (G1 needed first): S-07…S-12 are still "proposed".
 - work-lenovo clone pending (only when at the office).
 

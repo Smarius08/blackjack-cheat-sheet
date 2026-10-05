@@ -39,6 +39,6 @@ This story builds the function that produces that short reason from the Trainer'
 | 5 | Pass | No DOM; only require is the vendor writer; ChipyEngine.why; vm browser test matches Node |
 | 6 | Pass | `npm run check` 57/57, exit 0; only the two Write files added; engine/vendor, chart.js, snapshot unchanged |
 
-Overall: PASS (story-reviewer, 2026-10-06). Gap closed before commit: A,A soft mapping had no catching test (A,A is SPLIT everywhere) → added synthetic STAND/HIT/DOUBLE test; mutation now fails it; 58/58.
+Overall: PASS (story-reviewer, 2026-10-05). Gap closed before commit: A,A soft mapping had no catching test (A,A is SPLIT everywhere) → added synthetic STAND/HIT/DOUBLE test; mutation now fails it; 58/58.
 Notes for S-10 (reviewer): 18-21 row says "Your 18…"; 5-7 reason says "without busting"; 33 distinct reasons across 10,800 cells, mostly not naming the dealer card or rule; pair reasons start "You can split this pair, but…" even on HIT/STAND/DOUBLE; "Soft" is not explained.
 

@@ -120,15 +120,49 @@ test('Hard 16 vs A ("Rh", Multi): except_ace blocks surrender against the ace on
   assert.equal(cell(chart, 'hard', '16', '10').move, 'SURRENDER');
 });
 
-test('Pair 8,8 vs A ("Rp", Multi H17): SURRENDER only when surrender allowed and DAS off', () => {
-  const sur = cell(buildChart(rules({ surrender: 'any', das: 'no' })), 'pairs', '8,8', 'A');
-  assert.equal(sur.code, 'Rp');
-  assert.equal(sur.move, 'SURRENDER');
-  assert.equal(cell(buildChart(rules({ surrender: 'any', das: 'yes' })), 'pairs', '8,8', 'A').move, 'SPLIT');
-  assert.equal(cell(buildChart(rules({ surrender: 'none', das: 'no' })), 'pairs', '8,8', 'A').move, 'SPLIT');
+test('Pair 8,8 vs A ("Rpa", Multi H17): SURRENDER only when surrender allowed vs Ace, DAS ignored (S-17, D-046)', () => {
+  for (const das of ['yes', 'no']) {
+    for (const surrender of ['none', 'any', 'except_ace']) {
+      const c = cell(buildChart(rules({ surrender, das })), 'pairs', '8,8', 'A');
+      const where = `das ${das}, surrender ${surrender}`;
+      assert.equal(c.code, 'Rpa', where);
+      if (surrender === 'any') {
+        assert.equal(c.move, 'SURRENDER', where);
+        assert.equal(c.note, null, where);
+      } else {
+        assert.equal(c.move, 'SPLIT', where);
+        assert.equal(typeof c.note, 'string', where);
+        assert.ok(c.note.length > 0, where);
+      }
+    }
+  }
   const s17 = cell(buildChart(rules({ soft17: 'stands', surrender: 'any', das: 'no' })), 'pairs', '8,8', 'A');
   assert.equal(s17.code, 'P');
   assert.equal(s17.move, 'SPLIT');
+});
+
+test('Pair 8,8 vs A ("Rp", Double H17): SURRENDER only when surrender allowed and DAS off', () => {
+  for (const das of ['yes', 'no']) {
+    for (const surrender of ['none', 'any', 'except_ace']) {
+      const c = cell(buildChart(rules({ decks: '2', surrender, das })), 'pairs', '8,8', 'A');
+      const where = `das ${das}, surrender ${surrender}`;
+      assert.equal(c.code, 'Rp', where);
+      assert.equal(c.move, surrender === 'any' && das === 'no' ? 'SURRENDER' : 'SPLIT', where);
+      assert.equal(c.note, null, where);
+    }
+  }
+});
+
+test('Pair 6,6 vs 7 ("Ph", Single H17): SPLIT with DAS yes, HIT + note with DAS no (S-17, D-046)', () => {
+  const yes = cell(buildChart(rules({ decks: '1', das: 'yes' })), 'pairs', '6,6', '7');
+  const no = cell(buildChart(rules({ decks: '1', das: 'no' })), 'pairs', '6,6', '7');
+  assert.equal(yes.code, 'Ph');
+  assert.equal(yes.move, 'SPLIT');
+  assert.equal(yes.note, null);
+  assert.equal(no.code, 'Ph');
+  assert.equal(no.move, 'HIT');
+  assert.equal(typeof no.note, 'string');
+  assert.ok(no.note.length > 0);
 });
 
 test('Pair 2,2 vs 2 ("Ph", Multi): SPLIT with DAS yes, HIT + note with DAS no', () => {

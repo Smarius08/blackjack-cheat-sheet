@@ -43,5 +43,5 @@ Why inlined: a page opened by double-click (file://) cannot load a local JSON fi
 | 5 | Pass | Move word in every cell; one colour per move, five distinct |
 | 6 | Pass | `npm run check` 36/36, exit 0; one-cell mutation in scratch copy fails 2 tests; only the 3 Write files added; nothing committed |
 
-Overall: PASS (story-reviewer, 2026-10-06). Observations: ~950 KB; engine codes not explained on the page; one vendor note says "Hit instead." vs "Use X instead." (engine text, not S-05).
+Overall: PASS (story-reviewer, 2026-10-05). Observations: ~950 KB; engine codes not explained on the page; one vendor note says "Hit instead." vs "Use X instead." (engine text, not S-05).
 G2 (D-040): approved plus engine-code key in the intro (test checks every snapshot code is named); re-verified 10,800 cells, 37/37 tests; SHA-256 447a3afd…140716. Note: key's Pd line omits the "hit if double not allowed" branch, unreachable while double is fixed to any two cards (D-002).

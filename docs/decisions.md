@@ -41,7 +41,9 @@ Format: ID · date · decision · by. Newest at the bottom. Superseded rows move
 | D-035 | 2026-10-05 | Codex adversarial finding accepted: chart.js exports frozen copies of COLUMNS and RULE_VALUES; buildChart uses private values; regression test; 36 charts unchanged (S-03 follow-up) | Lead |
 | D-036 | 2026-10-05 | G2: chart.js deep-freezes the vendored STRATEGY_TABLE in memory on load (vendor file untouched) + regression test; 36 charts unchanged | Marius |
 | D-037 | 2026-10-05 | Codex adversarial findings that only describe our own code tampering with engine data in memory → recorded as known limitations, not fixed. Findings that could give a wrong chart in normal use are still fixed. S-04 snapshot test is the main guard | Marius |
-| D-038 | 2026-10-06 | charts-36.json top level = { "charts": [36] }; each chart's `tables` = buildChart(rules) output as is (columns, hard, soft, pairs); written as JSON.stringify(…, null, 2) + LF | Lead |
-| D-039 | 2026-10-06 | G2: 36-chart snapshot approved with label wording "Dealer hits on soft 17" and "Surrender: any dealer card except ace" (supersedes those two D-024 wordings); cells unchanged | Marius |
-| D-040 | 2026-10-06 | G2: review page (S-05) approved, plus a one-line key for the engine codes in the intro (checked by the test) | Marius |
-| D-041 | 2026-10-06 | why.js API: `reasonFor({ table: "hard"\|"soft"\|"pairs", row: <D-033 row label>, dealer: <column label>, cell })` → string; browser global `window.ChipyEngine.why` | Lead |
+| D-038 | 2026-10-05 | charts-36.json top level = { "charts": [36] }; each chart's `tables` = buildChart(rules) output as is (columns, hard, soft, pairs); written as JSON.stringify(…, null, 2) + LF | Lead |
+| D-039 | 2026-10-05 | G2: 36-chart snapshot approved with label wording "Dealer hits on soft 17" and "Surrender: any dealer card except ace" (supersedes those two D-024 wordings); cells unchanged | Marius |
+| D-040 | 2026-10-05 | G2: review page (S-05) approved, plus a one-line key for the engine codes in the intro (checked by the test) | Marius |
+| D-041 | 2026-10-05 | why.js API: `reasonFor({ table: "hard"\|"soft"\|"pairs", row: <D-033 row label>, dealer: <column label>, cell })` → string; browser global `window.ChipyEngine.why` | Lead |
+| D-046 | 2026-10-05 | G1: add S-17 — re-vendor corrected Trainer strategy_table.js (8b87989: Single/H17 6,6 vs 7 H→Ph; Multi/H17 8,8 vs A Rp→Rpa), regenerate snapshot + review page; exactly 12 cells change; D-042–D-045 reserved for pending housekeeping cards | Marius |
+| D-047 | 2026-10-05 | G2: re-vendored strategy_table.js (Trainer 8b87989, SHA-256 d0a272f8…) + regenerated snapshot and review page (S-17) approved; exactly 12 cells changed | Marius |

@@ -149,6 +149,11 @@ test('code key: one element in the intro naming every code in the snapshot (D-04
         for (const cell of row.cells) used.add(cell.code);
   assert.ok(used.size > 0);
   for (const code of used) assert.ok(named.has(code), 'code key names ' + code);
+  // S-17 / D-046: exact visible text of the Rpa key line.
+  const visible = unesc(keys[0][1].replace(/<\/?code>/g, ''));
+  assert.ok(
+    visible.includes("Rpa = Surrender if allowed against an Ace, otherwise Split (double after split doesn't matter)"),
+    'code key has the exact Rpa line');
 });
 
 test('no external requests', () => {

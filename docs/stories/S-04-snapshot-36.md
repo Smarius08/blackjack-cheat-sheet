@@ -43,5 +43,5 @@ then on they are the truth QA compares against. The builder stops after the test
 | 5 | Pass | Temp-copy mutation (hard 13 vs 6) → exit 1 naming chart id + row + dealer; duplicate id → fails |
 | 6 | Pass | `npm run check` 30/30, exit 0; only the 3 Write files added; engine/ and package.json unchanged; nothing committed |
 
-Overall: PASS (story-reviewer, 2026-10-06). Observations: 1.47 MB file; label wording also written in the test (independent check); generator prints one line.
+Overall: PASS (story-reviewer, 2026-10-05). Observations: 1.47 MB file; label wording also written in the test (independent check); generator prints one line.
 G2 (D-039): approved with wording "Dealer hits on soft 17" and "Surrender: any dealer card except ace"; regenerated — 10,800 cells identical, 24 labels changed; SHA-256 fb91953d…6cf970.

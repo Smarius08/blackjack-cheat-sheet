@@ -1,9 +1,10 @@
-// Vendor checksum lock (story S-02, AGENTS.md section 9).
+// Vendor checksum lock (stories S-02, S-17; AGENTS.md section 9, D-046).
 //
 // Provenance: byte-for-byte copies, never edited.
 //   ../chipy-blackjack-trainer/engine/strategy_table.js    -> engine/vendor/strategy_table.js
 //   ../chipy-blackjack-trainer/engine/explanation_writer.js -> engine/vendor/explanation_writer.js
-//   Source commit: 34f3fd5 (2026-09-21), chipy-blackjack-trainer.
+//   strategy_table.js    source commit: 8b87989 (2026-10-05), chipy-blackjack-trainer (re-vendored in S-17).
+//   explanation_writer.js source commit: 34f3fd5 (2026-09-21), chipy-blackjack-trainer (unchanged).
 //
 // Any change to either vendor file, even one byte or whitespace, fails this test.
 // No strategy behaviour is tested here.
@@ -20,8 +21,8 @@ const VENDOR_DIR = path.join(__dirname, '..', 'engine', 'vendor');
 
 const EXPECTED = {
   'strategy_table.js': {
-    size: 21414,
-    sha256: 'b4e5823d83fe0074df3e2aa90170e529eced7288420d3bee45550700709c9a25',
+    size: 22646,
+    sha256: 'd0a272f8343a16ce38287dc15e4771a0a06aef7dcb8bfd87522fa1c14a8bee4f',
   },
   'explanation_writer.js': {
     size: 9860,

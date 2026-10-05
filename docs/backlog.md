@@ -13,6 +13,11 @@ Goal = 1 search · 2 table · 3 ship.
 | S-05 | `snapshot/review.html`: human-readable view of all 36 charts for Marius/reporter | engine-dev | 2 | G2 | done |
 | S-06 | `engine/why.js`: short reason per cell from explanation_writer (D-028) | engine-dev | 2 | — | done |
 
+## Sprint 1b — Engine correction · APPROVED at G1 (D-046)
+| ID | Story (one output) | Agent | Goal | Gate | State |
+|---|---|---|---|---|---|
+| S-17 | Re-vendor corrected Trainer strategy_table.js (8b87989), regenerate snapshot + review page; exactly 12 cells change (D-046) | engine-dev | 2 | G2 | done |
+
 ## Sprint 2 — Prototype (D1)
 | ID | Story (one output) | Agent | Goal | Gate | State |
 |---|---|---|---|---|---|
@@ -27,7 +32,7 @@ Goal = 1 search · 2 table · 3 ship.
 | ID | Story (one output) | Agent | Goal | Gate | State |
 |---|---|---|---|---|---|
 | S-13 | Figma page from approved prototype (desktop + mobile + print) | figma-designer | 2 | G4 | proposed |
-| S-14 | Jira draft: Calculation Logic & Lookup Tables (engine + snapshot) | jira-writer | 3 | G5 | proposed |
+| S-14 | Jira draft: Calculation Logic & Lookup Tables (engine + snapshot; must state the 2 deliberate deviations from Jira v30, D-046) | jira-writer | 3 | G5 | proposed |
 | S-15 | Jira drafts: Tool Layout, Tool Functionality | jira-writer | 3 | G5 | proposed |
 | S-16 | Jira drafts: SEO Content (incl. keyword split decision with Ahrefs, D-016), Common Sections, related tools, sitemaps/index/search | jira-writer | 1 | G5 | proposed |
 

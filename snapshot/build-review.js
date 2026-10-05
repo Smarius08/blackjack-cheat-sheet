@@ -34,6 +34,7 @@ const CODE_KEY = [
   [['Ds'], 'double, if not allowed stand'],
   [['Rh', 'Rs'], 'surrender, if not allowed hit / stand'],
   [['Rp'], 'surrender if surrender is allowed and double after split is not; otherwise split'],
+  [['Rpa'], "Surrender if allowed against an Ace, otherwise Split (double after split doesn't matter)"],
   [['Ph'], 'split if double after split is allowed, otherwise hit'],
   [['Pd'], 'split if double after split is allowed, otherwise double'],
   [['Ps'], 'same, otherwise stand'],
