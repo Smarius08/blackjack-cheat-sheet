@@ -10,8 +10,8 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 - `npm run check`: 118/118 pass. Prototype: prototype/index.html (`open prototype/index.html`).
 
 ## Next
-- G3 (second pass): Marius signs off the prototype (S-12, S-20 stay "reviewed" until then).
-- Then: Codex review + adversarial review --base origin/main, G6 push; Sprint 3 (Figma S-13).
+- G3 signed off (D-068). Sprint 3 starts with S-13 Figma (brief incl. F2 contrast, F4 badge, v2 space, CHIPY tokens).
+- Marius: Codex review + adversarial review --base origin/main, then G6 push of 11 commits.
 - work-lenovo clone pending.
 
 ## Lead-only decisions (Marius may veto)
@@ -26,4 +26,4 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 - chart.js freezing STRATEGY_TABLE makes it read-only for code loaded after it (intended, D-036).
 
 ## Files to attach in Jira
-- None yet (prototype, QA report and screenshots after G3).
+- After S-14/S-15: prototype/index.html, docs/qa/2026-10-05-qa.md, docs/qa/screenshots/*.png.

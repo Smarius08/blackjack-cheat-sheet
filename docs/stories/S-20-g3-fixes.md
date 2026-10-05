@@ -1,6 +1,6 @@
 # S-20 — G3 fixes: scroll cue, bigger Calculator link, "What your rules change"
 
-State: reviewed (awaiting G3) (G3 first pass D-066; D-067; batch D-058) · Agent: ui-dev, then qa-tester (separate step) · Goal served: 2 (usable at the table, chart correct for the player's rules) · Gate: G3
+State: done (G3 D-068) (G3 first pass D-066; D-067; batch D-058) · Agent: ui-dev, then qa-tester (separate step) · Goal served: 2 (usable at the table, chart correct for the player's rules) · Gate: G3
 
 ## Why
 Marius's first G3 review found three things, and asked for them in one fix story (D-066, D-067): (1) at phone width players do not see that the chart

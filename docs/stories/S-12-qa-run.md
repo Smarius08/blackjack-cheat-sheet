@@ -1,6 +1,6 @@
 # S-12 — QA run of the built prototype, report + screenshots in docs/qa/
 
-State: reviewed (awaiting G3) · Agent: qa-tester · Goal served: 2 (correct at the table, printable) · Gate: G3 (D-045, D-051, D-058)
+State: done (G3 D-068) · Agent: qa-tester · Goal served: 2 (correct at the table, printable) · Gate: G3 (D-045, D-051, D-058)
 
 ## Why
 Before Marius signs off the prototype (G3), a real browser must prove that every rule set shows the right chart, table mode, reason panel, link and print all work, and the layout holds on a phone. The tester reports only; it never edits app or engine code.
