@@ -20,3 +20,4 @@ Format: ID · date · decision · by. Newest at the bottom. Superseded rows move
 | D-014 | 2026-10-05 | G1: Sprint 1 (S-01…S-06) approved | Marius |
 | D-015 | 2026-10-05 | Rename folder/repo to blackjack-cheat-sheet before first commit | Marius |
 | D-016 | 2026-10-05 | Keyword split is part of the SEO Content task (S-16), not tool development; it blocks nothing else | Marius |
+| D-017 | 2026-10-05 | Claude Code CLI (terminal) on both machines, not the Desktop Code tab; Cowork stays the planning chat | Marius |

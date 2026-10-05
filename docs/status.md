@@ -6,7 +6,7 @@ Last updated: 2026-10-05 (team setup, Cowork)
 - Agent team files created (AGENTS.md, CLAUDE.md, .claude/agents/, docs/).
 
 ## Next
-- Folder renamed (D-015). First commit done locally; Marius creates the GitHub repo and pushes, then clones on the Lenovo.
+- Repo pushed to github.com/Smarius08/blackjack-cheat-sheet over SSH from home-mac-mini. work-lenovo clone pending (only when at the office).
 - Lead: spec-writer writes S-01…S-06 story files, then engine-dev starts S-01.
 
 ## Blockers
