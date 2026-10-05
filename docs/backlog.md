@@ -28,7 +28,8 @@ Defaults on load: 4–8 decks · dealer hits soft 17 · DAS allowed · surrender
 | S-10 | Tap/click/keyboard a cell → panel: row label, reason (why.js), note shown separately (D-029, D-030, D-049); no hover | ui-dev | 2 | — | done |
 | S-11 | Print, both sizes: full page + pocket card, chosen rules printed on each (D-054) | ui-dev | 2 | — | done |
 | S-19 | My-table link: active rules kept in the page URL; every combo round-trips; invalid values fall back to defaults with no error (D-051, D-054) | ui-dev | 2 | — | done |
-| S-12 | QA run: Playwright 390 / 1280, all 36 combos vs snapshot, incl. S-18 and S-19 → docs/qa/ | qa-tester | 2 | G3 | reviewed (G3 pending) |
+| S-20 | G3 fix (D-066, D-067): scroll cue at 390 (fade + "Swipe for dealer 6–A"), Calculator link ≥44px, "What your rules change" highlight + count (chart and table mode); new QA checks; full QA re-run | ui-dev + qa-tester | 2 | G3 | in progress |
+| S-12 | QA run: Playwright 390 / 1280, all 36 combos vs snapshot, incl. S-18 and S-19 → docs/qa/ | qa-tester | 2 | G3 | reviewed (G3 pending; re-run after S-20) |
 
 ## Sprint 3 — Figma (D2) + Jira (D3)
 | ID | Story (one output) | Agent | Goal | Gate | State |
