@@ -491,7 +491,7 @@ table.chart { border-collapse: separate; border-spacing: 0; width: 100%; min-wid
     return out;
   }
 
-  // ---- My-table link (S-19, D-023, D-054): rules live in the query, silently ----
+  // ---- URL keeps the selected rules (S-19, D-023, D-054): rules live in the query, silently ----
   function queryEntries(search) {
     try { return Array.from(new URLSearchParams(String(search || ''))); } catch (e) { return []; }
   }
