@@ -45,6 +45,7 @@ Defaults on load: 4–8 decks · dealer hits soft 17 · DAS allowed · surrender
 | ID | Story (one output) | Agent | Goal | Gate | State |
 |---|---|---|---|---|---|
 | S-21 | Prototype full visual sync with the signed-off Figma (D-076): tokens, palette, typography/spacing, buttons, 52px changed marker, light outline on dark cells, print styling; tool only; no logic change; QA re-run + visual check vs Figma → G3 visual | ui-dev + qa-tester | 2 | G3 | done (G3 D-080) |
+| S-22 | Widen the tool-only 1280 Figma frames and the prototype shell to 900 px (852 content); dealer columns share the width equally; QA re-run + side-by-sides (D-085) | figma-designer + ui-dev + qa-tester | 2 | G3/G4 | approved (D-085), not scheduled |
 
 ## v2 (next version, not now)
 - "Learn this chart": memory rules for the player's chart (D-051).

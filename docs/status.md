@@ -1,6 +1,6 @@
 # Status
 
-Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
+Last updated: 2026-10-06 (home-mac-mini, Claude Code CLI)
 
 ## Done
 - Sprint 1 (engine) S-01…S-06 + S-17 pushed (ddb2a58); details in docs/archive/sprint-1.md.
@@ -10,7 +10,7 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 - `npm run check`: 118/118 pass. Prototype: prototype/index.html (`open prototype/index.html`).
 
 ## Figma frames (file mRGsMU76MmiKMnzQkwYKgG, page 14034:33811; PNGs in docs/figma/)
-- Full page 1280 14047:648859 · 390 14048:648735 (D-073 rework). Components: CS / Move 14047:86, CS / Pick 14060:14892.
+- Full page 1280 14047:648859 · 390 14048:648735 (D-073 rework; Calculator page template D-084, shell 900 vs tool frames 852 D-085). Components: CS / Move 14047:86, CS / Pick 14060:14892.
 - Default chart 14056:6031 / 14056:6546 · Reason panel 14058:7935 / 14058:8815 · Reason note 14058:654495 / 14058:656063
 - Rules changed 14060:11755 / 14060:13320 · TM empty 14060:14893 / 14060:15510 · TM hand 14061:13759 / 14061:14223
 - TM result 14061:13883 / 14061:14345 · TM result changed 14061:14048 / 14061:14508 (1280 / 390)
@@ -19,7 +19,8 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 
 ## Next
 - S-21 visual sync done (G3 D-080), pushed 4025487. Handoff zip handoff/blackjack-cheat-sheet-handoff-2026-10-05.zip (git-ignored).
-- S-15 approved (G5 D-081): Cowork writes BFC-55465/66 from docs/jira/*.html; Marius attaches the zip. Final URLs D-082 (page + Calculator link in prototype). QA 12/12.
+- D-083 shell title olive; D-084 page template (4 full-page PNGs re-exported, visual-spec §7, BFC-55465 draft = live Jira); D-085: Marius pastes §8 line + chart column line into BFC-55465. Zip rebuilt (same name).
+- S-22 (widen tool frames + prototype to 900) approved, not scheduled.
 - Card next session: refresh .claude/agents/ui-dev.md for D-050/D-053/D-056 (housekeeper).
 - work-lenovo clone pending.
 
@@ -35,4 +36,4 @@ Last updated: 2026-10-05 (home-mac-mini, Claude Code CLI)
 - chart.js freezing STRATEGY_TABLE makes it read-only for code loaded after it (intended, D-036).
 
 ## Files to attach in Jira
-- On BFC-55462: handoff/blackjack-cheat-sheet-handoff-2026-10-05.zip (prototype, engine, snapshot, docs incl. figma + qa).
+- On BFC-55462 + Drive: handoff/blackjack-cheat-sheet-handoff-2026-10-05.zip (rebuilt 2026-10-06 for D-084/D-085; re-attach).

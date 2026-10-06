@@ -65,12 +65,12 @@ Changed cell (State=Changed): `outline: 2px dashed <colour>; outline-offset: -2p
 | "Changed for your new rules" marker | 700 / 14 | #1a1a1a | |
 
 ## 3. Sizes and spacing (1280)
-- **Shell**: width 852 (content 804), background #fff, radius 16, `box-shadow: 0 -1px 20px 2px rgba(0,0,0,.10)`, no border. Header band #f9fafa, padding 24 20 20 20. Body padding 24, gap 20 between blocks.
+- **Shell**: tool-only frames and prototype: width 852 (content 804); on the page 900 (content 852) is the truth, see §7 (D-085). background #fff, radius 16, `box-shadow: 0 -1px 20px 2px rgba(0,0,0,.10)`, no border. Header band #f9fafa, padding 24 20 20 20. Body padding 24, gap 20 between blocks.
 - **Rule panel**: 2 columns, column gap 20, row gap 16; label → control gap 8.
 - **Segmented controls**: height 48, radius 6, `1px solid #e6e6e6` (inside), segments equal width, no gaps; selected fill #c4db11, unselected #f9fafa; option padding 12 16 (3-option rows: padding 0 8).
 - **Buttons** (secondary): height 48, padding 16 24, `2px solid #c4db11`, radius 6, transparent fill, gap 10 between print buttons.
 - **Legend**: wrap, gap 10 (row gap 8). Pill: height 32, padding 5 10 5 6, gap 6, radius 999, fill per move; Hit pill `1px solid #e6e6e6`.
-- **Chart box**: `border: 1px solid #e6e6e6`, radius 12, overflow hidden; grid lines 1px #e6e6e6 (cells separated by 1px). Pinned column 84px. Header row 36px. Body rows **52px always**. Dealer columns at 1280: 71px (84 + 1 + 10×71 + 9 = 804). Header/row-label cells #f9fafa. Cell: icon 20 above word, gap 2, side padding 2. Section gap between charts 28; H2 → sub 4, sub → box 14 (390: sub → swipe cue 4, cue → box 10).
+- **Chart box**: `border: 1px solid #e6e6e6`, radius 12, overflow hidden; grid lines 1px #e6e6e6 (cells separated by 1px). Pinned column 84px. Header row 36px. Body rows **52px always**. Dealer columns at 1280: 71px in the 852 shell (84 + 1 + 10×71 + 9 = 804); in the 900 shell they share the width after the 84px column equally (≈75.8px). 390 keeps fixed columns + scroll. Header/row-label cells #f9fafa. Cell: icon 20 above word, gap 2, side padding 2. Section gap between charts 28; H2 → sub 4, sub → box 14 (390: sub → swipe cue 4, cue → box 10).
 - **Reason panel**: `1px solid #e6e6e6`, radius 12. Head: fill #b4ca09 @15%, padding 8 8 8 16, gap 12 (title + Close button). Body: padding 14 16 16 16, gap 12. Move chip: radius 999, fill #c4db11 @20%, `1px solid #c4db11`, padding 6 14 6 8, gap 10; icon circle holds a 22px icon.
 - **Count line box (diff note)**: #fff, `1px solid #1a1a1a`, radius 8, padding 6 8 6 14, gap 12 (text + Dismiss button).
 - **Table mode**: pick area gap 18 between steps; step heading → groups gap 8; group label → grid gap 6; pick grid wrap, gap 8. Pick button 60×48 (390: 62×48), radius 8, `1px solid rgba(0,0,0,.18)`, #fff; selected #c4db11. "Change rules" = secondary button.
@@ -86,6 +86,17 @@ Page side margin 8 → shell 374 wide; body padding 24 16 16 16; title 18. Rule 
 ## 6. Icons
 Same glyphs as Trainer/Calculator (Figma local "Icons" set; `prototype/src/icons`): Hit = action-hit (pointer click), Stand = action-stand (open hand), Double = action-double (two vertical bars), Split = action-split (↔ arrows), Surrender = action-surrender (flag). Colour = the move's text colour.
 Sizes: chart cell 20, legend pill 20, reason chip 22, Recommended Play circle 26, print legend 16, print cell 9; pocket card uses letters, no icons.
+
+## 7. Page template (full-page frames, D-084)
+Full page 1280 14047:648859 / 390 14048:648735 and Table mode 14071:660225 / 14071:661008 follow the Strategy Calculator page template (Figma 12386:8654). Page only, not the tool.
+- Page background #f9fafa behind all sections.
+- Top section + in-page nav share one soft shadow (no shadow on the nav itself). Nav labels: "Blackjack Cheat Sheet", "How it works", "Q&As", "Other tools".
+- "Read more" in olive #859c2e.
+- 120 px between the page content and the footer (desktop).
+- Mobile: Authors section padding 8 px.
+- Desktop: the tool shell uses the full 900 px content column (852 content + 24 px padding each side); the 10 dealer columns share the width after the 84 px "Your hand" column equally (≈76 px). This is the source of truth. The tool-only frames and the prototype still show 852 (§3), accepted difference until S-22 (D-085).
+- Carousel order: Cheat Sheet, Quiz, Trainer, Calculator, Simulator.
+- No Embed button: legacy feature, hidden in the Calculator/Quiz templates, not part of this page (D-072, D-084).
 
 ## Not extracted / notes
 - Hover/focus states are not drawn in Figma; keep the prototype's 3px #404040 focus ring (white on Surrender).
